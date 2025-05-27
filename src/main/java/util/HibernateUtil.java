@@ -1,10 +1,6 @@
-package until;
-
-
+package util;
 
 import jakarta.persistence.EntityManager;
-
-
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
@@ -20,13 +16,17 @@ public class HibernateUtil {
         }
     }
 
-    public static EntityManagerFactory getEntityManagerFactory() {
-        return emf;
+    // Obtiene un nuevo EntityManager
+    public static EntityManager getEntityManager() {
+        return emf.createEntityManager();
     }
 
-    public static void shutdown() {
-        if (emf != null) {
-            emf.close();
+    // Cierra el EntityManager (si está abierto)
+    public static void closeEntityManager(EntityManager em) {
+        if (em != null && em.isOpen()) {
+            em.close();
         }
     }
+
+
 }

@@ -3,7 +3,8 @@ package dao;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import until.HibernateUtil;
+import util.HibernateUtil;
+
 
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
@@ -16,7 +17,7 @@ public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
     @SuppressWarnings("unchecked")
     public GenericDAOImpl() {
         this.tipoEntidad = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-        this.em = HibernateUtil.getEntityManagerFactory().createEntityManager();
+        this.em =  HibernateUtil.getEntityManager();
     }
 
     @Override
@@ -32,13 +33,11 @@ public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
             }
             throw e;
         }
-        em.close();
     }
 
     @Override
     public T buscarPorId(ID id) {
         T t = em.find(tipoEntidad, id);
-        em.close();
         return t;
     }
 
@@ -55,7 +54,6 @@ public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
             }
             throw e;
         }
-        em.close();
     }
 
     @Override
@@ -74,14 +72,12 @@ public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
             }
             throw e;
         }
-        em.close();
     }
 
     @Override
     public List<T> listarTodos() {
         String jpql = "SELECT e FROM " + tipoEntidad.getSimpleName() + " e";
         List<T> tList = em.createQuery(jpql, tipoEntidad).getResultList();
-        em.close();
         return tList;
     }
 

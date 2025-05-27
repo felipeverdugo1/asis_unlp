@@ -1,7 +1,9 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import java.util.List;
+
 
 @Entity
 @Table(name = "personal_de_salud")
@@ -14,7 +16,8 @@ public class PersonalDeSalud extends Usuario {
     private List<Reporte> reportesGenerados;
 
     // Constructor, Getters y Setters
-    public PersonalDeSalud() {}
+    public PersonalDeSalud() {
+    }
 
     public String getEspecialidad() {
         return especialidad;
@@ -32,7 +35,5 @@ public class PersonalDeSalud extends Usuario {
         this.reportesGenerados = reportesGenerados;
     }
 
-
-
-
 }
+

@@ -3,6 +3,7 @@ package model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,7 +16,7 @@ public class Reporte {
     private Long id;
 
     @Column(name = "fecha_creacion", nullable = false)
-    private LocalDateTime fechaCreacion;
+    private Date fechaCreacion;
 
     @Column(name = "nombre", nullable = false)
     private String nombre;
@@ -44,7 +45,7 @@ public class Reporte {
         this.contenido = contenido;
     }
 
-    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+    public void setFechaCreacion(Date fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
 

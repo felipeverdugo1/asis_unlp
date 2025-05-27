@@ -12,6 +12,8 @@ public abstract class GenericServiceImpl<T, ID> implements GenericService<T, ID>
         this.genericDAO = genericDAO;
     }
 
+
+
     @Override
     public T crear(T entidad) {
         genericDAO.crear(entidad);

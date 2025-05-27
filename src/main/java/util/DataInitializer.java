@@ -1,13 +1,14 @@
-package until;
+package util;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import model.*;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Date;
 import java.time.LocalDateTime;
-import java.util.Map;
 
 
 public class DataInitializer {
@@ -50,7 +51,7 @@ public class DataInitializer {
             // 5. Crear Reportes
             Reporte reporteDiabetes = new Reporte();
             reporteDiabetes.setNombre("Reporte Diabetes Zona 1");
-            reporteDiabetes.setFechaCreacion(LocalDateTime.now());
+            reporteDiabetes.setFechaCreacion(Date.from(Instant.now()));
             reporteDiabetes.setPersonalSalud(drPerez);
             reporteDiabetes.getFiltros().put("enfermedad", "diabetes");
             em.persist(reporteDiabetes);

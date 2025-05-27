@@ -1,7 +1,6 @@
 package model;
 
 import jakarta.persistence.*;
-
 @MappedSuperclass
 public abstract class Usuario {
 
@@ -18,6 +17,10 @@ public abstract class Usuario {
     @Column(name = "password", nullable = false)
     private String password;
 
+
+
+    public Usuario() {}
+
     // Getters y Setters
 
     public void setNombre(String nombre) {
@@ -32,5 +35,24 @@ public abstract class Usuario {
         this.password = password;
     }
 
+    public String getEmail() {
+        return email;
+    }
 
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }
