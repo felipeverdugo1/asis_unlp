@@ -26,6 +26,10 @@ public class Barrio {
     // Constructor, Getters y Setters
     public Barrio() {}
 
+    public Long getId() { return id; }
+
+    public String getNombre() { return nombre; }
+
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }

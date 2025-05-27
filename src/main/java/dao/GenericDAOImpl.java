@@ -10,17 +10,20 @@ import java.util.List;
 
 public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
 
-    protected EntityManager em;
     private final Class<T> tipoEntidad;
 
     @SuppressWarnings("unchecked")
     public GenericDAOImpl() {
         this.tipoEntidad = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-        this.em = HibernateUtil.getEntityManagerFactory().createEntityManager();
+    }
+
+    protected EntityManager getEntityManager() {
+        return HibernateUtil.getEntityManagerFactory().createEntityManager();
     }
 
     @Override
     public void crear(T entidad) {
+        EntityManager em = HibernateUtil.getEntityManagerFactory().createEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
@@ -31,19 +34,24 @@ public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
                 tx.rollback();
             }
             throw e;
+        } finally {
+            em.close();
         }
-        em.close();
     }
 
     @Override
     public T buscarPorId(ID id) {
-        T t = em.find(tipoEntidad, id);
-        em.close();
-        return t;
+        EntityManager em = getEntityManager();
+        try {
+            return em.find(tipoEntidad, id);
+        } finally {
+            em.close();
+        }
     }
 
     @Override
     public void actualizar(T entidad) {
+        EntityManager em = getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
@@ -54,16 +62,18 @@ public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
                 tx.rollback();
             }
             throw e;
+        } finally {
+            em.close();
         }
-        em.close();
     }
 
     @Override
     public void eliminar(ID id) {
+        EntityManager em = getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
-            T entidad = buscarPorId(id);
+            T entidad = em.find(tipoEntidad, id);
             if (entidad != null) {
                 em.remove(entidad);
             }
@@ -73,16 +83,20 @@ public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
                 tx.rollback();
             }
             throw e;
+        } finally {
+            em.close();
         }
-        em.close();
     }
 
     @Override
     public List<T> listarTodos() {
-        String jpql = "SELECT e FROM " + tipoEntidad.getSimpleName() + " e";
-        List<T> tList = em.createQuery(jpql, tipoEntidad).getResultList();
-        em.close();
-        return tList;
+        EntityManager em = getEntityManager();
+        try {
+            String jpql = "SELECT e FROM " + tipoEntidad.getSimpleName() + " e";
+            return em.createQuery(jpql, tipoEntidad).getResultList();
+        } finally {
+            em.close();
+        }
     }
 
 
