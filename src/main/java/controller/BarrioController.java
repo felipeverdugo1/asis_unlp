@@ -37,7 +37,6 @@ public class BarrioController{
 
             String jsonResponse = String.format(
                     "{\"id\": %d, \"nombre\": \"%s\"}",
-                    resultado.getId(),
                     resultado.getNombre()
             );
 

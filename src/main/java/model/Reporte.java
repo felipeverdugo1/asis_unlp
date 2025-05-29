@@ -17,54 +17,65 @@ public class Reporte {
     @Column(name = "fecha_creacion", nullable = false)
     private LocalDateTime fechaCreacion;
 
-    @Column(name = "nombre", nullable = false)
+    @Column( nullable = false)
     private String nombre;
 
-    @ElementCollection
-    @CollectionTable(name = "reporte_filtros", joinColumns = @JoinColumn(name = "reporte_id"))
-    @MapKeyColumn(name = "clave")
-    @Column(name = "valor")
-    private Map<String, String> filtros =  new HashMap<>(); // Inicialización directa; // Ej: {"enfermedad": "diabetes", "acceso_agua": "no"}
+    @Column( nullable = false)
+    private String descripcion;
 
     @ManyToOne
-    @JoinColumn(name = "personal_salud_id", nullable = false)
-    private PersonalDeSalud personalSalud;
+    @JoinColumn(name = "creado_por")
+    private Usuario creadoPor;
 
-    @Lob
-    @Column(name = "contenido")
-    private byte[] contenido; // Para almacenar la captura de pantalla o datos del reporte
+    @ManyToOne
+    @JoinColumn(name = "compartido_con")
+    private Usuario compartidoCon;
 
-
-    public void setNombre(String nombre) {
+    public Reporte(LocalDateTime fechaCreacion, String nombre, String descripcion, Usuario creadoPor, Usuario compartidoCon) {
+        this.fechaCreacion = fechaCreacion;
         this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.creadoPor = creadoPor;
+        this.compartidoCon = compartidoCon;
     }
 
+    public LocalDateTime getFechaCreacion() {
+        return fechaCreacion;
+    }
 
-    public void setContenido(byte[] contenido) {
-        this.contenido = contenido;
+    public String getNombre() {
+        return nombre;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public Usuario getCreadoPor() {
+        return creadoPor;
+    }
+
+    public Usuario getCompartidoCon() {
+        return compartidoCon;
     }
 
     public void setFechaCreacion(LocalDateTime fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
 
-    public void setFiltros(Map<String, String> filtros) {
-        this.filtros = filtros;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
-    public void setPersonalSalud(PersonalDeSalud personalSalud) {
-        this.personalSalud = personalSalud;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
-
-    public Map<String, String> getFiltros() {
-        return filtros;
+    public void setCreadoPor(Usuario creadoPor) {
+        this.creadoPor = creadoPor;
     }
 
-
-
-
-
-    // Constructor, Getters y Setters
-    public Reporte() {}
+    public void setCompartidoCon(Usuario compartidoCon) {
+        this.compartidoCon = compartidoCon;
+    }
 }
