@@ -12,6 +12,7 @@ import java.util.Map;
 
 public class DataInitializer {
     public static void main(String[] args) {
+        /*
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("asis_unlp");
         EntityManager em = emf.createEntityManager();
 
@@ -64,6 +65,6 @@ public class DataInitializer {
         } finally {
             em.close();
             emf.close();
-        }
+        }*/
     }
 }
