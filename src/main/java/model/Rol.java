@@ -1,0 +1,9 @@
+package model;
+
+public enum Rol {
+    ADMINISTRADOR,
+    PERSONAL_DE_SALUD,
+    REFERENTE_ORGANIZACION_SOCIAL,
+    VISITANTE
+}
+

@@ -6,13 +6,14 @@
     <persistence-unit name="asis_unlp" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
-        <class>model.PersonalDeSalud</class>
+        <class>model.Usuario</class>
         <class>model.Campaña</class>
         <class>model.Barrio</class>
         <class>model.Reporte</class>
         <class> model.Jornada</class>
         <class> model.Zona</class>
         <class>model.Usuario</class>
+        <class> model.FiltroPersonalizado</class>
 
 
 
