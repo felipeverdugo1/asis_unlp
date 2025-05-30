@@ -33,6 +33,11 @@ public abstract class Usuario {
     private List<FiltroPersonalizado> filtrosPersonalizados;
 
 
+
+    public Usuario() {}
+
+    // Getters y Setters
+
     public Usuario(String email, String password, String nombreUsuario, Rol rol) {
         this.email = email;
         this.password = password;
@@ -43,7 +48,6 @@ public abstract class Usuario {
 
     }
 
-    public Usuario() { }
 
     public Long getId() {
         return id;
@@ -101,8 +105,6 @@ public abstract class Usuario {
         filtro.setUsuario(this);
         this.filtrosPersonalizados.add(filtro);
     }
-
-
 
 
 }
