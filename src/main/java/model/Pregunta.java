@@ -22,6 +22,9 @@ public class Pregunta {
     @JoinColumn(name = "encuesta_id", nullable = false)
     private Encuesta encuesta;
 
+
+
+
     public Pregunta(String tipo, String pregunta, String respuesta, Encuesta encuesta) {
         this.tipo = tipo;
         this.pregunta = pregunta;

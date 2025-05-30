@@ -12,7 +12,6 @@
         <class>model.Reporte</class>
         <class> model.Jornada</class>
         <class> model.Zona</class>
-        <class>model.Usuario</class>
         <class> model.FiltroPersonalizado</class>
 
 
@@ -26,8 +25,6 @@
             <property name="jakarta.persistence.jdbc.user" value="root"/>
             <property name="jakarta.persistence.jdbc.password" value="admin"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
-
-
             <!-- Mostrar SQL -->
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>

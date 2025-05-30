@@ -32,7 +32,10 @@ public class Reporte {
     @JoinColumn(name = "compartido_con")
     private Usuario compartidoCon;
 
-    public Reporte(LocalDateTime fechaCreacion, String nombre, String descripcion, Usuario creadoPor, Usuario compartidoCon) {
+
+    public Reporte() {}
+
+    public Reporte(Date fechaCreacion, String nombre, String descripcion, Usuario creadoPor, Usuario compartidoCon) {
         this.fechaCreacion = fechaCreacion;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -40,7 +43,7 @@ public class Reporte {
         this.compartidoCon = compartidoCon;
     }
 
-    public LocalDateTime getFechaCreacion() {
+    public Date getFechaCreacion() {
         return fechaCreacion;
     }
 

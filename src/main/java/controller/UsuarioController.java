@@ -5,29 +5,24 @@ import dao.GenericDAOImpl;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import model.PersonalDeSalud;
-import service.GenericService;
-import service.GenericServiceImpl;
-
-import java.util.List;
+import model.Usuario;
 
 
+@Path("/usuario")
+public class UsuarioController {
+    protected final GenericDAO<Usuario, Integer> usuarioDAO;
 
-@Path("/personal_de_salud")
-public class PersonalDeSaludResource {
-    protected final GenericDAO<PersonalDeSalud, Integer> personalDAO;
 
-
-    public PersonalDeSaludResource() {
-        this.personalDAO = new GenericDAOImpl<PersonalDeSalud, Integer>() {}; // Inicialización directa para que mi amigo jersey lo pueda ejecutar
+    public UsuarioController() {
+        this.usuarioDAO = new GenericDAOImpl<Usuario, Integer>() {}; // Inicialización directa para que mi amigo jersey lo pueda ejecutar
     }
 
 
-    //     GET /usuarios -> Listar todos los usuarios
+    //  GET /usuarios -> Listar todos los usuarios
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUsuarios() {
-        return Response.ok(personalDAO.listarTodos()).build();
+        return Response.ok(usuarioDAO.listarTodos()).build();
     }
 
     // GET /usuarios/{id} -> Obtener un usuario por ID
@@ -35,9 +30,9 @@ public class PersonalDeSaludResource {
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUsuario(@PathParam("id") int id) {
-        PersonalDeSalud personalDeSalud = personalDAO.buscarPorId(id);
-        if (personalDeSalud != null) {
-            return Response.ok(personalDeSalud).build();
+        Usuario usuario = usuarioDAO.buscarPorId(id);
+        if (usuario != null) {
+            return Response.ok(usuario).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
@@ -47,8 +42,8 @@ public class PersonalDeSaludResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response crearUsuario(PersonalDeSalud usuario) {
-        personalDAO.crear(usuario);
+    public Response crearUsuario(Usuario usuario) {
+        usuarioDAO.crear(usuario);
         return Response.status(Response.Status.CREATED).entity(usuario).build();
     }
 
@@ -56,9 +51,9 @@ public class PersonalDeSaludResource {
     @PUT
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response actualizarUsuario(@PathParam("id") int id, PersonalDeSalud usuarioActualizado) {
-        if ( personalDAO.buscarPorId(id) != null) {
-            personalDAO.actualizar(usuarioActualizado);
+    public Response actualizarUsuario(@PathParam("id") int id, Usuario usuarioActualizado) {
+        if ( usuarioDAO.buscarPorId(id) != null) {
+            usuarioDAO.actualizar(usuarioActualizado);
             return Response.ok().build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -69,9 +64,9 @@ public class PersonalDeSaludResource {
     @DELETE
     @Path("{id}")
     public Response eliminarUsuario(@PathParam("id") int id) {
-        PersonalDeSalud personalDeSalud = personalDAO.buscarPorId(id);
+        Usuario personalDeSalud = usuarioDAO.buscarPorId(id);
         if (personalDeSalud != null) {
-            personalDAO.eliminar(id);
+            usuarioDAO.eliminar(id);
             return Response.noContent().build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
