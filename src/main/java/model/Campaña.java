@@ -1,10 +1,19 @@
 package model;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+
+@Getter
+@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "campanas")
 public class Campaña {
@@ -33,62 +42,7 @@ public class Campaña {
     @JoinColumn(name = "campaña_id") // Esta es la columna que se creará en la tabla reporte
     private List<Reporte> reportes = new ArrayList<>();
 
-    public Campaña(String nombre, LocalDate fechaInicio, LocalDate fechaFin, Barrio barrio, List<Jornada> jornadas, List<Reporte> reportes) {
-        this.nombre = nombre;
-        this.fechaInicio = fechaInicio;
-        this.fechaFin = fechaFin;
-        this.barrio = barrio;
-        this.jornadas = jornadas;
-        this.reportes = reportes;
-    }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public LocalDate getFechaInicio() {
-        return fechaInicio;
-    }
-
-    public LocalDate getFechaFin() {
-        return fechaFin;
-    }
-
-    public Barrio getBarrio() {
-        return barrio;
-    }
-
-    public List<Jornada> getJornadas() {
-        return jornadas;
-    }
-
-    public List<Reporte> getReportes() {
-        return reportes;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public void setFechaInicio(LocalDate fechaInicio) {
-        this.fechaInicio = fechaInicio;
-    }
-
-    public void setFechaFin(LocalDate fechaFin) {
-        this.fechaFin = fechaFin;
-    }
-
-    public void setBarrio(Barrio barrio) {
-        this.barrio = barrio;
-    }
-
-    public void setJornadas(List<Jornada> jornadas) {
-        this.jornadas = jornadas;
-    }
-
-    public void setReportes(List<Reporte> reportes) {
-        this.reportes = reportes;
-    }
 
     // Métodos adicionales
     public void agregarJornada(Jornada jornada) {

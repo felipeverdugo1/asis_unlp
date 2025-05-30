@@ -2,11 +2,21 @@ package model;
 
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+
+
+@Getter
+@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "reportes")
 public class Reporte {
@@ -33,53 +43,5 @@ public class Reporte {
     private Usuario compartidoCon;
 
 
-    public Reporte() {}
-
-    public Reporte(Date fechaCreacion, String nombre, String descripcion, Usuario creadoPor, Usuario compartidoCon) {
-        this.fechaCreacion = fechaCreacion;
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.creadoPor = creadoPor;
-        this.compartidoCon = compartidoCon;
-    }
-
-    public Date getFechaCreacion() {
-        return fechaCreacion;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public Usuario getCreadoPor() {
-        return creadoPor;
-    }
-
-    public Usuario getCompartidoCon() {
-        return compartidoCon;
-    }
-
-    public void setFechaCreacion(Date fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public void setCreadoPor(Usuario creadoPor) {
-        this.creadoPor = creadoPor;
-    }
-
-    public void setCompartidoCon(Usuario compartidoCon) {
-        this.compartidoCon = compartidoCon;
-    }
+ 
 }

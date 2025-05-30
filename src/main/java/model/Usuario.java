@@ -1,10 +1,19 @@
 package model;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
+
+@Getter
+@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "usuarios")
 public abstract class Usuario {
@@ -33,78 +42,6 @@ public abstract class Usuario {
     private List<FiltroPersonalizado> filtrosPersonalizados;
 
 
-
-    public Usuario() {}
-
-    // Getters y Setters
-
-    public Usuario(String email, String password, String nombreUsuario, Rol rol) {
-        this.email = email;
-        this.password = password;
-        this.nombreUsuario = nombreUsuario;
-        this.rol = rol;
-        this.habilitado = true;
-        this.filtrosPersonalizados = new ArrayList<>();
-
-    }
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getNombreUsuario() {
-        return nombreUsuario;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public boolean isHabilitado() {
-        return habilitado;
-    }
-
-    public Rol getRol() {
-        return rol;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setNombreUsuario(String nombreUsuario) {
-        this.nombreUsuario = nombreUsuario;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setHabilitado(boolean habilitado) {
-        this.habilitado = habilitado;
-    }
-
-    public void setRol(Rol rol) {
-        this.rol = rol;
-    }
-
-    //PersonalDeSalud
-    public void agregarFiltro(FiltroPersonalizado filtro) {
-        if (this.rol != Rol.PERSONAL_DE_SALUD) {
-            throw new IllegalStateException("Solo el personal de salud puede tener filtros personalizados");
-        }
-        filtro.setUsuario(this);
-        this.filtrosPersonalizados.add(filtro);
-    }
 
 
 }

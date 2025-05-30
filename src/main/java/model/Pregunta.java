@@ -1,7 +1,16 @@
 package model;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+
+
+@Getter
+@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Pregunta {
 
@@ -18,6 +27,7 @@ public class Pregunta {
     @Column(nullable = false)
     private String respuesta;
 
+
     @ManyToOne
     @JoinColumn(name = "encuesta_id", nullable = false)
     private Encuesta encuesta;
@@ -25,42 +35,6 @@ public class Pregunta {
 
 
 
-    public Pregunta(String tipo, String pregunta, String respuesta, Encuesta encuesta) {
-        this.tipo = tipo;
-        this.pregunta = pregunta;
-        this.respuesta = respuesta;
-        this.encuesta = encuesta;
-    }
 
-    public String getTipo() {
-        return tipo;
-    }
 
-    public String getPregunta() {
-        return pregunta;
     }
-
-    public String getRespuesta() {
-        return respuesta;
-    }
-
-    public Encuesta getEncuesta() {
-        return encuesta;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-
-    public void setPregunta(String pregunta) {
-        this.pregunta = pregunta;
-    }
-
-    public void setRespuesta(String respuesta) {
-        this.respuesta = respuesta;
-    }
-
-    public void setEncuesta(Encuesta encuesta) {
-        this.encuesta = encuesta;
-    }
-}

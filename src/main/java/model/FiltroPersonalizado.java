@@ -1,7 +1,15 @@
 package model;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+
+@Getter
+@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "filtros_personalizados")
 public class FiltroPersonalizado {
@@ -20,45 +28,6 @@ public class FiltroPersonalizado {
     @JoinColumn(name = "usuario_id")
     private Usuario propietario;
 
-    public FiltroPersonalizado(Long id, String nombre, String criterios, Usuario usuario) {
-        this.id = id;
-        this.nombre = nombre;
-        this.criterios = criterios;
-        this.propietario = usuario;
-    }
-
-    public FiltroPersonalizado() { }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public String getCriterios() {
-        return criterios;
-    }
-
-    public Usuario getPropietario() {
-        return propietario;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public void setCriterios(String criterios) {
-        this.criterios = criterios;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.propietario = usuario;
-    }
 }
+
 

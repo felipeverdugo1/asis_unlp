@@ -1,7 +1,15 @@
 package model;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+
+@Getter
+@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Encuestador {
 
@@ -24,51 +32,4 @@ public class Encuestador {
     @Column(nullable = false)
     private String ocupacion;
 
-    public Encuestador(String nombre, String dni, int edad, String genero, String ocupacion) {
-        this.nombre = nombre;
-        this.dni = dni;
-        this.edad = edad;
-        this.genero = genero;
-        this.ocupacion = ocupacion;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public String getDni() {
-        return dni;
-    }
-
-    public int getEdad() {
-        return edad;
-    }
-
-    public String getGenero() {
-        return genero;
-    }
-
-    public String getOcupacion() {
-        return ocupacion;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public void setDni(String dni) {
-        this.dni = dni;
-    }
-
-    public void setEdad(int edad) {
-        this.edad = edad;
-    }
-
-    public void setGenero(String genero) {
-        this.genero = genero;
-    }
-
-    public void setOcupacion(String ocupacion) {
-        this.ocupacion = ocupacion;
-    }
 }

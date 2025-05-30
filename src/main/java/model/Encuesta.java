@@ -1,10 +1,18 @@
 package model;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.List;
 
+
+@Getter
+@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Encuesta {
 
@@ -30,51 +38,6 @@ public class Encuesta {
     @JoinColumn(name = "encuestador_id")
     private Encuestador encuestador;
 
-    public Encuesta(LocalDate fecha, List<Pregunta> preguntas, Jornada jornada, Zona zona, Encuestador encuestador) {
-        this.fecha = fecha;
-        this.preguntas = preguntas;
-        this.jornada = jornada;
-        this.zona = zona;
-        this.encuestador = encuestador;
-    }
 
-    public LocalDate getFecha() {
-        return fecha;
-    }
 
-    public List<Pregunta> getPreguntas() {
-        return preguntas;
-    }
-
-    public Jornada getJornada() {
-        return jornada;
-    }
-
-    public Zona getZona() {
-        return zona;
-    }
-
-    public Encuestador getEncuestador() {
-        return encuestador;
-    }
-
-    public void setFecha(LocalDate fecha) {
-        this.fecha = fecha;
-    }
-
-    public void setPreguntas(List<Pregunta> preguntas) {
-        this.preguntas = preguntas;
-    }
-
-    public void setJornada(Jornada jornada) {
-        this.jornada = jornada;
-    }
-
-    public void setZona(Zona zona) {
-        this.zona = zona;
-    }
-
-    public void setEncuestador(Encuestador encuestador) {
-        this.encuestador = encuestador;
-    }
 }

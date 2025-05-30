@@ -2,7 +2,15 @@ package model;
 
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+
+@Getter
+@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "zonas")
 public class Zona {
@@ -21,33 +29,4 @@ public class Zona {
     @JoinColumn(name = "barrio_id", nullable = false)
     private Barrio barrio;
 
-    public Zona(String nombre, String geolocalizacion, Barrio barrio) {
-        this.nombre = nombre;
-        this.geolocalizacion = geolocalizacion;
-        this.barrio = barrio;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public String getGeolocalizacion() {
-        return geolocalizacion;
-    }
-
-    public Barrio getBarrio() {
-        return barrio;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public void setGeolocalizacion(String geolocalizacion) {
-        this.geolocalizacion = geolocalizacion;
-    }
-
-    public void setBarrio(Barrio barrio) {
-        this.barrio = barrio;
-    }
 }

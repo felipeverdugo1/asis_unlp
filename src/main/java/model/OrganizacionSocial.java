@@ -1,7 +1,15 @@
 package model;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+
+@Getter
+@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "organizaciones_sociales")
 public class OrganizacionSocial {
@@ -23,42 +31,5 @@ public class OrganizacionSocial {
     @JoinColumn(name = "barrio_id")
     private Barrio barrio;
 
-    public OrganizacionSocial(String nombre, String domicilio, String actividadPrincipal, Barrio barrio) {
-        this.nombre = nombre;
-        this.domicilio = domicilio;
-        this.actividadPrincipal = actividadPrincipal;
-        this.barrio = barrio;
-    }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public String getDomicilio() {
-        return domicilio;
-    }
-
-    public String getActividadPrincipal() {
-        return actividadPrincipal;
-    }
-
-    public Barrio getBarrio() {
-        return barrio;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public void setDomicilio(String domicilio) {
-        this.domicilio = domicilio;
-    }
-
-    public void setActividadPrincipal(String actividadPrincipal) {
-        this.actividadPrincipal = actividadPrincipal;
-    }
-
-    public void setBarrio(Barrio barrio) {
-        this.barrio = barrio;
-    }
 }
