@@ -13,6 +13,10 @@
         <class> model.Jornada</class>
         <class> model.Zona</class>
         <class> model.FiltroPersonalizado</class>
+        <class>model.Encuesta</class>
+        <class>model.Pregunta</class>
+        <class>model.Encuestador</class>
+        <class>model.OrganizacionSocial</class>
 
 
 

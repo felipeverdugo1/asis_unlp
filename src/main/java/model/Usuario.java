@@ -1,5 +1,6 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -16,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "usuarios")
-public abstract class Usuario {
+public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +39,14 @@ public abstract class Usuario {
     @Column(nullable = false)
     private Rol rol;
 
-    @OneToMany(mappedBy = "propietario", cascade = CascadeType.ALL)
+
+
+
+    //Hibernate carga las relaciones Lazy (pero Jackson las serializa al JSON).
+    //Al serializar Usuario → incluye filtrosPersonalizados → cada FiltroPersonalizado referencia de nuevo a Usuario → bucle infinito.
+    //Por lo tanto Usamos @JsonManagedReference (para relaciones bidireccionales):
+    @JsonManagedReference
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<FiltroPersonalizado> filtrosPersonalizados;
 
 

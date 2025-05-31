@@ -11,6 +11,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Table(name = "encuestadores")
 public class Encuestador {
 
     @Id

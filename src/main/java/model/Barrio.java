@@ -1,5 +1,6 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -27,6 +28,7 @@ public class Barrio {
     @Column(nullable = false)
     private String informacion;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "barrio", cascade = CascadeType.ALL)
     private List<Zona> zonas;
 

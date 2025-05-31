@@ -1,40 +1,37 @@
 package controller;
 
-import dao.GenericDAO;
+import com.mysql.cj.log.Log;
 import dao.GenericDAOImpl;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import model.Barrio;
-import model.Usuario;
+import model.Encuestador;
 import service.GenericService;
 import service.GenericServiceImpl;
 
 
-@Path("/barrio")
-public class BarrioController {
-    protected final GenericService<Barrio, Integer> service;
+@Path("/encuestador")
+public class EncuestadorController {
+    protected final GenericService<Encuestador, Integer> service;
 
 
-    public BarrioController() {
-        this.service = new GenericServiceImpl<Barrio, Integer>(new GenericDAOImpl<Barrio, Integer>() {
-        }) {};;
+    public EncuestadorController() {
+        this.service = new GenericServiceImpl<Encuestador, Integer>(new GenericDAOImpl<Encuestador, Integer>() {
+        }) {};
     }
 
 
-    //  GET /usuarios -> Listar todos los usuarios
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response get() {
         return Response.ok(service.listarTodos()).build();
     }
 
-    // GET /usuarios/{id} -> Obtener un usuario por ID
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response get(@PathParam("id") int id) {
-        Barrio objeto = service.buscarPorId(id);
+        Encuestador objeto = service.buscarPorId(id);
         if (objeto != null) {
             return Response.ok(objeto).build();
         } else {
@@ -42,33 +39,30 @@ public class BarrioController {
         }
     }
 
-    // POST /usuarios -> Crear un nuevo usuario
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response post(Barrio barrio) {
-        service.crear(barrio);
-        return Response.status(Response.Status.CREATED).entity(barrio).build();
+    public Response post(Encuestador Encuestador) {
+        service.crear(Encuestador);
+        return Response.status(Response.Status.CREATED).entity(Encuestador).build();
     }
 
-    // PUT /usuarios/{id} -> Actualizar un usuario
     @PUT
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response put(@PathParam("id") int id, Barrio barrio) {
+    public Response put(@PathParam("id") int id, Encuestador Encuestador) {
         if ( service.buscarPorId(id) != null) {
-            service.actualizar(barrio);
+            service.actualizar(Encuestador);
             return Response.ok().build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
 
-    // DELETE /usuarios/{id} -> Eliminar un usuario
     @DELETE
     @Path("{id}")
     public Response delete(@PathParam("id") int id) {
-        Barrio objeto = service.buscarPorId(id);
+        Encuestador objeto = service.buscarPorId(id);
         if (objeto != null) {
             service.eliminar(id);
             return Response.noContent().build();

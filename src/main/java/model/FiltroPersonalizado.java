@@ -1,5 +1,6 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -25,8 +26,9 @@ public class FiltroPersonalizado {
     private String criterios;
 
     @ManyToOne
+    @JsonBackReference //Explicacion en model.Usuario
     @JoinColumn(name = "usuario_id")
-    private Usuario propietario;
+    private Usuario usuario;
 
 }
 

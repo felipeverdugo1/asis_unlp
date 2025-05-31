@@ -1,11 +1,14 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +18,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "campanas")
+@Table(name = "campanias")
 public class Campaña {
 
     @Id
@@ -31,13 +34,16 @@ public class Campaña {
     @Column(name = "fecha_fin", nullable = false)
     private LocalDate fechaFin;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "barrio_id", nullable = false)
     private Barrio barrio;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "campaña", cascade = CascadeType.ALL)
     private List<Jornada> jornadas;
 
+    @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "campaña_id") // Esta es la columna que se creará en la tabla reporte
     private List<Reporte> reportes = new ArrayList<>();

@@ -1,5 +1,6 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -27,6 +28,7 @@ public class OrganizacionSocial {
     @Column(name = "actividad_principal", nullable = false)
     private String actividadPrincipal;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "barrio_id")
     private Barrio barrio;

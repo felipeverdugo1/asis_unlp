@@ -1,6 +1,7 @@
 package model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -25,6 +26,7 @@ public class Zona {
     @Column( nullable = false)
     private String geolocalizacion;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "barrio_id", nullable = false)
     private Barrio barrio;

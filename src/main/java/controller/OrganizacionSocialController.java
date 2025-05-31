@@ -1,23 +1,22 @@
 package controller;
 
-import dao.GenericDAO;
 import dao.GenericDAOImpl;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import model.Barrio;
-import model.Usuario;
+import model.OrganizacionSocial;
+import model.OrganizacionSocial;
 import service.GenericService;
 import service.GenericServiceImpl;
 
 
-@Path("/barrio")
-public class BarrioController {
-    protected final GenericService<Barrio, Integer> service;
+@Path("/organizacionSocial")
+public class OrganizacionSocialController {
+    protected final GenericService<OrganizacionSocial, Integer> service;
 
 
-    public BarrioController() {
-        this.service = new GenericServiceImpl<Barrio, Integer>(new GenericDAOImpl<Barrio, Integer>() {
+    public OrganizacionSocialController() {
+        this.service = new GenericServiceImpl<OrganizacionSocial, Integer>(new GenericDAOImpl<OrganizacionSocial, Integer>() {
         }) {};;
     }
 
@@ -34,7 +33,7 @@ public class BarrioController {
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response get(@PathParam("id") int id) {
-        Barrio objeto = service.buscarPorId(id);
+        OrganizacionSocial objeto = service.buscarPorId(id);
         if (objeto != null) {
             return Response.ok(objeto).build();
         } else {
@@ -46,18 +45,18 @@ public class BarrioController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response post(Barrio barrio) {
-        service.crear(barrio);
-        return Response.status(Response.Status.CREATED).entity(barrio).build();
+    public Response post(OrganizacionSocial OrganizacionSocial) {
+        service.crear(OrganizacionSocial);
+        return Response.status(Response.Status.CREATED).entity(OrganizacionSocial).build();
     }
 
     // PUT /usuarios/{id} -> Actualizar un usuario
     @PUT
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response put(@PathParam("id") int id, Barrio barrio) {
+    public Response put(@PathParam("id") int id, OrganizacionSocial OrganizacionSocial) {
         if ( service.buscarPorId(id) != null) {
-            service.actualizar(barrio);
+            service.actualizar(OrganizacionSocial);
             return Response.ok().build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -68,7 +67,7 @@ public class BarrioController {
     @DELETE
     @Path("{id}")
     public Response delete(@PathParam("id") int id) {
-        Barrio objeto = service.buscarPorId(id);
+        OrganizacionSocial objeto = service.buscarPorId(id);
         if (objeto != null) {
             service.eliminar(id);
             return Response.noContent().build();

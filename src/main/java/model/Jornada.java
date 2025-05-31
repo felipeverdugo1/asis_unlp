@@ -2,6 +2,8 @@ package model;
 
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -29,10 +31,12 @@ public class Jornada {
     @Column(name = "fecha_fin", nullable = false)
     private LocalDate fechaFin;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "campana_id", nullable = false)
     private Campaña campaña;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "jornada", cascade = CascadeType.ALL)
     private List<Encuesta> encuestas;
 
@@ -41,4 +45,5 @@ public class Jornada {
         this.encuestas.add(encuesta);
         encuesta.setJornada(this);
     }
+
 }

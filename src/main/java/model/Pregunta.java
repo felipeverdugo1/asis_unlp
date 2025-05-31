@@ -1,5 +1,6 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -12,6 +13,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Table(name = "preguntas")
 public class Pregunta {
 
     @Id
@@ -27,7 +29,7 @@ public class Pregunta {
     @Column(nullable = false)
     private String respuesta;
 
-
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "encuesta_id", nullable = false)
     private Encuesta encuesta;
