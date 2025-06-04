@@ -11,6 +11,7 @@
 
   <properties>
     <maven.compiler.release>23</maven.compiler.release>
+    <lombok.version>1.18.30</lombok.version>
   </properties>
 
 
@@ -98,14 +99,6 @@
       </exclusions>
     </dependency>
 
-
-    <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <version>1.18.38</version>
-    </dependency>
-
     <!-- Si estás usando JSON -->
     <dependency>
       <groupId>org.glassfish.jersey.media</groupId>
@@ -120,10 +113,11 @@
       <version>2.15.3</version> <!-- Última versión estable -->
     </dependency>
 
+    <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.30</version>
+      <version>${lombok.version}</version>
       <scope>provided</scope>
     </dependency>
 
@@ -150,6 +144,13 @@
         <version>3.13.0</version>
         <configuration>
           <release>23</release>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${lombok.version}</version>
+            </path>
+          </annotationProcessorPaths>
         </configuration>
       </plugin>
 
