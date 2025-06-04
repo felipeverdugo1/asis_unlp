@@ -41,4 +41,9 @@ public abstract class GenericServiceImpl<T, ID> implements GenericService<T, ID>
     public List<T> listarTodos() {
         return genericDAO.listarTodos();
     }
+
+    @Override
+    public T buscarPorCampo(String campo, Object valor) {
+        return genericDAO.buscarPorCampo(campo, valor);
+    }
 }

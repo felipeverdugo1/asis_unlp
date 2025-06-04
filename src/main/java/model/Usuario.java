@@ -14,14 +14,14 @@ import java.util.List;
 
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.NONE)
 @Entity
 @Table(name = "usuarios")
 public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "nombre_usuario", nullable = false)
     private String nombreUsuario;

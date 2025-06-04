@@ -8,7 +8,7 @@ public interface GenericService<T, ID> {
     T actualizar(T entidad);
     void eliminar(ID id);
     List<T> listarTodos();
-
+    T buscarPorCampo(String campo, Object valor);
 
 }
 

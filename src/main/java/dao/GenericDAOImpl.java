@@ -82,5 +82,11 @@ public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
     }
 
 
-
+    @Override
+    public T buscarPorCampo(String campo, Object valor) {
+        String jpql = "SELECT e FROM " + tipoEntidad.getSimpleName() + " e WHERE e." + campo + " = :valor";
+        return em.createQuery(jpql, tipoEntidad)
+                .setParameter("valor", valor)
+                .getSingleResult();
+    }
 }
