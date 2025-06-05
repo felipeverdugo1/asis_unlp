@@ -70,7 +70,3 @@ Se puede hacer con un simple `mvn test` en la raiz del repositorio, teniendo el 
 
 
 
-
-
-
-

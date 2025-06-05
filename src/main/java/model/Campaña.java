@@ -3,10 +3,8 @@ package model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.Accessors;
 
 import java.util.Date;
 import java.time.LocalDate;
@@ -14,9 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
+@Accessors(chain = true)
 @Entity
 @Table(name = "campanias")
 public class Campaña {

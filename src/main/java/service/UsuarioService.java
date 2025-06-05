@@ -3,7 +3,7 @@ package service;
 import dao.UsuarioDAO;
 import model.Usuario;
 
-public class UsuarioService extends GenericServiceImpl<Usuario, Integer> {
+public class UsuarioService extends GenericServiceImpl<Usuario, Long> {
     public UsuarioService() {
         super(new UsuarioDAO());
     }

@@ -10,7 +10,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.NONE)
 @Entity
 @Table(name = "filtros_personalizados")
 public class FiltroPersonalizado {
