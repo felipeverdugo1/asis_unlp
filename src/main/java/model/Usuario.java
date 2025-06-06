@@ -49,7 +49,8 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<FiltroPersonalizado> filtrosPersonalizados;
 
-
-
+    public void agregarRol(Rol rol) {
+        this.roles.add(rol);
+    }
 
 }

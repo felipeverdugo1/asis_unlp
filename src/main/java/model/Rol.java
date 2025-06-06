@@ -18,4 +18,8 @@ public class Rol {
 
     @Column(nullable = false, unique = true)
     private String nombre; // Ej: "ADMINISTRADOR", "VISITANTE"
+
+    public Rol(String tipoRol) {
+        this.nombre = tipoRol;
+    }
 }

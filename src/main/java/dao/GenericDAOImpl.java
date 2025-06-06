@@ -3,6 +3,7 @@ package dao;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.transaction.Transactional;
 import util.HibernateUtil;
 
 
@@ -88,5 +89,10 @@ public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
         return em.createQuery(jpql, tipoEntidad)
                 .setParameter("valor", valor)
                 .getSingleResult();
+    }
+
+    @Transactional
+    public void flush() {
+        em.flush();
     }
 }

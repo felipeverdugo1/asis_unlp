@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -28,7 +29,7 @@ public class Barrio {
 
     @JsonManagedReference
     @OneToMany(mappedBy = "barrio", cascade = CascadeType.ALL)
-    private List<Zona> zonas;
+    private List<Zona> zonas = new ArrayList<>();
 
     public void agregarZonas(Zona zona) {
         this.zonas.add(zona);

@@ -9,6 +9,7 @@ public interface GenericDAO<T, ID> {
     void actualizar(T entidad);
     void eliminar(ID id);
     List<T> listarTodos();
+    void flush();
 
     T buscarPorCampo(String campo, Object valor);
 }
