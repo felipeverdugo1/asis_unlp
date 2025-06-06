@@ -39,7 +39,7 @@ public class Campaña {
 
     @JsonManagedReference
     @OneToMany(mappedBy = "campaña", cascade = CascadeType.ALL)
-    private List<Jornada> jornadas;
+    private List<Jornada> jornadas = new ArrayList<>();
 
     @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)

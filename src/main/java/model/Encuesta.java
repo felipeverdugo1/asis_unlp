@@ -8,6 +8,7 @@ import lombok.experimental.Accessors;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -25,9 +26,12 @@ public class Encuesta {
     @Column( nullable = false)
     private LocalDate fecha;
 
+    @Column( nullable = false)
+    private String nombreUnico;
+
     @JsonManagedReference
     @OneToMany(mappedBy = "encuesta", cascade = CascadeType.ALL)
-    private List<Pregunta> preguntas;
+    private List<Pregunta> preguntas = new ArrayList<>();
 
     @JsonBackReference
     @ManyToOne

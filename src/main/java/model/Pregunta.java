@@ -8,7 +8,7 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-@NoArgsConstructor(access = AccessLevel.NONE)
+@NoArgsConstructor
 @Entity
 @Table(name = "preguntas")
 public class Pregunta {
@@ -32,8 +32,4 @@ public class Pregunta {
     private Encuesta encuesta;
 
 
-
-
-
-
-    }
+}

@@ -13,7 +13,7 @@ import java.util.Set;
 
 @Data
 @Accessors(chain = true)
-@NoArgsConstructor(access = AccessLevel.NONE)
+@NoArgsConstructor
 @Entity
 @Table(name = "usuarios")
 public class Usuario {
@@ -34,6 +34,9 @@ public class Usuario {
     @Column(nullable = false)
     private boolean habilitado;
 
+    @Column(nullable = true)
+    private String especialidad;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "usuario_roles",
@@ -47,10 +50,19 @@ public class Usuario {
     //Por lo tanto Usamos @JsonManagedReference (para relaciones bidireccionales):
     @JsonManagedReference
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
-    private List<FiltroPersonalizado> filtrosPersonalizados;
+    private List<FiltroPersonalizado> filtrosGuardados = new ArrayList<>();
 
     public void agregarRol(Rol rol) {
         this.roles.add(rol);
+    }
+
+    public void quitarRol(Rol rol) {
+        this.roles.remove(rol);
+    }
+
+    public void agregarFiltroPersonalizado(FiltroPersonalizado filtroPersonalizado) {
+        this.filtrosGuardados.add(filtroPersonalizado);
+        filtroPersonalizado.setPropietario(this);
     }
 
 }

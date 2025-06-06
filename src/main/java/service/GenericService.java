@@ -9,6 +9,7 @@ public interface GenericService<T, ID> {
     void eliminar(ID id);
     List<T> listarTodos();
     T buscarPorCampo(String campo, Object valor);
+    List<T> buscarTodosPorCampoLike(String campo, Object patron);
     void flush();
 }
 

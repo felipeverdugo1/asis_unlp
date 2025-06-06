@@ -25,7 +25,7 @@ public class Reporte {
     private LocalDate fechaCreacion;
 
     @Column( nullable = false)
-    private String nombre;
+    private String nombreUnico;
 
     @Column( nullable = false)
     private String descripcion;

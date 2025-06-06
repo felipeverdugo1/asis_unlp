@@ -8,7 +8,7 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-@NoArgsConstructor(access = AccessLevel.NONE)
+@NoArgsConstructor
 @Entity
 @Table(name = "filtros_personalizados")
 public class FiltroPersonalizado {
@@ -20,13 +20,14 @@ public class FiltroPersonalizado {
     @Column(nullable = false)
     private String nombre;
 
+    // string con formato con el setup del filtro
     @Column(columnDefinition = "TEXT")
     private String criterios;
 
     @ManyToOne
     @JsonBackReference //Explicacion en model.Usuario
     @JoinColumn(name = "usuario_id")
-    private Usuario usuario;
+    private Usuario propietario;
 
 }
 

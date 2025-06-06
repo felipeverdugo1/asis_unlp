@@ -10,7 +10,7 @@ import java.util.List;
 
 @Data
 @Accessors(chain = true)
-@NoArgsConstructor(access = AccessLevel.NONE)
+@NoArgsConstructor
 @Entity
 @Table(name = "barrios")
 public class Barrio {
@@ -31,8 +31,9 @@ public class Barrio {
     @OneToMany(mappedBy = "barrio", cascade = CascadeType.ALL)
     private List<Zona> zonas = new ArrayList<>();
 
-    public void agregarZonas(Zona zona) {
+    public void agregarZona(Zona zona) {
         this.zonas.add(zona);
         zona.setBarrio(this);
     }
+
 }

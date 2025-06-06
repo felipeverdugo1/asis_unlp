@@ -12,4 +12,5 @@ public interface GenericDAO<T, ID> {
     void flush();
 
     T buscarPorCampo(String campo, Object valor);
+    List<T> buscarTodosPorCampoLike(String campo, Object patron);
 }

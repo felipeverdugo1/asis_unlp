@@ -9,6 +9,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -36,12 +37,25 @@ public class Jornada {
 
     @JsonManagedReference
     @OneToMany(mappedBy = "jornada", cascade = CascadeType.ALL)
-    private List<Encuesta> encuestas;
+    private List<Encuesta> encuestas = new ArrayList<>();
+
+    @JsonManagedReference
+    @ManyToMany
+    @JoinTable(name="jornada_zona", joinColumns = @JoinColumn(name="jornada_id"), inverseJoinColumns = @JoinColumn(name="zona_id"))
+    private List<Zona> zonas = new ArrayList<>();
 
 
     public void agregarEncuesta(Encuesta encuesta) {
         this.encuestas.add(encuesta);
         encuesta.setJornada(this);
+    }
+
+    public void agregarZona(Zona zona) {
+        this.zonas.add(zona);
+    }
+
+    public void quitarZona(Zona zona) {
+        this.zonas.remove(zona);
     }
 
 }

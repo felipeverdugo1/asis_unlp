@@ -49,6 +49,11 @@ public abstract class GenericServiceImpl<T, ID> implements GenericService<T, ID>
     }
 
     @Override
+    public List<T> buscarTodosPorCampoLike(String campo, Object patron) {
+        return genericDAO.buscarTodosPorCampoLike(campo, patron);
+    }
+
+    @Override
     public void flush(){
         genericDAO.flush();
     }

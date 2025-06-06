@@ -31,5 +31,10 @@ public class OrganizacionSocial {
     @JoinColumn(name = "barrio_id")
     private Barrio barrio;
 
+    @ManyToOne
+    @JsonBackReference //Explicacion en model.Usuario
+    @JoinColumn(name = "usuario_id")
+    private Usuario referente;
+
 
 }

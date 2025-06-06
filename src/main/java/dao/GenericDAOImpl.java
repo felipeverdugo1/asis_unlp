@@ -3,8 +3,11 @@ package dao;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.PersistenceException;
 import jakarta.transaction.Transactional;
 import util.HibernateUtil;
+
+import java.util.Properties;
 
 
 import java.lang.reflect.ParameterizedType;
@@ -89,6 +92,14 @@ public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
         return em.createQuery(jpql, tipoEntidad)
                 .setParameter("valor", valor)
                 .getSingleResult();
+    }
+
+    @Override
+    public List<T> buscarTodosPorCampoLike(String campo, Object patron) {
+        String jpql = "SELECT e FROM " + tipoEntidad.getSimpleName() + " e WHERE e." + campo + "LIKE :pattern";
+        return em.createQuery(jpql, tipoEntidad)
+                .setParameter("pattern", patron)
+                .getResultList();
     }
 
     @Transactional
