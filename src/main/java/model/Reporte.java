@@ -3,17 +3,15 @@ package model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.Accessors;
 
 import java.sql.Date;
 import java.time.LocalDate;
 
 
-@Getter
-@Setter
+@Data
+@Accessors(chain = true)
 @NoArgsConstructor(access = AccessLevel.NONE)
 @Entity
 @Table(name = "reportes")

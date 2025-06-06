@@ -2,15 +2,13 @@ package model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 
-@Getter
-@Setter
+@Data
+@Accessors(chain = true)
 @NoArgsConstructor(access = AccessLevel.NONE)
 @Entity
 @Table(name = "barrios")
@@ -32,4 +30,8 @@ public class Barrio {
     @OneToMany(mappedBy = "barrio", cascade = CascadeType.ALL)
     private List<Zona> zonas;
 
+    public void agregarZonas(Zona zona) {
+        this.zonas.add(zona);
+        zona.setBarrio(this);
+    }
 }

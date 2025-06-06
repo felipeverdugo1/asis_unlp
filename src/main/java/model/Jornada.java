@@ -5,17 +5,15 @@ package model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.Accessors;
 
 import java.time.LocalDate;
 import java.util.List;
 
 
-@Getter
-@Setter
+@Data
+@Accessors(chain = true)
 @NoArgsConstructor
 @Entity
 @Table(name = "jornadas")

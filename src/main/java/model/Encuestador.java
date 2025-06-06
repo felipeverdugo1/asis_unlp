@@ -1,14 +1,12 @@
 package model;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.Accessors;
 
 
-@Getter
-@Setter
+@Data
+@Accessors(chain = true)
 @NoArgsConstructor(access = AccessLevel.NONE)
 @Entity
 @Table(name = "encuestadores")

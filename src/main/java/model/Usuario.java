@@ -2,18 +2,17 @@ package model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
-
-@Getter
-@Setter
+@Data
+@Accessors(chain = true)
 @NoArgsConstructor(access = AccessLevel.NONE)
 @Entity
 @Table(name = "usuarios")
@@ -35,12 +34,13 @@ public class Usuario {
     @Column(nullable = false)
     private boolean habilitado;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Rol rol;
-
-
-
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "usuario_roles",
+            joinColumns = @JoinColumn(name = "usuario_id"),
+            inverseJoinColumns = @JoinColumn(name = "rol_id")
+    )
+    private Set<Rol> roles = new HashSet<>();
 
     //Hibernate carga las relaciones Lazy (pero Jackson las serializa al JSON).
     //Al serializar Usuario → incluye filtrosPersonalizados → cada FiltroPersonalizado referencia de nuevo a Usuario → bucle infinito.
