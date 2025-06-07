@@ -1,6 +1,5 @@
 package model;
 
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,10 +8,10 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-@NoArgsConstructor(access = AccessLevel.NONE)
+@NoArgsConstructor
 @Entity
-@Table(name = "zonas")
-public class Zona {
+@Table(name = "filtros_personalizados")
+public class FiltroPersonalizado {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,12 +20,15 @@ public class Zona {
     @Column(nullable = false)
     private String nombre;
 
-    @Column( nullable = false)
-    private String geolocalizacion;
+    // string con formato con el setup del filtro
+    @Column(columnDefinition = "TEXT")
+    private String criterios;
 
-    @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "barrio_id", nullable = false)
-    private Barrio barrio;
+    @JsonBackReference //Explicacion en model.Usuario
+    @JoinColumn(name = "usuario_id")
+    private Usuario propietario;
 
 }
+
+

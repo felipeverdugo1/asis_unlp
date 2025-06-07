@@ -1,5 +1,7 @@
 package dao;
 
+import jakarta.persistence.EntityManager;
+
 import java.util.List;
 
 public interface GenericDAO<T, ID> {
@@ -9,4 +11,8 @@ public interface GenericDAO<T, ID> {
     void actualizar(T entidad);
     void eliminar(ID id);
     List<T> listarTodos();
+    void flush();
+
+    T buscarPorCampo(String campo, Object valor);
+    List<T> buscarTodosPorCampoLike(String campo, Object patron);
 }

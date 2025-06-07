@@ -11,12 +11,47 @@
 
   <properties>
     <maven.compiler.release>23</maven.compiler.release>
+    <lombok.version>1.18.30</lombok.version>
   </properties>
 
 
 
 
   <dependencies>
+
+    <!-- Jersey -->
+      <dependency>
+        <groupId>org.glassfish.jersey.containers</groupId>
+        <artifactId>jersey-container-servlet</artifactId>
+        <version>3.1.4</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.glassfish.jersey.inject</groupId>
+        <artifactId>jersey-hk2</artifactId>
+        <version>3.1.4</version>
+      </dependency>
+
+      <!-- Jakarta EE API -->
+      <dependency>
+        <groupId>jakarta.ws.rs</groupId>
+        <artifactId>jakarta.ws.rs-api</artifactId>
+        <version>3.1.0</version>
+      </dependency>
+
+      <!-- Jackson para JSON -->
+      <dependency>
+        <groupId>com.fasterxml.jackson.jakarta.rs</groupId>
+        <artifactId>jackson-jakarta-rs-json-provider</artifactId>
+        <version>2.17.0</version>
+      </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.17.0</version>
+    </dependency>
+
+
 
 
     <!--  https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api  -->
@@ -64,11 +99,41 @@
       </exclusions>
     </dependency>
 
+    <!-- Si estás usando JSON -->
+    <dependency>
+      <groupId>org.glassfish.jersey.media</groupId>
+      <artifactId>jersey-media-json-jackson</artifactId>
+      <version>3.1.3</version>
+    </dependency>
 
+    <!--Es para que funcione LocalDateTime  -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
+      <version>2.15.3</version> <!-- Última versión estable -->
+    </dependency>
 
+    <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>${lombok.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Tests -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.10.0</version>
+      <scope>test</scope>
+    </dependency>
 
 
   </dependencies>
+
+
+
 
   <build>
     <plugins>
@@ -79,6 +144,13 @@
         <version>3.13.0</version>
         <configuration>
           <release>23</release>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${lombok.version}</version>
+            </path>
+          </annotationProcessorPaths>
         </configuration>
       </plugin>
 
@@ -87,6 +159,13 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
         <version>3.2.3</version>
+      </plugin>
+
+      <!-- Tests -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.2.5</version>
       </plugin>
     </plugins>
   </build>

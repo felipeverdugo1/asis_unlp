@@ -1,9 +1,12 @@
 package dao;
 
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
-import until.HibernateUtil;
+import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
+import util.HibernateUtil;
+
+import java.util.Properties;
+
 
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
@@ -16,7 +19,7 @@ public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
     @SuppressWarnings("unchecked")
     public GenericDAOImpl() {
         this.tipoEntidad = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-        this.em = HibernateUtil.getEntityManagerFactory().createEntityManager();
+        this.em = HibernateUtil.getEntityManager();
     }
 
     @Override
@@ -31,15 +34,19 @@ public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
                 tx.rollback();
             }
             throw e;
+        } finally {
         }
-        em.close();
     }
 
     @Override
     public T buscarPorId(ID id) {
-        T t = em.find(tipoEntidad, id);
-        em.close();
-        return t;
+        try {
+            T t = em.find(tipoEntidad, id);
+            return t;
+        } catch (Exception e) {
+            throw e;
+        } finally {
+        }
     }
 
     @Override
@@ -54,8 +61,8 @@ public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
                 tx.rollback();
             }
             throw e;
+        } finally {
         }
-        em.close();
     }
 
     @Override
@@ -73,18 +80,51 @@ public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
                 tx.rollback();
             }
             throw e;
+        } finally {
         }
-        em.close();
     }
 
     @Override
     public List<T> listarTodos() {
-        String jpql = "SELECT e FROM " + tipoEntidad.getSimpleName() + " e";
-        List<T> tList = em.createQuery(jpql, tipoEntidad).getResultList();
-        em.close();
-        return tList;
+        try {
+            String jpql = "SELECT e FROM " + tipoEntidad.getSimpleName() + " e";
+            List<T> tList = em.createQuery(jpql, tipoEntidad).getResultList();
+            return tList;
+        } catch (Exception e) {
+            throw e;
+        } finally {
+        }
     }
 
 
+    @Override
+    public T buscarPorCampo(String campo, Object valor) {
+        try {
+            String jpql = "SELECT e FROM " + tipoEntidad.getSimpleName() + " e WHERE e." + campo + " = :valor";
+            return em.createQuery(jpql, tipoEntidad)
+                    .setParameter("valor", valor)
+                    .getSingleResult();
+        } catch (Exception e) {
+            throw e;
+        } finally {
+        }
+    }
 
+    @Override
+    public List<T> buscarTodosPorCampoLike(String campo, Object patron) {
+        try {
+            String jpql = "SELECT e FROM " + tipoEntidad.getSimpleName() + " e WHERE e." + campo + " LIKE :pattern";
+            return em.createQuery(jpql, tipoEntidad)
+                    .setParameter("pattern", patron)
+                    .getResultList();
+        } catch (Exception e) {
+            throw e;
+        } finally {
+        }
+    }
+
+    @Transactional
+    public void flush() {
+        em.flush();
+    }
 }

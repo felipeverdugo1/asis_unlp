@@ -1,6 +1,5 @@
 package model;
 
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,24 +8,28 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-@NoArgsConstructor(access = AccessLevel.NONE)
+@NoArgsConstructor
 @Entity
-@Table(name = "zonas")
-public class Zona {
+@Table(name = "preguntas")
+public class Pregunta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String nombre;
+    private String tipo;
 
-    @Column( nullable = false)
-    private String geolocalizacion;
+    @Column(nullable = false)
+    private String pregunta;
+
+    @Column(nullable = false)
+    private String respuesta;
 
     @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "barrio_id", nullable = false)
-    private Barrio barrio;
+    @JoinColumn(name = "encuesta_id", nullable = false)
+    private Encuesta encuesta;
+
 
 }
