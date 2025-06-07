@@ -10,7 +10,7 @@ import java.sql.Statement;
 
 public class HibernateUtil {
     private static final EntityManagerFactory emf;
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/asis_unlp?useSSL=false";
     private static final String DB_NAME = "asis_unlp";
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "admin";
@@ -19,7 +19,7 @@ public class HibernateUtil {
         try {
             // Try to create the database if it doesn't exist
             try {
-                createDatabaseIfNotExists();
+                //createDatabaseIfNotExists();
                 System.out.println("Database '" + DB_NAME + "' is ready for application.");
             } catch (Exception e) {
                 System.err.println("WARNING: Could not create or verify the database. " +
@@ -27,11 +27,7 @@ public class HibernateUtil {
                 System.err.println("Error details: " + e.getMessage());
             }
 
-            // Create properties to ensure the database schema is updated
-            java.util.Map<String, String> properties = new java.util.HashMap<>();
-            properties.put("hibernate.hbm2ddl.auto", "update");
-
-            emf = Persistence.createEntityManagerFactory("asis_unlp", properties);
+            emf = Persistence.createEntityManagerFactory("asis_unlp");
         } catch (Exception ex) {
             System.err.println("Error al crear EntityManagerFactory: " + ex);
             throw new ExceptionInInitializerError(ex);

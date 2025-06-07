@@ -22,19 +22,24 @@ public class EntityCRUDTestsCleanup extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         // Borra todos los ids que se guardaron en el HASH
-        for (Map.Entry<Class<?>, List<Long>> entry : TestDataRegistry.obtenerTodo().entrySet()) {
-            Class<?> tipo = entry.getKey();
-            for (Long id : entry.getValue()) {
-                if (tipo.equals(Barrio.class)) barrioService.eliminar(id);
-                else if (tipo.equals(Zona.class)) zonaService.eliminar(id);
-                // agregar más clases si las usás
+        Map<Class<?>, List<Long>> registros = TestDataRegistry.obtenerTodo();
+        if (registros != null) {
+            for (Map.Entry<Class<?>, List<Long>> entry : registros.entrySet()) {
+                Class<?> tipo = entry.getKey();
+                for (Long id : entry.getValue()) {
+                    if (tipo.equals(Barrio.class)) barrioService.eliminar(id);
+                    else if (tipo.equals(Zona.class)) zonaService.eliminar(id);
+                    // agregar más clases si las usás
+                }
             }
         }
 
         TestDataRegistry.limpiar();
 
         List<Barrio> barrios = barrioService.buscarTodosPorCampoLike("nombre", "TEST_%");
-        for (Barrio b : barrios) barrioService.eliminar(b.getId());
+        if ( barrios != null ){
+            for (Barrio b : barrios) barrioService.eliminar(b.getId());
+        }
 
         resp.getWriter().write("Cleanup completo");
     }

@@ -13,11 +13,12 @@ import java.time.LocalDateTime;
 
 public class DataInitializer {
     public static void main(String[] args) {
-        /*
+
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("asis_unlp");
         EntityManager em = emf.createEntityManager();
+        em.close();
 
-        try {
+        /*try {
             em.getTransaction().begin();
 
             // 1. Crear Barrios

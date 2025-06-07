@@ -1,5 +1,7 @@
 package dao;
 
+import jakarta.persistence.EntityManager;
+
 import java.util.List;
 
 public interface GenericDAO<T, ID> {

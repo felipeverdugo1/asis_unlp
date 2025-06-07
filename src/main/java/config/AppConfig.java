@@ -2,7 +2,6 @@ package config;
 
 import com.fasterxml.jackson.jakarta.rs.json.JacksonJsonProvider;
 import filter.EntityManagerFilter;
-import jakarta.ws.rs.ApplicationPath;
 import org.glassfish.jersey.server.ResourceConfig;
 
 

@@ -1,7 +1,22 @@
 # ASIS UNLP
+
+## Reentrega 2
+- En la carpeta reentrega_entrega_2/
+
+## Entrega 3
+- Se genero un servlet en src/main/java/tests_servlet/
+### Ejecucion del Test
+1. Levantar el motor MySQL en su local con puerto 3306.
+2. Levantar el proyecto con IntelliJ Tomcat 11.0.7 (Mas abajo esta el paso a paso de la configuracion).
+3. Una vez que se levanto la aplicacion se puede hacer un GET a:
+   - `https://localhost:8080/tests/DAO`
+   - Esto imprime en consola lo que se logro, y luego se puede revisar el motor para ver las tablas y los registros creados.
+4. Antes de volver a ejecutar el test hay que limpiar la base mediante otro endpoint:
+   - `https://localhost:8080/tests/DAO/cleanup`
+   - Esto borra todos los registros creados para el test para evitar conflictos.
+
 ### Aspectos a tener en cuenta
-- Las bases de datos `asis_unlp` y `asis_unlp_test` se crean automáticamente al ejecutar la aplicación o los tests.
-- Cuando se levanta la app y accedé a `http://localhost:8080/`, se crea el schema de la base de datos `asis_unlp` (las tablas sin datos).
+- Hay que crear una base de datos llamada `asis_unlp` en el motor MySQL, y las tablas se crearan solas al iniciar el Tomcat.
 - Para usar la API:  `http://localhost:8080/rest/(entidad)/(params)`
   - Ejemplo: `http://localhost:8080/rest/usuario/1`
 
@@ -23,13 +38,6 @@
    - Context path: `/`
 5. Configurá y dejá corriendo un motor MySQL en tu local al puerto 3306.
 6. Ejecutá y accedé a `http://localhost:8080/`
-
-### Ejecución de Tests
-
-Para ejecutar los tests:
-- Simplemente ejecute los tests desde IntelliJ (Run > Run 'EntityCRUDTests')
-- Las tablas se crearán automáticamente en la base de datos `asis_unlp_test` y se mantendrán después de la ejecución
-- Puede ver las tablas en su cliente MySQL después de ejecutar los tests
 
 
 ## Mediante uso de consola sin ayudines (Linux)
@@ -61,8 +69,6 @@ Parados en la carpeta raiz del repositorio (sera para nosotros `./`, los path pu
        - `./path/al/tomcat/apache-tomcat-11.0.7/bin/shutdown.sh`
 4. Acceder a la url: https://localhost:8080/app-web/
 
-### Correr los tests
-Se puede hacer con un simple `mvn test` en la raiz del repositorio, teniendo el docker-compose de mysql levantado.
 
 
 

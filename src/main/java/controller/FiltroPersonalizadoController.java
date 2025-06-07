@@ -1,22 +1,19 @@
 package controller;
 
-import dao.GenericDAOImpl;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import model.FiltroPersonalizado;
-import service.GenericService;
-import service.GenericServiceImpl;
+import service.FiltroPersonalizadoService;
 
 
 @Path("/filtro")
 public class FiltroPersonalizadoController {
-    protected final GenericService<FiltroPersonalizado, Integer> service;
+    protected final FiltroPersonalizadoService service;
 
 
     public FiltroPersonalizadoController() {
-        this.service = new GenericServiceImpl<FiltroPersonalizado, Integer>(new GenericDAOImpl<FiltroPersonalizado, Integer>() {
-        }) {};;
+        this.service = new FiltroPersonalizadoService();
     }
 
 
@@ -31,7 +28,7 @@ public class FiltroPersonalizadoController {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response get(@PathParam("id") int id) {
+    public Response get(@PathParam("id") Long id) {
         FiltroPersonalizado objeto = service.buscarPorId(id);
         if (objeto != null) {
             return Response.ok(objeto).build();
@@ -53,7 +50,7 @@ public class FiltroPersonalizadoController {
     @PUT
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response put(@PathParam("id") int id, FiltroPersonalizado filtroPersonalizado) {
+    public Response put(@PathParam("id") Long id, FiltroPersonalizado filtroPersonalizado) {
         if ( service.buscarPorId(id) != null) {
             service.actualizar(filtroPersonalizado);
             return Response.ok().build();
@@ -65,7 +62,7 @@ public class FiltroPersonalizadoController {
     // DELETE /usuarios/{id} -> Eliminar un usuario
     @DELETE
     @Path("{id}")
-    public Response delete(@PathParam("id") int id) {
+    public Response delete(@PathParam("id") Long id) {
         FiltroPersonalizado objeto = service.buscarPorId(id);
         if (objeto != null) {
             service.eliminar(id);
