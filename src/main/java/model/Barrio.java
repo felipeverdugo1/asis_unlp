@@ -33,8 +33,13 @@ public class Barrio {
     private List<Zona> zonas = new ArrayList<>();
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "barrio", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    private List<Campaña> campanias = new ArrayList<>();
+    @OneToMany(mappedBy = "barrio", cascade = CascadeType.ALL)
+    private List<OrganizacionSocial> organizacionesSociales = new ArrayList<>();
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "barrio", cascade = CascadeType.ALL)
+    private List<Campaña> campañas = new ArrayList<>();
+
 
     public void agregarZona(Zona zona) {
         this.zonas.add(zona);

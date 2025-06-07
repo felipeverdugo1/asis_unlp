@@ -41,7 +41,7 @@ public class Encuesta {
 
     @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "zona_id")
+    @JoinColumn(name = "zona_id", nullable = true)
     private Zona zona;
 
     @JsonBackReference

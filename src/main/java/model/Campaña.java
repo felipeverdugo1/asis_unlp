@@ -34,7 +34,7 @@ public class Campaña {
 
     @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "barrio_id", nullable = false)
+    @JoinColumn(name = "barrio_id")
     private Barrio barrio;
 
     @JsonManagedReference

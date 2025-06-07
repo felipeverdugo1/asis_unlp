@@ -2,9 +2,11 @@ package model;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
+import java.util.List;
 
 
 @Data
@@ -28,5 +30,10 @@ public class Zona {
     @ManyToOne
     @JoinColumn(name = "barrio_id", nullable = false)
     private Barrio barrio;
+
+    @JsonManagedReference
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "zona_id")
+    private List<Encuesta> encuestas;
 
 }
