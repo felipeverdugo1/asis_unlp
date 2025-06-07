@@ -3,6 +3,7 @@ package model;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
+import java.util.List;
 
 
 @Data
@@ -30,5 +31,8 @@ public class Encuestador {
 
     @Column(nullable = false)
     private String ocupacion;
+
+    @OneToMany(mappedBy = "encuestador")
+    private List<Encuesta> encuestas;
 
 }
