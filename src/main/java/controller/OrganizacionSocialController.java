@@ -1,5 +1,6 @@
 package controller;
 
+import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -9,12 +10,9 @@ import service.OrganizacionSocialService;
 
 @Path("/organizacionSocial")
 public class OrganizacionSocialController {
-    protected final OrganizacionSocialService service;
 
-
-    public OrganizacionSocialController() {
-        this.service = new OrganizacionSocialService();
-    }
+    @Inject
+    OrganizacionSocialService service;
 
 
     //  GET /usuarios -> Listar todos los usuarios

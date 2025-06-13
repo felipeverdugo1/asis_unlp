@@ -1,5 +1,7 @@
 package controller;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -9,11 +11,10 @@ import service.BarrioService;
 
 @Path("/barrio")
 public class BarrioController {
-    protected final BarrioService service;
 
-    public BarrioController() {
-        this.service = new BarrioService();
-    }
+    @Inject
+    BarrioService service;
+
 
 
     //  GET /usuarios -> Listar todos los usuarios

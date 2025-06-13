@@ -1,5 +1,6 @@
 package controller;
 
+import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -9,12 +10,9 @@ import service.FiltroPersonalizadoService;
 
 @Path("/filtro")
 public class FiltroPersonalizadoController {
-    protected final FiltroPersonalizadoService service;
 
-
-    public FiltroPersonalizadoController() {
-        this.service = new FiltroPersonalizadoService();
-    }
+    @Inject
+    FiltroPersonalizadoService service;
 
 
     //  GET /usuarios -> Listar todos los usuarios
@@ -72,5 +70,3 @@ public class FiltroPersonalizadoController {
         }
     }
 }
-
-

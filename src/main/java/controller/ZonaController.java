@@ -1,5 +1,6 @@
 package controller;
 
+import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -9,12 +10,9 @@ import service.ZonaService;
 
 @Path("/zona")
 public class ZonaController {
-    protected final ZonaService service;
 
-    public ZonaController() {
-        this.service = new ZonaService();
-    }
-
+    @Inject
+    ZonaService service;
 
     //  GET /usuarios -> Listar todos los usuarios
     @GET
