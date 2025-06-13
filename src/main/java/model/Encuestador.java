@@ -1,15 +1,14 @@
 package model;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.Accessors;
+import java.util.List;
 
 
-@Getter
-@Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Data
+@Accessors(chain = true)
+@NoArgsConstructor
 @Entity
 @Table(name = "encuestadores")
 public class Encuestador {
@@ -32,5 +31,8 @@ public class Encuestador {
 
     @Column(nullable = false)
     private String ocupacion;
+
+    @OneToMany(mappedBy = "encuestador")
+    private List<Encuesta> encuestas;
 
 }

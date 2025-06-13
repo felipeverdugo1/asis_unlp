@@ -3,10 +3,8 @@ package model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.Accessors;
 
 import java.util.Date;
 import java.time.LocalDate;
@@ -14,9 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@Getter
-@Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Data
+@NoArgsConstructor
+@Accessors(chain = true)
 @Entity
 @Table(name = "campanias")
 public class Campaña {
@@ -36,12 +34,12 @@ public class Campaña {
 
     @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "barrio_id", nullable = false)
+    @JoinColumn(name = "barrio_id")
     private Barrio barrio;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "campaña", cascade = CascadeType.ALL)
-    private List<Jornada> jornadas;
+    private List<Jornada> jornadas = new ArrayList<>();
 
     @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)

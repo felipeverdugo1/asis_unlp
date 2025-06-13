@@ -1,24 +1,18 @@
 package controller;
 
-import dao.GenericDAOImpl;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import model.Campaña;
-import service.GenericService;
-import service.GenericServiceImpl;
+import service.CampañaService;
 
 
 @Path("/campaña")
 public class CampañaController {
-    protected final GenericService<Campaña, Integer> service;
 
-
-    public CampañaController() {
-        this.service = new GenericServiceImpl<>(new GenericDAOImpl<Campaña, Integer>() {
-        }) {
-        };
-    }
+    @Inject
+    CampañaService service;
 
 
     //  GET /usuarios -> Listar todos los usuarios
@@ -32,7 +26,7 @@ public class CampañaController {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response get(@PathParam("id") int id) {
+    public Response get(@PathParam("id") Long id) {
         Campaña objeto = service.buscarPorId(id);
         if (objeto != null) {
             return Response.ok(objeto).build();
@@ -54,7 +48,7 @@ public class CampañaController {
     @PUT
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response put(@PathParam("id") int id, Campaña Campaña) {
+    public Response put(@PathParam("id") Long id, Campaña Campaña) {
         if ( service.buscarPorId(id) != null) {
             service.actualizar(Campaña);
             return Response.ok().build();
@@ -66,7 +60,7 @@ public class CampañaController {
     // DELETE /usuarios/{id} -> Eliminar un usuario
     @DELETE
     @Path("{id}")
-    public Response delete(@PathParam("id") int id) {
+    public Response delete(@PathParam("id") Long id) {
         Campaña objeto = service.buscarPorId(id);
         if (objeto != null) {
             service.eliminar(id);

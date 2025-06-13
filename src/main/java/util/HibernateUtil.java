@@ -1,32 +1,28 @@
 package util;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.inject.Disposes;
+import jakarta.enterprise.inject.Produces;
+import jakarta.persistence.*;
 
+@ApplicationScoped
 public class HibernateUtil {
-    private static final EntityManagerFactory emf;
 
-    static {
-        try {
-            emf = Persistence.createEntityManagerFactory("asis_unlp");
-        } catch (Exception ex) {
-            System.err.println("Error al crear EntityManagerFactory: " + ex);
-            throw new ExceptionInInitializerError(ex);
-        }
+    private EntityManagerFactory emf;
+
+    public HibernateUtil() {
+        this.emf = Persistence.createEntityManagerFactory("asis_unlp");
     }
 
-    // Obtiene un nuevo EntityManager
-    public static EntityManager getEntityManager() {
+    @Produces
+    public EntityManager produceEntityManager() {
         return emf.createEntityManager();
     }
 
-    // Cierra el EntityManager (si está abierto)
-    public static void closeEntityManager(EntityManager em) {
-        if (em != null && em.isOpen()) {
+    public void close(@Disposes EntityManager em) {
+        if (em.isOpen()) {
             em.close();
         }
     }
-
-
 }

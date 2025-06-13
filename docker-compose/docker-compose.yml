@@ -1,0 +1,13 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_asis_unlp
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: asis_unlp
+      MYSQL_USER: test
+      MYSQL_PASSWORD: 12345
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql

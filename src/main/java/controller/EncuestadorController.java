@@ -1,24 +1,18 @@
 package controller;
 
-import com.mysql.cj.log.Log;
-import dao.GenericDAOImpl;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import model.Encuestador;
-import service.GenericService;
-import service.GenericServiceImpl;
+import service.EncuestadorService;
 
 
 @Path("/encuestador")
 public class EncuestadorController {
-    protected final GenericService<Encuestador, Integer> service;
 
-
-    public EncuestadorController() {
-        this.service = new GenericServiceImpl<Encuestador, Integer>(new GenericDAOImpl<Encuestador, Integer>() {
-        }) {};
-    }
+    @Inject
+    EncuestadorService service;
 
 
     @GET
@@ -30,7 +24,7 @@ public class EncuestadorController {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response get(@PathParam("id") int id) {
+    public Response get(@PathParam("id") Long id) {
         Encuestador objeto = service.buscarPorId(id);
         if (objeto != null) {
             return Response.ok(objeto).build();
@@ -50,7 +44,7 @@ public class EncuestadorController {
     @PUT
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response put(@PathParam("id") int id, Encuestador Encuestador) {
+    public Response put(@PathParam("id") Long id, Encuestador Encuestador) {
         if ( service.buscarPorId(id) != null) {
             service.actualizar(Encuestador);
             return Response.ok().build();
@@ -61,7 +55,7 @@ public class EncuestadorController {
 
     @DELETE
     @Path("{id}")
-    public Response delete(@PathParam("id") int id) {
+    public Response delete(@PathParam("id") Long id) {
         Encuestador objeto = service.buscarPorId(id);
         if (objeto != null) {
             service.eliminar(id);

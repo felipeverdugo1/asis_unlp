@@ -1,23 +1,18 @@
 package controller;
 
-import dao.GenericDAOImpl;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import model.Encuesta;
-import service.GenericService;
-import service.GenericServiceImpl;
+import service.EncuestaService;
 
 
 @Path("/encuesta")
 public class EncuestaController {
-    protected final GenericService<Encuesta, Integer> service;
 
-
-    public EncuestaController() {
-        this.service = new GenericServiceImpl<Encuesta, Integer>(new GenericDAOImpl<Encuesta, Integer>() {
-        }) {};;
-    }
+    @Inject
+    EncuestaService service;
 
 
     //  GET /usuarios -> Listar todos los usuarios
@@ -31,7 +26,7 @@ public class EncuestaController {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response get(@PathParam("id") int id) {
+    public Response get(@PathParam("id") Long id) {
         Encuesta objeto = service.buscarPorId(id);
         if (objeto != null) {
             return Response.ok(objeto).build();
@@ -53,7 +48,7 @@ public class EncuestaController {
     @PUT
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response put(@PathParam("id") int id, Encuesta Encuesta) {
+    public Response put(@PathParam("id") Long id, Encuesta Encuesta) {
         if ( service.buscarPorId(id) != null) {
             service.actualizar(Encuesta);
             return Response.ok().build();
@@ -65,7 +60,7 @@ public class EncuestaController {
     // DELETE /usuarios/{id} -> Eliminar un usuario
     @DELETE
     @Path("{id}")
-    public Response delete(@PathParam("id") int id) {
+    public Response delete(@PathParam("id") Long id) {
         Encuesta objeto = service.buscarPorId(id);
         if (objeto != null) {
             service.eliminar(id);

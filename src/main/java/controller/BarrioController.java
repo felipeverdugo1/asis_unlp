@@ -1,25 +1,20 @@
 package controller;
 
-import dao.GenericDAO;
-import dao.GenericDAOImpl;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import model.Barrio;
-import model.Usuario;
-import service.GenericService;
-import service.GenericServiceImpl;
+import service.BarrioService;
 
 
 @Path("/barrio")
 public class BarrioController {
-    protected final GenericService<Barrio, Integer> service;
 
+    @Inject
+    BarrioService service;
 
-    public BarrioController() {
-        this.service = new GenericServiceImpl<Barrio, Integer>(new GenericDAOImpl<Barrio, Integer>() {
-        }) {};;
-    }
 
 
     //  GET /usuarios -> Listar todos los usuarios
@@ -33,7 +28,7 @@ public class BarrioController {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response get(@PathParam("id") int id) {
+    public Response get(@PathParam("id") Long id) {
         Barrio objeto = service.buscarPorId(id);
         if (objeto != null) {
             return Response.ok(objeto).build();
@@ -55,7 +50,7 @@ public class BarrioController {
     @PUT
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response put(@PathParam("id") int id, Barrio barrio) {
+    public Response put(@PathParam("id") Long id, Barrio barrio) {
         if ( service.buscarPorId(id) != null) {
             service.actualizar(barrio);
             return Response.ok().build();
@@ -67,7 +62,7 @@ public class BarrioController {
     // DELETE /usuarios/{id} -> Eliminar un usuario
     @DELETE
     @Path("{id}")
-    public Response delete(@PathParam("id") int id) {
+    public Response delete(@PathParam("id") Long id) {
         Barrio objeto = service.buscarPorId(id);
         if (objeto != null) {
             service.eliminar(id);

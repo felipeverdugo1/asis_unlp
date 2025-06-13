@@ -2,16 +2,16 @@ package model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.Accessors;
+import org.hibernate.annotations.Fetch;
 
+import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Data
+@Accessors(chain = true)
+@NoArgsConstructor
 @Entity
 @Table(name = "barrios")
 public class Barrio {
@@ -29,7 +29,21 @@ public class Barrio {
     private String informacion;
 
     @JsonManagedReference
+    @OneToMany(mappedBy = "barrio", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Zona> zonas = new ArrayList<>();
+
+    @JsonManagedReference
     @OneToMany(mappedBy = "barrio", cascade = CascadeType.ALL)
-    private List<Zona> zonas;
+    private List<OrganizacionSocial> organizacionesSociales = new ArrayList<>();
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "barrio", cascade = CascadeType.ALL)
+    private List<Campaña> campañas = new ArrayList<>();
+
+
+    public void agregarZona(Zona zona) {
+        this.zonas.add(zona);
+        zona.setBarrio(this);
+    }
 
 }

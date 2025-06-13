@@ -1,23 +1,21 @@
 package controller;
 
 import dao.GenericDAOImpl;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import model.Reporte;
 import service.GenericService;
 import service.GenericServiceImpl;
+import service.ReporteService;
 
 
 @Path("/reporte")
 public class ReporteController {
-    protected final GenericService<Reporte, Integer> service;
 
-
-    public ReporteController() {
-        this.service = new GenericServiceImpl<Reporte, Integer>(new GenericDAOImpl<Reporte, Integer>() {
-        }) {};;
-    }
+    @Inject
+    ReporteService service;
 
 
     //  GET /usuarios -> Listar todos los usuarios
@@ -31,7 +29,7 @@ public class ReporteController {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response get(@PathParam("id") int id) {
+    public Response get(@PathParam("id") Long id) {
         Reporte objeto = service.buscarPorId(id);
         if (objeto != null) {
             return Response.ok(objeto).build();
@@ -53,7 +51,7 @@ public class ReporteController {
     @PUT
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response put(@PathParam("id") int id, Reporte Reporte) {
+    public Response put(@PathParam("id") Long id, Reporte Reporte) {
         if ( service.buscarPorId(id) != null) {
             service.actualizar(Reporte);
             return Response.ok().build();
@@ -65,7 +63,7 @@ public class ReporteController {
     // DELETE /usuarios/{id} -> Eliminar un usuario
     @DELETE
     @Path("{id}")
-    public Response delete(@PathParam("id") int id) {
+    public Response delete(@PathParam("id") Long id) {
         Reporte objeto = service.buscarPorId(id);
         if (objeto != null) {
             service.eliminar(id);

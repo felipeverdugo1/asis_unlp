@@ -1,6 +1,7 @@
 package service;
 
 import dao.GenericDAO;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 
@@ -40,5 +41,20 @@ public abstract class GenericServiceImpl<T, ID> implements GenericService<T, ID>
     @Override
     public List<T> listarTodos() {
         return genericDAO.listarTodos();
+    }
+
+    @Override
+    public T buscarPorCampo(String campo, Object valor) {
+        return genericDAO.buscarPorCampo(campo, valor);
+    }
+
+    @Override
+    public List<T> buscarTodosPorCampoLike(String campo, Object patron) {
+        return genericDAO.buscarTodosPorCampoLike(campo, patron);
+    }
+
+    @Override
+    public void flush(){
+        genericDAO.flush();
     }
 }

@@ -3,19 +3,18 @@ package model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.Accessors;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 
-@Getter
-@Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Data
+@Accessors(chain = true)
+@NoArgsConstructor
 @Entity
 @Table(name = "encuestas")
 public class Encuesta {
@@ -27,9 +26,12 @@ public class Encuesta {
     @Column( nullable = false)
     private LocalDate fecha;
 
+    @Column( nullable = false)
+    private String nombreUnico;
+
     @JsonManagedReference
     @OneToMany(mappedBy = "encuesta", cascade = CascadeType.ALL)
-    private List<Pregunta> preguntas;
+    private List<Pregunta> preguntas = new ArrayList<>();
 
     @JsonBackReference
     @ManyToOne
@@ -39,7 +41,7 @@ public class Encuesta {
 
     @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "zona_id")
+    @JoinColumn(name = "zona_id", nullable = true)
     private Zona zona;
 
     @JsonBackReference
@@ -47,6 +49,9 @@ public class Encuesta {
     @JoinColumn(name = "encuestador_id")
     private Encuestador encuestador;
 
-
+    public void agregarPregunta(Pregunta pregunta) {
+        this.preguntas.add(pregunta);
+        pregunta.setEncuesta(this);
+    }
 
 }

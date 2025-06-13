@@ -1,23 +1,18 @@
 package controller;
 
-import dao.GenericDAOImpl;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import model.Jornada;
-import service.GenericService;
-import service.GenericServiceImpl;
+import service.JornadaService;
 
 
 @Path("/jornada")
 public class JornadaController {
-    protected final GenericService<Jornada, Integer> service;
 
-
-    public JornadaController() {
-        this.service = new GenericServiceImpl<Jornada, Integer>(new GenericDAOImpl<Jornada, Integer>() {
-        }) {};;
-    }
+    @Inject
+    JornadaService service;
 
 
     //  GET /usuarios -> Listar todos los usuarios
@@ -31,7 +26,7 @@ public class JornadaController {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response get(@PathParam("id") int id) {
+    public Response get(@PathParam("id") Long id) {
         Jornada objeto = service.buscarPorId(id);
         if (objeto != null) {
             return Response.ok(objeto).build();
@@ -53,7 +48,7 @@ public class JornadaController {
     @PUT
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response put(@PathParam("id") int id, Jornada Jornada) {
+    public Response put(@PathParam("id") Long id, Jornada Jornada) {
         if ( service.buscarPorId(id) != null) {
             service.actualizar(Jornada);
             return Response.ok().build();
@@ -65,7 +60,7 @@ public class JornadaController {
     // DELETE /usuarios/{id} -> Eliminar un usuario
     @DELETE
     @Path("{id}")
-    public Response delete(@PathParam("id") int id) {
+    public Response delete(@PathParam("id") Long id) {
         Jornada objeto = service.buscarPorId(id);
         if (objeto != null) {
             service.eliminar(id);

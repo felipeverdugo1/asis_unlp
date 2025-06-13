@@ -1,25 +1,18 @@
 package controller;
 
-import dao.GenericDAOImpl;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import model.Zona;
-import service.GenericService;
-import service.GenericServiceImpl;
+import service.ZonaService;
 
 
 @Path("/zona")
 public class ZonaController {
-    protected final GenericService<Zona, Integer> service;
 
-
-
-    public ZonaController() {
-        this.service = new GenericServiceImpl<Zona, Integer>(new GenericDAOImpl<Zona, Integer>() {
-        }) {};;
-    }
-
+    @Inject
+    ZonaService service;
 
     //  GET /usuarios -> Listar todos los usuarios
     @GET
@@ -32,7 +25,7 @@ public class ZonaController {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response get(@PathParam("id") int id) {
+    public Response get(@PathParam("id") Long id) {
         Zona objeto = service.buscarPorId(id);
         if (objeto != null) {
             return Response.ok(objeto).build();
@@ -54,7 +47,7 @@ public class ZonaController {
     @PUT
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response put(@PathParam("id") int id, Zona Zona) {
+    public Response put(@PathParam("id") Long id, Zona Zona) {
         if ( service.buscarPorId(id) != null) {
             service.actualizar(Zona);
             return Response.ok().build();
@@ -66,7 +59,7 @@ public class ZonaController {
     // DELETE /usuarios/{id} -> Eliminar un usuario
     @DELETE
     @Path("{id}")
-    public Response delete(@PathParam("id") int id) {
+    public Response delete(@PathParam("id") Long id) {
         Zona objeto = service.buscarPorId(id);
         if (objeto != null) {
             service.eliminar(id);

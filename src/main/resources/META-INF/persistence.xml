@@ -19,9 +19,6 @@
         <class>model.OrganizacionSocial</class>
 
 
-
-
-
         <properties>
             <!-- Configuración de conexión -->
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
@@ -36,4 +33,5 @@
 
         </properties>
     </persistence-unit>
+
 </persistence>

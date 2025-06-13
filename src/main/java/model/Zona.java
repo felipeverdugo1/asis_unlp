@@ -2,16 +2,16 @@ package model;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.Accessors;
+import java.util.List;
 
 
-@Getter
-@Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Data
+@Accessors(chain = true)
+@NoArgsConstructor(access = AccessLevel.NONE)
 @Entity
 @Table(name = "zonas")
 public class Zona {
@@ -30,5 +30,11 @@ public class Zona {
     @ManyToOne
     @JoinColumn(name = "barrio_id", nullable = false)
     private Barrio barrio;
+
+    @JsonManagedReference
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "zona_id")
+    private List<Encuesta> encuestas;
+
 
 }
