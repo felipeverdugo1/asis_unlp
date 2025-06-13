@@ -1,11 +1,11 @@
 package service;
 
 import dao.UsuarioDAO;
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import model.Usuario;
 
-@ApplicationScoped
+@RequestScoped
 public class UsuarioService extends GenericServiceImpl<Usuario, Long> {
 
 

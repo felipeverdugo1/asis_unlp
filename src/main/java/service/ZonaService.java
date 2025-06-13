@@ -2,10 +2,12 @@ package service;
 
 import dao.ZonaDAO;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import model.Zona;
-@ApplicationScoped
 
+
+@RequestScoped
 public class ZonaService extends GenericServiceImpl<Zona, Long> {
 
     @Inject

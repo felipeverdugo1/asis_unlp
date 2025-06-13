@@ -10,7 +10,6 @@ import service.BarrioService;
 
 
 @Path("/barrio")
-@ApplicationScoped
 public class BarrioController {
 
     @Inject

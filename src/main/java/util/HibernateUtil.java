@@ -9,7 +9,6 @@ import jakarta.persistence.*;
 @ApplicationScoped
 public class HibernateUtil {
 
-
     private EntityManagerFactory emf;
 
     public HibernateUtil() {

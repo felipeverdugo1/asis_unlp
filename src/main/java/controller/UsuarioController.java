@@ -15,16 +15,13 @@ import service.UsuarioService;
 
 
 @Path("/usuario")
-@ApplicationScoped
 public class UsuarioController {
 
     @Inject
     UsuarioService usuarioService;
 
-
     public UsuarioController() {
     }
-
 
     //  GET /usuarios -> Listar todos los usuarios
     @GET

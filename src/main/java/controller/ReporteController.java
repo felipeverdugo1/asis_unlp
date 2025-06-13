@@ -1,6 +1,7 @@
 package controller;
 
 import dao.GenericDAOImpl;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -12,12 +13,9 @@ import service.ReporteService;
 
 @Path("/reporte")
 public class ReporteController {
-    protected final ReporteService service;
 
-
-    public ReporteController() {
-        this.service = new ReporteService();
-    }
+    @Inject
+    ReporteService service;
 
 
     //  GET /usuarios -> Listar todos los usuarios

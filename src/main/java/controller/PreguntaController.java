@@ -1,5 +1,6 @@
 package controller;
 
+import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -9,12 +10,9 @@ import service.PreguntaService;
 
 @Path("/pregunta")
 public class PreguntaController {
-    protected final PreguntaService service;
 
-
-    public PreguntaController() {
-        this.service = new PreguntaService();
-    }
+    @Inject
+    PreguntaService service;
 
 
     //  GET /usuarios -> Listar todos los usuarios

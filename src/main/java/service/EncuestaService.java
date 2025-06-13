@@ -2,13 +2,18 @@ package service;
 
 import dao.EncuestaDAO;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 import model.Encuesta;
-@ApplicationScoped
 
+@RequestScoped
 public class EncuestaService extends GenericServiceImpl<Encuesta, Long> {
-    public EncuestaService() {
-        super(new EncuestaDAO());
+
+    @Inject
+    public EncuestaService(EncuestaDAO encuestaDAO) {
+        super(encuestaDAO);
     }
 
+    public EncuestaService() { super(null); }
     // Métodos específicos de Usuario si los necesitás
 }
