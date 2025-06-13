@@ -1,7 +1,9 @@
 package service;
 
 import dao.OrganizacionSocialDAO;
+import jakarta.enterprise.context.ApplicationScoped;
 import model.OrganizacionSocial;
+@ApplicationScoped
 
 public class OrganizacionSocialService extends GenericServiceImpl<OrganizacionSocial, Long> {
 

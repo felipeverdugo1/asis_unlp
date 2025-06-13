@@ -2,6 +2,9 @@ package controller;
 
 import dao.GenericDAO;
 import dao.GenericDAOImpl;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -12,12 +15,14 @@ import service.UsuarioService;
 
 
 @Path("/usuario")
+@ApplicationScoped
 public class UsuarioController {
-    protected final UsuarioService usuarioService;
+
+    @Inject
+    UsuarioService usuarioService;
 
 
     public UsuarioController() {
-        this.usuarioService = new UsuarioService();
     }
 
 
@@ -76,5 +81,4 @@ public class UsuarioController {
         }
     }
 }
-
 

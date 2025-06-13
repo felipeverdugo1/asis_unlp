@@ -1,8 +1,11 @@
 package service;
 
 import dao.BarrioDAO;
+import jakarta.enterprise.context.ApplicationScoped;
 import model.Barrio;
 
+
+@ApplicationScoped
 public class BarrioService extends GenericServiceImpl<Barrio, Long> {
     
     public BarrioService() {
