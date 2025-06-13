@@ -1,7 +1,9 @@
 package service;
 
 import dao.EncuestaDAO;
+import jakarta.enterprise.context.ApplicationScoped;
 import model.Encuesta;
+@ApplicationScoped
 
 public class EncuestaService extends GenericServiceImpl<Encuesta, Long> {
     public EncuestaService() {

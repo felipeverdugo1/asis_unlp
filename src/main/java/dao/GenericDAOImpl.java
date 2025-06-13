@@ -1,11 +1,11 @@
 package dao;
 
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
-import util.HibernateUtil;
-
-import java.util.Properties;
 
 
 import java.lang.reflect.ParameterizedType;
@@ -13,14 +13,14 @@ import java.util.List;
 
 public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
 
+    @Inject
     protected EntityManager em;
     private final Class<T> tipoEntidad;
 
-    @SuppressWarnings("unchecked")
-    public GenericDAOImpl() {
-        this.tipoEntidad = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-        this.em = HibernateUtil.getEntityManager();
+    public GenericDAOImpl(Class<T> tipoEntidad) {
+        this.tipoEntidad = tipoEntidad;
     }
+
 
     @Override
     public void crear(T entidad) {
@@ -128,3 +128,4 @@ public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
         em.flush();
     }
 }
+
