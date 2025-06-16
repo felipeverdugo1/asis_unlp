@@ -1,14 +1,10 @@
 package dao;
 
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 
-
-import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {

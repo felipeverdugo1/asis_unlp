@@ -142,14 +142,6 @@
       <version>1.5.1</version>
     </dependency>
 
-    <!--Es para que funcione LocalDateTime  -->
-    <dependency>
-      <groupId>com.fasterxml.jackson.datatype</groupId>
-      <artifactId>jackson-datatype-jsr310</artifactId>
-      <version>2.15.3</version> <!-- Última versión estable -->
-    </dependency>
-
-
     <!-- Tests -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
@@ -159,32 +151,30 @@
     </dependency>
 
 
-
-
-
-
   </dependencies>
   <build>
     <plugins>
+      <!-- Compilador Java -->
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.13.0</version>
         <configuration>
           <release>23</release>
+          <source>23</source>
+          <target>23</target>
+          <compilerArgs>--enable-preview</compilerArgs>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${lombok.version}</version>
+            </path>
+          </annotationProcessorPaths>
         </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
         <version>3.2.3</version>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>23</source>
-          <target>23</target>
-          <compilerArgs>--enable-preview</compilerArgs>
-        </configuration>
       </plugin>
     </plugins>
   </build>

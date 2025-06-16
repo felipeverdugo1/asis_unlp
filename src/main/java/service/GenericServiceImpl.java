@@ -1,8 +1,6 @@
 package service;
 
 import dao.GenericDAO;
-import jakarta.transaction.Transactional;
-
 import java.util.List;
 
 public abstract class GenericServiceImpl<T, ID> implements GenericService<T, ID> {
@@ -12,8 +10,6 @@ public abstract class GenericServiceImpl<T, ID> implements GenericService<T, ID>
     public GenericServiceImpl(GenericDAO<T, ID> genericDAO) {
         this.genericDAO = genericDAO;
     }
-
-
 
 
     @Override
