@@ -23,5 +23,26 @@
         <listener-class>org.jboss.weld.environment.servlet.Listener</listener-class>
     </listener>
 
+    <servlet>
+        <servlet-name>OpenApi</servlet-name>
+        <servlet-class>io.swagger.v3.jaxrs2.integration.OpenApiServlet</servlet-class>
+        <init-param>
+            <param-name>openApi.configuration.resourcePackages</param-name>
+                <param-value>controller</param-value>
+        </init-param>
+        <init-param>
+            <param-name>openApi.configuration.applicationClass</param-name>
+            <param-value>config.OpenApiConfig</param-value>
+        </init-param>
+        <init-param>
+            <param-name>openApi.configuration.servers</param-name>
+            <param-value>[{ "url": "http://localhost:8080/rest" }]</param-value>
+        </init-param>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>OpenApi</servlet-name>
+        <url-pattern>/openapi/*</url-pattern>
+    </servlet-mapping>
 
 </web-app>
