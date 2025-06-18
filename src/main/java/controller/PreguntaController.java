@@ -72,6 +72,8 @@ public class PreguntaController {
             ))
     public Response post(Pregunta Pregunta) {
         //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con service
+        Pregunta pregunta;
+        pregunta.setPregunta();
         service.crear(Pregunta);
         return Response.status(Response.Status.CREATED).entity(Pregunta).build();
     }

@@ -95,7 +95,8 @@ public class JornadaController {
                                "fechaInicio": "2025-06-13",
                                "fechaFin": "2025-06-13",
                                "campaña_id": "1",
-                               "zonas_id": ["1","3"]
+                               "zonas_id": ["1","3"],
+                               "encuestas_id" : ["1", "4"] (opcional)
                             }
                             """
                             )}
