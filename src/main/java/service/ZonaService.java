@@ -32,18 +32,24 @@ public class ZonaService extends GenericServiceImpl<Zona, Long> {
 
     public Zona crear(ZonaDTO zonaDTO) {
         Optional<Zona> zona = zonaDAO.buscarPorCampo("nombre", zonaDTO.getNombre());
+        // si es duplicado
         if ( zona.isPresent() ) {
             throw new EntidadExistenteException("Ya existe una zona con ese nombre");
         }
         Zona zona_nueva = new Zona();
-        Barrio barrio = barrioDAO.buscarPorId(zonaDTO.getBarrio_id());
-        if (barrio != null) {
-            zona_nueva.setBarrio(barrio);
-            zona_nueva.setNombre(zonaDTO.getNombre());
-            zona_nueva.setGeolocalizacion(zonaDTO.getGeolocalizacion());
-            zonaDAO.crear(zona_nueva);
+        // si existe el barrio
+        if (zonaDTO.getBarrio_id() != null) {
+            Barrio barrio = barrioDAO.buscarPorId(zonaDTO.getBarrio_id());
+            if (barrio != null) {
+                zona_nueva.setBarrio(barrio);
+                zona_nueva.setNombre(zonaDTO.getNombre());
+                zona_nueva.setGeolocalizacion(zonaDTO.getGeolocalizacion());
+                zonaDAO.crear(zona_nueva);
+            } else {
+                throw new EntidadNoEncontradaException("El Barrio no existe");
+            }
         } else {
-            throw new EntidadNoEncontradaException("El Barrio no existe");
+            throw new FaltanArgumentosException("El barrio_id es obligatorio");
         }
         return zona_nueva;
     }

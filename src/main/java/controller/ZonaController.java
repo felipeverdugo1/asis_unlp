@@ -1,10 +1,13 @@
 package controller;
 
+import exceptions.EntidadExistenteException;
+import exceptions.EntidadNoEncontradaException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -70,7 +73,13 @@ public class ZonaController {
                             """
                             )}
                     )
-            ))
+            ),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Creacion exitosa"),
+                    @ApiResponse(responseCode = "400", description = "Error de validacion."),
+                    @ApiResponse(responseCode = "500", description = "Error interno.")
+            }
+    )
     public Response post(@Valid ZonaDTO dto) {
         Zona zona = service.crear(dto);
         return Response.status(Response.Status.CREATED).entity(zona).build();

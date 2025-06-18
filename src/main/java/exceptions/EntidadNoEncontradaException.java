@@ -1,7 +1,9 @@
 package exceptions;
 
-public class EntidadNoEncontradaException extends RuntimeException {
+import jakarta.ws.rs.core.Response;
+
+public class EntidadNoEncontradaException extends ApiException {
     public EntidadNoEncontradaException(String mensaje) {
-        super(mensaje);
+        super(mensaje, Response.Status.NOT_FOUND);
     }
 }
