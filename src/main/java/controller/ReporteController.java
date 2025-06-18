@@ -75,7 +75,7 @@ public class ReporteController {
                     )
             ))
     public Response post(Reporte Reporte) {
-        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con service
+        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con barrioService
         service.crear(Reporte);
         return Response.status(Response.Status.CREATED).entity(Reporte).build();
     }
@@ -107,7 +107,7 @@ public class ReporteController {
                     )
             ))
     public Response put(@PathParam("id") Long id, Reporte Reporte) {
-        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con service
+        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con barrioService
         if ( service.buscarPorId(id) != null) {
             service.actualizar(Reporte);
             return Response.ok().build();

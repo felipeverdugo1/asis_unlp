@@ -2,6 +2,7 @@ package service;
 
 import dao.GenericDAO;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class GenericServiceImpl<T, ID> implements GenericService<T, ID> {
 
@@ -40,7 +41,7 @@ public abstract class GenericServiceImpl<T, ID> implements GenericService<T, ID>
     }
 
     @Override
-    public T buscarPorCampo(String campo, Object valor) {
+    public Optional<T> buscarPorCampo(String campo, Object valor) {
         return genericDAO.buscarPorCampo(campo, valor);
     }
 

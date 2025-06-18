@@ -72,7 +72,7 @@ public class OrganizacionSocialController {
                     )
             ))
     public Response post(OrganizacionSocial OrganizacionSocial) {
-        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con service
+        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con barrioService
         service.crear(OrganizacionSocial);
         return Response.status(Response.Status.CREATED).entity(OrganizacionSocial).build();
     }
@@ -103,7 +103,7 @@ public class OrganizacionSocialController {
                     )
             ))
     public Response put(@PathParam("id") Long id, OrganizacionSocial OrganizacionSocial) {
-        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con service
+        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con barrioService
         if ( service.buscarPorId(id) != null) {
             service.actualizar(OrganizacionSocial);
             return Response.ok().build();

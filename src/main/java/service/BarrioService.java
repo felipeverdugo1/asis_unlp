@@ -1,11 +1,9 @@
 package service;
 
 import dao.BarrioDAO;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import model.Barrio;
-
 
 @RequestScoped
 public class BarrioService extends GenericServiceImpl<Barrio, Long> {

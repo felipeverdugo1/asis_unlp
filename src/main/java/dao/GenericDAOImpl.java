@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
 
@@ -98,12 +99,15 @@ public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
 
 
     @Override
-    public T buscarPorCampo(String campo, Object valor) {
+    public Optional<T> buscarPorCampo(String campo, Object valor) {
         try {
             String jpql = "SELECT e FROM " + tipoEntidad.getSimpleName() + " e WHERE e." + campo + " = :valor";
-            return em.createQuery(jpql, tipoEntidad)
+            T resultado = em.createQuery(jpql, tipoEntidad)
                     .setParameter("valor", valor)
                     .getSingleResult();
+            return Optional.ofNullable(resultado);
+        } catch (NoResultException e) {
+            return Optional.empty();
         } catch (Exception e) {
             throw e;
         } finally {

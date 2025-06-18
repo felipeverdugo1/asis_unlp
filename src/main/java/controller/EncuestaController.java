@@ -72,7 +72,7 @@ public class EncuestaController {
                     )
             ))
     public Response post(Encuesta Encuesta) {
-        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con service
+        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con barrioService
         service.crear(Encuesta);
         return Response.status(Response.Status.CREATED).entity(Encuesta).build();
     }
@@ -104,7 +104,7 @@ public class EncuestaController {
                     )
             ))
     public Response put(@PathParam("id") Long id, Encuesta Encuesta) {
-        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con service
+        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con barrioService
         if ( service.buscarPorId(id) != null) {
             service.actualizar(Encuesta);
             return Response.ok().build();

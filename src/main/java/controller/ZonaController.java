@@ -7,11 +7,13 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import model.Zona;
 import service.ZonaService;
+import controller.dto.ZonaDTO;
 
 
 @Path("/zona")
@@ -69,10 +71,9 @@ public class ZonaController {
                             )}
                     )
             ))
-    public Response post(Zona Zona) {
-        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con service
-        service.crear(Zona);
-        return Response.status(Response.Status.CREATED).entity(Zona).build();
+    public Response post(@Valid ZonaDTO dto) {
+        Zona zona = service.crear(dto);
+        return Response.status(Response.Status.CREATED).entity(zona).build();
     }
 
 
@@ -99,7 +100,7 @@ public class ZonaController {
                     )
             ))
     public Response put(@PathParam("id") Long id, Zona Zona) {
-        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con service
+        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con barrioService
         if ( service.buscarPorId(id) != null) {
             service.actualizar(Zona);
             return Response.ok().build();

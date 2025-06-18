@@ -19,13 +19,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class BarrioController {
 
     @Inject
-    BarrioService service;
+    BarrioService barrioService;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Este endpoint nos permite obtener todos los barrios registrados.")
     public Response get() {
-        return Response.ok(service.listarTodos()).build();
+        return Response.ok(barrioService.listarTodos()).build();
     }
 
     @GET
@@ -34,7 +34,7 @@ public class BarrioController {
     @Operation(description = "Este endpoint nos permite obtener el barrio a partir de un id",
             parameters = @Parameter(name = "barrio id"))
     public Response get(@PathParam("id") Long id) {
-        Barrio objeto = service.buscarPorId(id);
+        Barrio objeto = barrioService.buscarPorId(id);
         if (objeto != null) {
             return Response.ok(objeto).build();
         } else {
@@ -65,7 +65,7 @@ public class BarrioController {
             )
     ))
     public Response post(Barrio barrio) {
-        service.crear(barrio);
+        barrioService.crear(barrio);
         return Response.status(Response.Status.CREATED).entity(barrio).build();
     }
 
@@ -93,8 +93,8 @@ public class BarrioController {
                     )
     ))
     public Response put(@PathParam("id") Long id, Barrio barrio) {
-        if ( service.buscarPorId(id) != null) {
-            service.actualizar(barrio);
+        if ( barrioService.buscarPorId(id) != null) {
+            barrioService.actualizar(barrio);
             return Response.ok().build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -107,9 +107,9 @@ public class BarrioController {
     @Operation(description = "Este endpoint nos permite eliminar el barrio a partir de un id",
             parameters = @Parameter(name = "barrio id"))
     public Response delete(@PathParam("id") Long id) {
-        Barrio objeto = service.buscarPorId(id);
+        Barrio objeto = barrioService.buscarPorId(id);
         if (objeto != null) {
-            service.eliminar(id);
+            barrioService.eliminar(id);
             return Response.noContent().build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();

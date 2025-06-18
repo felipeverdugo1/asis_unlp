@@ -71,7 +71,7 @@ public class JornadaController {
                     )
             ))
     public Response post(Jornada Jornada) {
-        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con service
+        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con barrioService
         service.crear(Jornada);
         return Response.status(Response.Status.CREATED).entity(Jornada).build();
     }
@@ -103,7 +103,7 @@ public class JornadaController {
                     )
             ))
     public Response put(@PathParam("id") Long id, Jornada Jornada) {
-        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con service
+        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con barrioService
         if ( service.buscarPorId(id) != null) {
             service.actualizar(Jornada);
             return Response.ok().build();

@@ -70,7 +70,7 @@ public class FiltroPersonalizadoController {
                     )
             ))
     public Response post(FiltroPersonalizado filtroPersonalizado) {
-        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con service
+        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con barrioService
         service.crear(filtroPersonalizado);
         return Response.status(Response.Status.CREATED).entity(filtroPersonalizado).build();
     }
@@ -99,7 +99,7 @@ public class FiltroPersonalizadoController {
                     )
             ))
     public Response put(@PathParam("id") Long id, FiltroPersonalizado filtroPersonalizado) {
-        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con service
+        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con barrioService
         if ( service.buscarPorId(id) != null) {
             service.actualizar(filtroPersonalizado);
             return Response.ok().build();
