@@ -5,13 +5,11 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class PreguntaDTO {
+public class FiltroDTO {
 
-    @NotBlank(message = "Nombre es obligatorio")
-    private String tipo;
+    private String nombre;
     @NotBlank(message = "Geolocalizacion es obligatoria")
-    private String pregunta;
-    private String respuesta;
+    private String criterios;
     @NotNull(message = "El id del barrio es obligatorio")
-    private Long encuesta_id;
+    private Long propietario_id;
 }

@@ -15,4 +15,6 @@ public class OrganizacionSocialDTO {
     @NotNull(message = "El id del barrio es obligatorio")
     private Long barrio_id;
     private Long referente_id;
+
+
 }
