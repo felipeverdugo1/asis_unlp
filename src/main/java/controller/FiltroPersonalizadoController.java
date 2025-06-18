@@ -13,6 +13,8 @@ import jakarta.ws.rs.core.Response;
 import model.FiltroPersonalizado;
 import service.FiltroPersonalizadoService;
 
+import java.util.Optional;
+
 
 @Path("/filtro")
 @Tag(
@@ -39,8 +41,8 @@ public class FiltroPersonalizadoController {
     @Operation(description = "Este endpoint nos permite obtener el filtro a partir de un id",
             parameters = @Parameter(name = "filtro id"))
     public Response get(@PathParam("id") Long id) {
-        FiltroPersonalizado objeto = service.buscarPorId(id);
-        if (objeto != null) {
+        Optional<FiltroPersonalizado> objeto = service.buscarPorId(id);
+        if (objeto.isPresent()) {
             return Response.ok(objeto).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -113,9 +115,9 @@ public class FiltroPersonalizadoController {
     @Operation(description = "Este endpoint nos permite eliminar el filtro a partir de un id",
             parameters = @Parameter(name = "filtro id"))
     public Response delete(@PathParam("id") Long id) {
-        FiltroPersonalizado objeto = service.buscarPorId(id);
-        if (objeto != null) {
-            service.eliminar(id);
+        Optional<FiltroPersonalizado> objeto = service.buscarPorId(id);
+        if (objeto.isPresent()) {
+            service.eliminar(objeto.get());
             return Response.noContent().build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();

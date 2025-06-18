@@ -14,6 +14,4 @@ public class ZonaDTO {
     private String geolocalizacion;
     @NotNull(message = "El id del barrio es obligatorio")
     private Long barrio_id;
-    // opcional
-    private List<Long> encuestas_id;
 }

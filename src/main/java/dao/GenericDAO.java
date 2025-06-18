@@ -8,9 +8,9 @@ import java.util.Optional;
 public interface GenericDAO<T, ID> {
     // Operaciones CRUD básicas
     void crear(T entidad);
-    T buscarPorId(ID id);
+    Optional<T> buscarPorId(ID id);
     void actualizar(T entidad);
-    void eliminar(ID id);
+    void eliminar(T entidad);
     List<T> listarTodos();
     void flush();
 

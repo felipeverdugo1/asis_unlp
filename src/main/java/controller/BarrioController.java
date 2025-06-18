@@ -11,6 +11,8 @@ import service.BarrioService;
 import io.swagger.v3.oas.annotations.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import java.util.Optional;
+
 @Path("/barrio")
 @Tag(
     name = "Barrios",
@@ -34,8 +36,8 @@ public class BarrioController {
     @Operation(description = "Este endpoint nos permite obtener el barrio a partir de un id",
             parameters = @Parameter(name = "barrio id"))
     public Response get(@PathParam("id") Long id) {
-        Barrio objeto = barrioService.buscarPorId(id);
-        if (objeto != null) {
+        Optional<Barrio> objeto = barrioService.buscarPorId(id);
+        if (objeto.isPresent()) {
             return Response.ok(objeto).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -107,9 +109,9 @@ public class BarrioController {
     @Operation(description = "Este endpoint nos permite eliminar el barrio a partir de un id",
             parameters = @Parameter(name = "barrio id"))
     public Response delete(@PathParam("id") Long id) {
-        Barrio objeto = barrioService.buscarPorId(id);
-        if (objeto != null) {
-            barrioService.eliminar(id);
+        Optional<Barrio> objeto = barrioService.buscarPorId(id);
+        if (objeto.isPresent()) {
+            barrioService.eliminar(objeto.get());
             return Response.noContent().build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
