@@ -18,6 +18,8 @@ import model.Zona;
 import service.ZonaService;
 import controller.dto.ZonaDTO;
 
+import java.util.Optional;
+
 
 @Path("/zona")
 @Tag(
@@ -44,8 +46,8 @@ public class ZonaController {
     @Operation(description = "Este endpoint nos permite obtener la zona a partir de un id",
             parameters = @Parameter(name = "zona id"))
     public Response get(@PathParam("id") Long id) {
-        Zona objeto = service.buscarPorId(id);
-        if (objeto != null) {
+        Optional<Zona> objeto = service.buscarPorId(id);
+        if (objeto.isPresent()) {
             return Response.ok(objeto).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -89,6 +91,7 @@ public class ZonaController {
     @PUT
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Este endpoint nos permite actualizar una zona.",
             parameters = @Parameter(name = "zona id"),
             requestBody = @RequestBody(description = "una zona en formato JSON",
@@ -108,29 +111,20 @@ public class ZonaController {
                             )}
                     )
             ))
-    public Response put(@PathParam("id") Long id, Zona Zona) {
-        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con barrioService
-        if ( service.buscarPorId(id) != null) {
-            service.actualizar(Zona);
-            return Response.ok().build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+    public Response put(@PathParam("id") Long id, ZonaDTO dto) {
+        Zona zona = service.actualizar(id, dto);
+        return Response.ok().build();
     }
 
 
     @DELETE
     @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Este endpoint nos permite eliminar la zona a partir de un id",
             parameters = @Parameter(name = "zona id"))
     public Response delete(@PathParam("id") Long id) {
-        Zona objeto = service.buscarPorId(id);
-        if (objeto != null) {
-            service.eliminar(id);
-            return Response.noContent().build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        service.eliminar(id);
+        return Response.noContent().build();
     }
 }
 

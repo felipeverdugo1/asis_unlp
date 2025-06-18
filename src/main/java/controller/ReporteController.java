@@ -16,6 +16,8 @@ import service.GenericService;
 import service.GenericServiceImpl;
 import service.ReporteService;
 
+import java.util.Optional;
+
 
 @Path("/reporte")
 @Tag(
@@ -42,8 +44,8 @@ public class ReporteController {
     @Operation(description = "Este endpoint nos permite obtener el reporte a partir de un id",
             parameters = @Parameter(name = "reporte id"))
     public Response get(@PathParam("id") Long id) {
-        Reporte objeto = service.buscarPorId(id);
-        if (objeto != null) {
+        Optional<Reporte> objeto = service.buscarPorId(id);
+        if (objeto.isPresent()) {
             return Response.ok(objeto).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -122,9 +124,9 @@ public class ReporteController {
     @Operation(description = "Este endpoint nos permite obtener el reporte a partir de un id",
             parameters = @Parameter(name = "reporte id"))
     public Response delete(@PathParam("id") Long id) {
-        Reporte objeto = service.buscarPorId(id);
-        if (objeto != null) {
-            service.eliminar(id);
+        Optional<Reporte> objeto = service.buscarPorId(id);
+        if (objeto.isPresent()) {
+            service.eliminar(objeto.get());
             return Response.noContent().build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();

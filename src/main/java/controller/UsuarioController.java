@@ -19,6 +19,8 @@ import service.GenericService;
 import service.GenericServiceImpl;
 import service.UsuarioService;
 
+import java.util.Optional;
+
 
 @Path("/usuario")
 @Tag(
@@ -44,8 +46,8 @@ public class UsuarioController {
     @Operation(description = "Este endpoint nos permite obtener el usuario a partir de un id",
             parameters = @Parameter(name = "usuario id"))
     public Response getUsuario(@PathParam("id") Long id) {
-        Usuario usuario = usuarioService.buscarPorId(id);
-        if (usuario != null) {
+        Optional<Usuario> usuario = usuarioService.buscarPorId(id);
+        if (usuario.isPresent()) {
             return Response.ok(usuario).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -125,9 +127,9 @@ public class UsuarioController {
     @Operation(description = "Este endpoint nos permite obtener el usuario a partir de un id",
             parameters = @Parameter(name = "usuario id"))
     public Response eliminarUsuario(@PathParam("id") Long id) {
-        Usuario personalDeSalud = usuarioService.buscarPorId(id);
-        if (personalDeSalud != null) {
-            usuarioService.eliminar(id);
+        Optional<Usuario> personalDeSalud = usuarioService.buscarPorId(id);
+        if (personalDeSalud.isPresent()) {
+            usuarioService.eliminar(personalDeSalud.get());
             return Response.noContent().build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();

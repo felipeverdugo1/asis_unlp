@@ -1,6 +1,8 @@
 package service;
 
 import dao.GenericDAO;
+import exceptions.EntidadNoEncontradaException;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +22,7 @@ public abstract class GenericServiceImpl<T, ID> implements GenericService<T, ID>
     }
 
     @Override
-    public T buscarPorId(ID id) {
+    public Optional<T> buscarPorId(ID id) {
         return genericDAO.buscarPorId(id);
     }
 
@@ -31,8 +33,8 @@ public abstract class GenericServiceImpl<T, ID> implements GenericService<T, ID>
     }
 
     @Override
-    public void eliminar(ID id) {
-        genericDAO.eliminar(id);
+    public void eliminar(T entidad) {
+        genericDAO.eliminar(entidad);
     }
 
     @Override

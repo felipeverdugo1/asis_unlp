@@ -13,6 +13,8 @@ import jakarta.ws.rs.core.Response;
 import model.OrganizacionSocial;
 import service.OrganizacionSocialService;
 
+import java.util.Optional;
+
 
 @Path("/organizacionSocial")
 @Tag(
@@ -39,8 +41,8 @@ public class OrganizacionSocialController {
     @Operation(description = "Este endpoint nos permite obtener la organizacion a partir de un id",
             parameters = @Parameter(name = "organizacion id"))
     public Response get(@PathParam("id") Long id) {
-        OrganizacionSocial objeto = service.buscarPorId(id);
-        if (objeto != null) {
+        Optional<OrganizacionSocial> objeto = service.buscarPorId(id);
+        if (objeto.isPresent()) {
             return Response.ok(objeto).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -118,9 +120,9 @@ public class OrganizacionSocialController {
     @Operation(description = "Este endpoint nos permite eliminar la organizacion a partir de un id",
             parameters = @Parameter(name = "organizacion id"))
     public Response delete(@PathParam("id") Long id) {
-        OrganizacionSocial objeto = service.buscarPorId(id);
-        if (objeto != null) {
-            service.eliminar(id);
+        Optional<OrganizacionSocial> objeto = service.buscarPorId(id);
+        if (objeto.isPresent()) {
+            service.eliminar(objeto.get());
             return Response.noContent().build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();

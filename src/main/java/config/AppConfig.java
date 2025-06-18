@@ -1,6 +1,5 @@
 package config;
 
-import com.fasterxml.jackson.jakarta.rs.json.JacksonJsonProvider;
 import exceptions.CustomExceptionMapper;
 import org.glassfish.jersey.server.ResourceConfig;
 
