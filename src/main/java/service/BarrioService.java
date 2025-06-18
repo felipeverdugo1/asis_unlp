@@ -59,36 +59,45 @@ public class BarrioService extends GenericServiceImpl<Barrio, Long> {
         if(!barrioDTO.validarTodosNull()){
 
             // Validar si existe el barrio
-            Barrio barrioExistente = barrioDAO.buscarPorId(barrioId);
-            if (barrioExistente == null) {
+            Optional<Barrio> barrioExistente = barrioDAO.buscarPorId(barrioId);
+            if (!barrioExistente.isPresent()) {
                 throw new EntidadNoEncontradaException("Barrio no encontrado");
             }
 
             // Validar nombre único si se va a actualizar
             if (barrioDTO.getNombre() != null) {
-                if (!barrioDTO.getNombre().equals(barrioExistente.getNombre())) {
+                if (!barrioDTO.getNombre().equals(barrioExistente.get().getNombre())) {
                     // Buscar si existe otro barrio con ese nombre
                     Optional<Barrio> barrioConMismoNombre = barrioDAO.buscarPorCampo("nombre", barrioDTO.getNombre());
                     if (barrioConMismoNombre.isPresent()) {
                         throw new EntidadExistenteException("Nombre de barrio ya existente");
                     }
-                    barrioExistente.setNombre(barrioDTO.getNombre());
+                    barrioExistente.get().setNombre(barrioDTO.getNombre());
                 }
             }
 
             //Seteo variables nuevas
             if (barrioDTO.getInformacion() != null){
-                barrioExistente.setInformacion(barrioDTO.getInformacion());
+                barrioExistente.get().setInformacion(barrioDTO.getInformacion());
             }
 
             if (barrioDTO.getGeolocalizacion() != null){
-                barrioExistente.setGeolocalizacion(barrioDTO.getGeolocalizacion());
+                barrioExistente.get().setGeolocalizacion(barrioDTO.getGeolocalizacion());
             }
-            barrioDAO.actualizar(barrioExistente);
-            return barrioExistente;
+            barrioDAO.actualizar(barrioExistente.get());
+            return barrioExistente.get();
 
         } else {
             throw new FaltanArgumentosException("Se requiere alguno de los campos nombre, informacion y geolocalizacion");
+        }
+    }
+
+    public void eliminar(Long id) {
+        Optional<Barrio> barrio = barrioDAO.buscarPorId(id);
+        if ( barrio.isPresent() ) {
+            barrioDAO.eliminar(barrio.get());
+        } else {
+            throw new EntidadNoEncontradaException("El Barrio no existe");
         }
     }
 
