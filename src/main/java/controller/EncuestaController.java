@@ -1,16 +1,19 @@
 package controller;
 
+import controller.dto.EncuestaDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import model.Encuesta;
+import model.Encuestador;
 import service.EncuestaService;
 
 import java.util.Optional;
@@ -25,6 +28,8 @@ public class EncuestaController {
 
     @Inject
     EncuestaService service;
+    @Inject
+    private EncuestaService encuestaService;
 
 
     @GET
@@ -43,7 +48,7 @@ public class EncuestaController {
     public Response get(@PathParam("id") Long id) {
         Optional<Encuesta> objeto = service.buscarPorId(id);
         if (objeto.isPresent()) {
-            return Response.ok(objeto).build();
+            return Response.ok(objeto.get()).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
@@ -65,24 +70,31 @@ public class EncuestaController {
                             {
                                "nombreUnico": "/path/a/encuesta.xlsx",
                                "fecha": "2025-06-13",
-                               "encuestador_id": "3",
-                               "zona_id": "1",
-                               "jornada_id": "1"
+                               "encuestador_id": 3,
+                               "zona_id": 1,
+                               "jornada_id": 1
                             }
                             """
                             )}
                     )
-            ))
-    public Response post(Encuesta Encuesta) {
+            ),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Actualizacion exitosa"),
+                    @ApiResponse(responseCode = "400", description = "Error de validacion."),
+                    @ApiResponse(responseCode = "500", description = "Error interno.")
+            }
+    )
+    public Response post(EncuestaDTO encuestaDTO) {
         //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con barrioService
-        service.crear(Encuesta);
-        return Response.status(Response.Status.CREATED).entity(Encuesta).build();
+        Encuesta encuesta = service.crear(encuestaDTO);
+        return Response.status(Response.Status.CREATED).entity(encuesta).build();
     }
 
 
     @PUT
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Este endpoint nos permite actualizar una encuesta",
             parameters = @Parameter(name = "encuesta id"),
             requestBody = @RequestBody(description = "una encuesta en formato JSON",
@@ -96,23 +108,23 @@ public class EncuestaController {
                             {
                                "nombreUnico": "/path/a/encuesta.xlsx",
                                "fecha": "2025-06-13",
-                               "encuestador_id": "3",
-                               "zona_id": "1",
-                               "jornada_id": "1",
-                               "preguntas_id": ["3", "4"] (opcional)
+                               "encuestador_id": 3,
+                               "zona_id": 1,
+                               "jornada_id": 1
                             }
                             """
                             )}
                     )
-            ))
-    public Response put(@PathParam("id") Long id, Encuesta Encuesta) {
-        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con barrioService
-        if ( service.buscarPorId(id) != null) {
-            service.actualizar(Encuesta);
-            return Response.ok().build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+            ),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Actualizacion exitosa"),
+                    @ApiResponse(responseCode = "400", description = "Error de validacion."),
+                    @ApiResponse(responseCode = "500", description = "Error interno.")
+            }
+    )
+    public Response put(@PathParam("id") Long id, EncuestaDTO encuestaDTO) {
+        Encuesta encuesta = encuestaService.actualizar(id, encuestaDTO);
+        return Response.status(Response.Status.OK).entity(encuesta).build();
     }
 
 

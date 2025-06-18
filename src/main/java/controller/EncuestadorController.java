@@ -75,7 +75,13 @@ public class EncuestadorController {
                             """
                             )}
                     )
-            ))
+            ),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Actualizacion exitosa"),
+                    @ApiResponse(responseCode = "400", description = "Error de validacion."),
+                    @ApiResponse(responseCode = "500", description = "Error interno.")
+            }
+    )
     public Response post(EncuestadorDTO encuestadorDTO) {
         Encuestador encuestador = service.crear(encuestadorDTO);
         return Response.status(Response.Status.CREATED).entity(encuestador).build();

@@ -16,12 +16,13 @@ import java.util.Optional;
 public class EncuestadorService extends GenericServiceImpl<Encuestador, Long> {
 
     @Inject
+    private EncuestadorDAO encuestadorDAO;
+
+    @Inject
     public EncuestadorService(EncuestadorDAO dao) {
         super(dao);
     }
 
-    @Inject
-    private EncuestadorDAO encuestadorDAO;
 
     public EncuestadorService() {super(null);}
     // Métodos específicos de Usuario si los necesitás
