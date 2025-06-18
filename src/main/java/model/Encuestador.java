@@ -20,7 +20,7 @@ public class Encuestador {
     @Column(nullable = false)
     private String nombre;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String dni;
 
     @Column(nullable = false)
