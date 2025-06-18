@@ -1,9 +1,12 @@
 package dao;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.transaction.Transactional;
 import model.OrganizacionSocial;
-@ApplicationScoped
+
+
+@RequestScoped
 @Transactional
 public class OrganizacionSocialDAO extends GenericDAOImpl<OrganizacionSocial, Long> {
 

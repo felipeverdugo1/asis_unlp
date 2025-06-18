@@ -1,13 +1,16 @@
 package dao;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.transaction.Transactional;
 import model.Barrio;
 import model.Zona;
 import java.util.List;
 import util.HibernateUtil;
 import jakarta.persistence.*;
-@ApplicationScoped
+
+
+@RequestScoped
 @Transactional
 public class BarrioDAO extends GenericDAOImpl<Barrio, Long> {
 

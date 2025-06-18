@@ -1,26 +1,27 @@
 package dao;
 
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 
-
-import java.lang.reflect.ParameterizedType;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
 
     @Inject
     protected EntityManager em;
+
     private final Class<T> tipoEntidad;
 
     public GenericDAOImpl(Class<T> tipoEntidad) {
         this.tipoEntidad = tipoEntidad;
     }
 
+    public void setEntityManager(EntityManager em) {
+        this.em = em;
+    }
 
     @Override
     public void crear(T entidad) {
@@ -98,12 +99,15 @@ public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
 
 
     @Override
-    public T buscarPorCampo(String campo, Object valor) {
+    public Optional<T> buscarPorCampo(String campo, Object valor) {
         try {
             String jpql = "SELECT e FROM " + tipoEntidad.getSimpleName() + " e WHERE e." + campo + " = :valor";
-            return em.createQuery(jpql, tipoEntidad)
+            T resultado = em.createQuery(jpql, tipoEntidad)
                     .setParameter("valor", valor)
                     .getSingleResult();
+            return Optional.ofNullable(resultado);
+        } catch (NoResultException e) {
+            return Optional.empty();
         } catch (Exception e) {
             throw e;
         } finally {

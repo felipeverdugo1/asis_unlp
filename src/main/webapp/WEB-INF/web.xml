@@ -5,7 +5,10 @@
          https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
          version="6.0">
 
-
+    <context-param>
+        <param-name>jakarta.faces.validator.beanValidation.ENABLE_VALIDATOR</param-name>
+        <param-value>true</param-value>
+    </context-param>
     <servlet>
         <servlet-name>RESTfulJersey</servlet-name>
         <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
@@ -23,5 +26,18 @@
         <listener-class>org.jboss.weld.environment.servlet.Listener</listener-class>
     </listener>
 
+    <servlet>
+        <servlet-name>OpenApi</servlet-name>
+        <servlet-class>io.swagger.v3.jaxrs2.integration.OpenApiServlet</servlet-class>
+        <init-param>
+            <param-name>openApi.configuration.resourcePackages</param-name>
+                <param-value>config,controller</param-value>
+        </init-param>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>OpenApi</servlet-name>
+        <url-pattern>/openapi/*</url-pattern>
+    </servlet-mapping>
 
 </web-app>

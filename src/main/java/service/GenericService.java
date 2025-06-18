@@ -1,5 +1,6 @@
 package service;
 import java.util.List;
+import java.util.Optional;
 
 
 public interface GenericService<T, ID> {
@@ -8,7 +9,7 @@ public interface GenericService<T, ID> {
     T actualizar(T entidad);
     void eliminar(ID id);
     List<T> listarTodos();
-    T buscarPorCampo(String campo, Object valor);
+    Optional<T> buscarPorCampo(String campo, Object valor);
     List<T> buscarTodosPorCampoLike(String campo, Object patron);
     void flush();
 }

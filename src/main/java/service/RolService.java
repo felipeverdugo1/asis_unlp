@@ -3,10 +3,11 @@ package service;
 
 import dao.RolDAO;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import model.Rol;
-@ApplicationScoped
 
+@RequestScoped
 public class RolService extends GenericServiceImpl<Rol, Long> {
 
 

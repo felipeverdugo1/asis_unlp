@@ -2,14 +2,15 @@ package service;
 
 import dao.ReporteDAO;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import model.Reporte;
-@ApplicationScoped
 
+@RequestScoped
 public class ReporteService extends GenericServiceImpl<Reporte, Long> {
 
-     @Inject
-     public ReporteService(ReporteDAO reporteDAO) {super(reporteDAO);}
+    @Inject
+    public ReporteService(ReporteDAO reporteDAO) {super(reporteDAO);}
 
     public ReporteService() {
         super(null);

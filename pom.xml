@@ -9,19 +9,19 @@
   <url>https://maven.apache.org</url>
 
 
-
-
-
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.target>17</maven.compiler.target>
+    <maven.compiler.source>23</maven.compiler.source>
+    <maven.compiler.target>23</maven.compiler.target>
     <jersey.version>3.1.3</jersey.version>
     <lombok.version>1.18.30</lombok.version>
     <weld.version>4.0.3.Final</weld.version>
+    <swagger.version>2.2.20</swagger.version>
+    <jackson.version>2.13.5</jackson.version>
   </properties>
-  <dependencies>
 
+
+  <dependencies>
 
     <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
     <dependency>
@@ -30,8 +30,6 @@
       <version>${lombok.version}</version>
       <scope>provided</scope>
     </dependency>
-
-
 
     <!--  Jersey  -->
     <dependency>
@@ -58,6 +56,13 @@
       <version>${jersey.version}</version>
     </dependency>
 
+    <!-- Si estás usando JSON -->
+    <dependency>
+      <groupId>org.glassfish.jersey.media</groupId>
+      <artifactId>jersey-media-json-jackson</artifactId>
+      <version>${jersey.version}</version>
+    </dependency>
+
 
     <!--  CDI Implementation (Weld)  -->
     <!-- https://mvnrepository.com/artifact/org.jboss.weld.se/weld-se-core -->
@@ -66,16 +71,6 @@
       <artifactId>weld-servlet-core</artifactId>
       <version>4.0.3.Final</version>
     </dependency>
-    <!--  JSON support  -->
-
-    <!-- Jackson para JSON -->
-    <dependency>
-      <groupId>com.fasterxml.jackson.jakarta.rs</groupId>
-      <artifactId>jackson-jakarta-rs-json-provider</artifactId>
-      <version>2.17.0</version>
-    </dependency>
-
-
 
     <!--  JPA + Hibernate  -->
     <dependency>
@@ -113,30 +108,12 @@
       <version>3.1.0</version>
     </dependency>
 
-
-
-
-
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>2.17.0</version>
-    </dependency>
-
     <!-- Classmate -->
     <dependency>
       <groupId>com.fasterxml</groupId>
       <artifactId>classmate</artifactId>
       <version>1.5.1</version>
     </dependency>
-
-    <!--Es para que funcione LocalDateTime  -->
-    <dependency>
-      <groupId>com.fasterxml.jackson.datatype</groupId>
-      <artifactId>jackson-datatype-jsr310</artifactId>
-      <version>2.15.3</version> <!-- Última versión estable -->
-    </dependency>
-
 
     <!-- Tests -->
     <dependency>
@@ -146,33 +123,57 @@
       <scope>test</scope>
     </dependency>
 
-
-
-
-
+    <!-- Swagger -->
+    <dependency>
+      <groupId>io.swagger.core.v3</groupId>
+      <artifactId>swagger-jaxrs2-jakarta</artifactId>
+      <version>${swagger.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.swagger.core.v3</groupId>
+      <artifactId>swagger-annotations-jakarta</artifactId>
+      <version>${swagger.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.swagger.core.v3</groupId>
+      <artifactId>swagger-annotations</artifactId>
+      <version>${swagger.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.swagger.core.v3</groupId>
+      <artifactId>swagger-core-jakarta</artifactId>
+      <version>${swagger.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.swagger.core.v3</groupId>
+      <artifactId>swagger-models-jakarta</artifactId>
+      <version>${swagger.version}</version>
+    </dependency>
 
   </dependencies>
   <build>
     <plugins>
+      <!-- Compilador Java -->
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.13.0</version>
         <configuration>
           <release>23</release>
+          <source>23</source>
+          <target>23</target>
+          <compilerArgs>--enable-preview</compilerArgs>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${lombok.version}</version>
+            </path>
+          </annotationProcessorPaths>
         </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
         <version>3.2.3</version>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>23</source>
-          <target>23</target>
-          <compilerArgs>--enable-preview</compilerArgs>
-        </configuration>
       </plugin>
     </plugins>
   </build>

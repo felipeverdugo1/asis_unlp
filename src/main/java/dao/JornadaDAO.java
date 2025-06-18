@@ -1,9 +1,12 @@
 package dao;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.transaction.Transactional;
 import model.Jornada;
-@ApplicationScoped
+
+
+@RequestScoped
 @Transactional
 public class JornadaDAO extends GenericDAOImpl<Jornada, Long> {
     public JornadaDAO() {
