@@ -11,6 +11,7 @@ import jakarta.inject.Inject;
 import model.Rol;
 import model.Usuario;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -39,16 +40,14 @@ public class UsuarioService extends GenericServiceImpl<Usuario, Long> {
             throw new EntidadExistenteException("Ya existe un usuario con ese email");
         }
         Usuario usuario = new Usuario();
+        if (usuarioDTO.getEspecialidad() != null) {
+            usuario.setEspecialidad(usuarioDTO.getEspecialidad());
+        }
         if (!usuarioDTO.getRoles_id().isEmpty()){
             for (Long id: usuarioDTO.getRoles_id()) {
                 Optional<Rol> rol = rolDAO.buscarPorId(id);
                 if (rol.isPresent()) {
-                    if (rol.get().getNombre().contains("referente") && usuarioDTO.getEspecialidad() != null) {
-                        usuario.agregarRol(rol.get());
-                        usuario.setEspecialidad(usuarioDTO.getEspecialidad());
-                    } else {
-                        throw new FaltanArgumentosException("Si se asigna rol referente debe tener el campo especialidad.");
-                    }
+                    usuario.agregarRol(rol.get());
                 } else {
                     throw new EntidadNoEncontradaException("El rol no existe con id: " + id.toString());
                 }
@@ -76,25 +75,37 @@ public class UsuarioService extends GenericServiceImpl<Usuario, Long> {
         }
     }
 
-    public Usuario quitarRol(Long id, Rol rol) {
+    public Usuario quitarRol(Long id, Long rol_id) {
         Optional<Usuario> usuario_t = usuarioDAO.buscarPorId(id);
         if (usuario_t.isPresent()) {
-            Usuario usuario = usuario_t.get();
-            usuario.quitarRol(rol);
-            usuarioDAO.actualizar(usuario);
-            return usuario;
+            Optional<Rol> rol_t = rolDAO.buscarPorId(rol_id);
+            if (rol_t.isPresent()) {
+                Usuario usuario = usuario_t.get();
+                Rol rol = rol_t.get();
+                usuario.quitarRol(rol);
+                usuarioDAO.actualizar(usuario);
+                return usuario;
+            } else {
+                throw new EntidadNoEncontradaException("No existe el rol");
+            }
         } else {
             throw new EntidadNoEncontradaException("No existe el usuario.");
         }
     }
 
-    public Usuario agregarRol(Long id, Rol rol) {
+    public Usuario agregarRol(Long id, Long rol_id) {
         Optional<Usuario> usuario_t = usuarioDAO.buscarPorId(id);
         if (usuario_t.isPresent()) {
-            Usuario usuario = usuario_t.get();
-            usuario.agregarRol(rol);
-            usuarioDAO.actualizar(usuario);
-            return usuario;
+            Optional<Rol> rol_t = rolDAO.buscarPorId(rol_id);
+            if (rol_t.isPresent()){
+                Usuario usuario = usuario_t.get();
+                Rol rol = rol_t.get();
+                usuario.agregarRol(rol);
+                usuarioDAO.actualizar(usuario);
+                return usuario;
+            } else {
+                throw new EntidadNoEncontradaException("No existe el rol.");
+            }
         } else {
             throw new EntidadNoEncontradaException("No existe el usuario.");
         }
@@ -104,11 +115,51 @@ public class UsuarioService extends GenericServiceImpl<Usuario, Long> {
         Optional<Usuario> usuario_t = usuarioDAO.buscarPorId(id);
         if (usuario_t.isPresent()) {
             Usuario usuario = usuario_t.get();
-            usuario.getRoles().clear();
-            usuarioDAO.actualizar(usuario);
+            //usuario.getRoles().clear();
+            //usuarioDAO.actualizar(usuario);
             usuarioDAO.eliminar(usuario);
         } else {
             throw new EntidadNoEncontradaException("No existe el usuario.");
+        }
+    }
+
+    public Usuario actualizar(Long id, UsuarioDTO dto) {
+        Optional<Usuario> usuario_t = usuarioDAO.buscarPorId(id);
+        if (usuario_t.isPresent()) {
+            Usuario usuario = usuario_t.get();
+            if (dto.getEmail() != null) {
+                Optional<Usuario> usuario_existente = usuarioDAO.buscarPorCampo("email", dto.getEmail());
+                if (usuario_existente.isPresent()) {
+                    throw new EntidadNoEncontradaException("Ya existe un usuario con ese email.");
+                }
+                usuario.setEmail(dto.getEmail());
+            }
+            if (dto.getPassword() != null) {
+                usuario.setPassword(dto.getPassword());
+            }
+            if (dto.getNombreUsuario() != null) {
+                Optional<Usuario> usuario_existente_2 = usuarioDAO.buscarPorCampo("nombreUsuario", dto.getNombreUsuario());
+                if (usuario_existente_2.isPresent()) {
+                    throw new EntidadNoEncontradaException("Ya existe un usuario con ese username.");
+                }
+                usuario.setNombreUsuario(dto.getNombreUsuario());
+            }
+            if (dto.getHabilitado() != null) {
+                usuario.setHabilitado(dto.getHabilitado());
+            }
+            usuarioDAO.actualizar(usuario);
+            return usuario;
+        } else {
+            throw new EntidadNoEncontradaException("No existe el usuario.");
+        }
+    }
+
+    public List<Usuario> getUsuariosByRol(Long id){
+        Optional<Rol> rol_t = rolDAO.buscarPorId(id);
+        if (rol_t.isPresent()) {
+            return usuarioDAO.getAllUsuariosByRol(rol_t.get());
+        } else {
+            throw new EntidadNoEncontradaException("No existe el rol.");
         }
     }
 
