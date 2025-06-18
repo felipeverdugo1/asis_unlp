@@ -26,7 +26,7 @@ public class Encuesta {
     @Column( nullable = false)
     private LocalDate fecha;
 
-    @Column( nullable = false)
+    @Column( nullable = false, unique = true)
     private String nombreUnico;
 
     @JsonManagedReference
