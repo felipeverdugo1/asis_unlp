@@ -133,13 +133,8 @@ public class EncuestaController {
     @Operation(description = "Este endpoint nos permite eliminar la encuesta a partir de un id",
             parameters = @Parameter(name = "encuesta id"))
     public Response delete(@PathParam("id") Long id) {
-        Optional<Encuesta> objeto = service.buscarPorId(id);
-        if (objeto.isPresent()) {
-            service.eliminar(objeto.get());
-            return Response.noContent().build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        encuestaService.eliminar(id);
+        return Response.noContent().build();
     }
 }
 
