@@ -41,7 +41,7 @@ public class Usuario {
     @JoinTable(
             name = "usuario_roles",
             joinColumns = @JoinColumn(name = "usuario_id"),
-            inverseJoinColumns = @JoinColumn(name = "rol_id")
+            inverseJoinColumns = @JoinColumn(name = "rol_id", foreignKey = @ForeignKey(foreignKeyDefinition = "ON DELETE CASCADE"))
     )
     private Set<Rol> roles = new HashSet<>();
 

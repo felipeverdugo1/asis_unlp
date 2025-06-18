@@ -51,7 +51,7 @@ public class UsuarioController {
     public Response getUsuario(@PathParam("id") Long id) {
         Optional<Usuario> usuario = usuarioService.buscarPorId(id);
         if (usuario.isPresent()) {
-            return Response.ok(usuario).build();
+            return Response.ok(usuario.get()).build();
         } else {
             throw new EntidadNoEncontradaException("Usuario no encontrado");
         }
@@ -76,7 +76,7 @@ public class UsuarioController {
                                "password": "supersecreto",
                                "habilitado": true,
                                "roles_id": ["3", "2"],
-                               "especialidad": "Panadero" (opcional para referente de org social)
+                               "especialidad": "Panadero (opcional para referente de org social)"
                             }
                             """
                             )}
@@ -91,6 +91,7 @@ public class UsuarioController {
     @PUT
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Este endpoint nos permite actualizar un usuario.",
             parameters = @Parameter(name = "usuario id"),
             requestBody = @RequestBody(description = "un usuario en formato JSON",
@@ -106,20 +107,15 @@ public class UsuarioController {
                                "email": "usuarionuevo@gmail.com",
                                "password": "supersecreto",
                                "habilitado": true,
-                               "especialidad": "Panadero" (opcional para referente de org social)
+                               "especialidad": "Panadero (opcional para referente de org social)"
                             }
                             """
                             )}
                     )
             ))
-    public Response actualizarUsuario(@PathParam("id") Long id, Usuario usuarioActualizado) {
-        // TODO id roles mapeo etc
-        if ( usuarioService.buscarPorId(id) != null) {
-            usuarioService.actualizar(usuarioActualizado);
-            return Response.ok().build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+    public Response actualizarUsuario(@PathParam("id") Long id, UsuarioDTO dto) {
+        usuarioService.actualizar(id, dto);
+        return Response.ok().build();
     }
 
 
@@ -127,6 +123,7 @@ public class UsuarioController {
     @Path("{id}")
     @Operation(description = "Este endpoint nos permite obtener el usuario a partir de un id",
             parameters = @Parameter(name = "usuario id", required = true))
+    @Produces(MediaType.APPLICATION_JSON)
     public Response eliminarUsuario(@PathParam("id") Long id) {
         usuarioService.eliminar(id);
         return Response.noContent().build();
@@ -137,8 +134,31 @@ public class UsuarioController {
     @Operation(description = "Este endpoint permite habilitar o deshabilitar un usuario",
             parameters = { @Parameter(name = "usuario id", required = true),
                     @Parameter(name = "habilitacion", required = true) })
+    @Produces(MediaType.APPLICATION_JSON)
     public Response habilitarUsuario(@PathParam("id") Long id, @PathParam("habilitacion") Boolean habilitado) {
         Usuario usuario = usuarioService.habilitacionUsuario(id, habilitado);
+        return Response.status(Response.Status.CREATED).entity(usuario).build();
+    }
+
+    @PUT
+    @Path("/agregarRol/{id}/{rol_id}")
+    @Operation(description = "Este endpoint permite habilitar o deshabilitar un usuario",
+            parameters = { @Parameter(name = "usuario id", required = true),
+                    @Parameter(name = "rol_id", required = true) })
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response agregarRol(@PathParam("id") Long id, @PathParam("rol_id") Long rol_id) {
+        Usuario usuario = usuarioService.agregarRol(id, rol_id);
+        return Response.status(Response.Status.CREATED).entity(usuario).build();
+    }
+
+    @PUT
+    @Path("/quitarRol/{id}/{rol_id}")
+    @Operation(description = "Este endpoint permite habilitar o deshabilitar un usuario",
+            parameters = { @Parameter(name = "usuario id", required = true),
+                    @Parameter(name = "rol_id", required = true) })
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response quitarRol(@PathParam("id") Long id, @PathParam("rol_id") Long rol_id) {
+        Usuario usuario = usuarioService.quitarRol(id, rol_id);
         return Response.status(Response.Status.CREATED).entity(usuario).build();
     }
 }

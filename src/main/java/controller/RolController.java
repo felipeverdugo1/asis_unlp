@@ -1,6 +1,7 @@
 package controller;
 
-import exceptions.EntidadExistenteException;
+import controller.dto.RolDTO;
+import controller.dto.ZonaDTO;
 import exceptions.EntidadNoEncontradaException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -14,27 +15,26 @@ import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import model.Zona;
-import service.ZonaService;
-import controller.dto.ZonaDTO;
+import model.Rol;
+import service.RolService;
 
 import java.util.Optional;
 
 
-@Path("/zona")
+@Path("/rol")
 @Tag(
-        name = "Zonas",
-        description = "Controller que nos permite hacer operaciones sobre las zonas"
+        name = "Roles",
+        description = "Controller que nos permite hacer operaciones sobre los roles"
 )
-public class ZonaController {
+public class RolController {
 
     @Inject
-    ZonaService service;
+    RolService service;
 
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Este endpoint nos permite obtener todas las zonas registradas.")
+    @Operation(description = "Este endpoint nos permite obtener todas los roles registrados.")
     public Response get() {
         return Response.ok(service.listarTodos()).build();
     }
@@ -43,14 +43,14 @@ public class ZonaController {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Este endpoint nos permite obtener la zona a partir de un id",
+    @Operation(description = "Este endpoint nos permite obtener el rol a partir de un id",
             parameters = @Parameter(name = "zona id"))
     public Response get(@PathParam("id") Long id) {
-        Optional<Zona> objeto = service.buscarPorId(id);
+        Optional<Rol> objeto = service.buscarPorId(id);
         if (objeto.isPresent()) {
             return Response.ok(objeto.get()).build();
         } else {
-            throw new EntidadNoEncontradaException("No existe la zona.");
+            throw new EntidadNoEncontradaException("No existe el rol.");
         }
     }
 
@@ -58,19 +58,17 @@ public class ZonaController {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Este endpoint nos permite crear una zona.",
-            requestBody = @RequestBody(description = "una nueva zona en formato JSON",
+    @Operation(description = "Este endpoint nos permite crear un rol.",
+            requestBody = @RequestBody(description = "un nuevo rol en formato JSON",
                     required = true,
                     content = @Content(
                             mediaType = "application/json",
                             examples = {@ExampleObject(
-                                    name = "Zona 1",
-                                    summary = "Zona 1",
+                                    name = "Rol de prueba",
+                                    summary = "Rol de prueba",
                                     value = """
                             {
-                               "nombre": "Zona 1",
-                               "geolocalizacion": "-34.987, 45.8776",
-                               "barrio_id": "1"
+                               "nombre": "rol_prueba"
                             }
                             """
                             )}
@@ -82,9 +80,9 @@ public class ZonaController {
                     @ApiResponse(responseCode = "500", description = "Error interno.")
             }
     )
-    public Response post(@Valid ZonaDTO dto) {
-        Zona zona = service.crear(dto);
-        return Response.status(Response.Status.CREATED).entity(zona).build();
+    public Response post(@Valid RolDTO dto) {
+        Rol rol = service.crear(dto);
+        return Response.status(Response.Status.CREATED).entity(rol).build();
     }
 
 
@@ -92,27 +90,25 @@ public class ZonaController {
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Este endpoint nos permite actualizar una zona.",
-            parameters = @Parameter(name = "zona id"),
+    @Operation(description = "Este endpoint nos permite actualizar un rol.",
+            parameters = @Parameter(name = "rol id"),
             requestBody = @RequestBody(description = "una zona en formato JSON",
                     required = true,
                     content = @Content(
                             mediaType = "application/json",
                             examples = {@ExampleObject(
-                                    name = "Zona 1",
-                                    summary = "Zona 1",
+                                    name = "Rol de prueba",
+                                    summary = "Rol de prueba",
                                     value = """
                             {
-                               "nombre": "Zona 1",
-                               "geolocalizacion": "-34.987, 45.8776",
-                               "barrio_id": "1"
+                               "nombre": "rol_prueba_actualizado"
                             }
                             """
                             )}
                     )
             ))
-    public Response put(@PathParam("id") Long id, ZonaDTO dto) {
-        Zona zona = service.actualizar(id, dto);
+    public Response put(@PathParam("id") Long id, RolDTO dto) {
+        Rol zona = service.actualizar(id, dto);
         return Response.ok().build();
     }
 
@@ -120,8 +116,8 @@ public class ZonaController {
     @DELETE
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Este endpoint nos permite eliminar la zona a partir de un id",
-            parameters = @Parameter(name = "zona id"))
+    @Operation(description = "Este endpoint nos permite eliminar un rol a partir de un id",
+            parameters = @Parameter(name = "rol id"))
     public Response delete(@PathParam("id") Long id) {
         service.eliminar(id);
         return Response.noContent().build();
