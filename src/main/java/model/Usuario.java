@@ -49,7 +49,7 @@ public class Usuario {
     //Al serializar Usuario → incluye filtrosPersonalizados → cada FiltroPersonalizado referencia de nuevo a Usuario → bucle infinito.
     //Por lo tanto Usamos @JsonManagedReference (para relaciones bidireccionales):
     @JsonManagedReference
-    @OneToMany(mappedBy = "propietario", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "propietario", cascade = CascadeType.REMOVE)
     private List<FiltroPersonalizado> filtrosGuardados = new ArrayList<>();
 
     public void agregarRol(Rol rol) {

@@ -36,5 +36,4 @@ public class Zona {
     @JoinColumn(name = "zona_id")
     private List<Encuesta> encuestas;
 
-
 }
