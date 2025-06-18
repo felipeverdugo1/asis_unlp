@@ -1,5 +1,7 @@
 package controller;
 
+import controller.dto.PreguntaDTO;
+import controller.dto.ReporteDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,6 +13,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import model.Pregunta;
+import model.Reporte;
 import service.PreguntaService;
 
 import java.util.Optional;
@@ -72,15 +75,16 @@ public class PreguntaController {
                             )}
                     )
             ))
-    public Response post(Pregunta Pregunta) {
+    public Response post(PreguntaDTO dto) {
         //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con barrioService
-        service.crear(Pregunta);
+        Pregunta Pregunta = service.crear(dto);
         return Response.status(Response.Status.CREATED).entity(Pregunta).build();
     }
 
 
     @PUT
     @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(description = "Este endpoint nos permite actualizar una pregunta.",
             parameters = @Parameter(name = "pregunta id"),
@@ -102,29 +106,20 @@ public class PreguntaController {
                             )}
                     )
             ))
-    public Response put(@PathParam("id") Long id, Pregunta Pregunta) {
-        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con barrioService
-        if ( service.buscarPorId(id) != null) {
-            service.actualizar(Pregunta);
-            return Response.ok().build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+    public Response put(@PathParam("id") Long id, PreguntaDTO dto) {
+        Pregunta pregunta = service.actualizar(id, dto);
+        return Response.ok().build();
     }
 
 
     @DELETE
     @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Este endpoint nos permite eliminar la pregunta a partir de un id",
             parameters = @Parameter(name = "pregunta id"))
     public Response delete(@PathParam("id") Long id) {
-        Optional<Pregunta> objeto = service.buscarPorId(id);
-        if (objeto.isPresent()) {
-            service.eliminar(objeto.get());
-            return Response.noContent().build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        service.eliminar(id);
+        return Response.noContent().build();
     }
 }
 
