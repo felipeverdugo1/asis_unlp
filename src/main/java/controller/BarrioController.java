@@ -44,7 +44,7 @@ public class BarrioController {
     public Response get(@PathParam("id") Long id) {
         Optional<Barrio> objeto = barrioService.buscarPorId(id);
         if (objeto.isPresent()) {
-            return Response.ok(objeto).build();
+            return Response.ok(objeto.get()).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).entity(Map.of(
                     "error", "Barrio no encontrado",
