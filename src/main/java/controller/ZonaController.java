@@ -50,7 +50,7 @@ public class ZonaController {
         if (objeto.isPresent()) {
             return Response.ok(objeto).build();
         } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            throw new EntidadNoEncontradaException("No existe la zona.");
         }
     }
 
