@@ -1,7 +1,9 @@
 package controller;
 
+import controller.dto.UsuarioDTO;
 import dao.GenericDAO;
 import dao.GenericDAOImpl;
+import exceptions.EntidadNoEncontradaException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,6 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -50,7 +53,7 @@ public class UsuarioController {
         if (usuario.isPresent()) {
             return Response.ok(usuario).build();
         } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            throw new EntidadNoEncontradaException("Usuario no encontrado");
         }
     }
 
@@ -79,9 +82,8 @@ public class UsuarioController {
                             )}
                     )
             ))
-    public Response crearUsuario(Usuario usuario) {
-        // TODO id roles mapeo etc
-        usuarioService.crear(usuario);
+    public Response crearUsuario(UsuarioDTO dto) {
+        Usuario usuario = usuarioService.crear(dto);
         return Response.status(Response.Status.CREATED).entity(usuario).build();
     }
 
@@ -104,7 +106,6 @@ public class UsuarioController {
                                "email": "usuarionuevo@gmail.com",
                                "password": "supersecreto",
                                "habilitado": true,
-                               "roles_id": ["3", "2"],
                                "especialidad": "Panadero" (opcional para referente de org social)
                             }
                             """
@@ -125,15 +126,20 @@ public class UsuarioController {
     @DELETE
     @Path("{id}")
     @Operation(description = "Este endpoint nos permite obtener el usuario a partir de un id",
-            parameters = @Parameter(name = "usuario id"))
+            parameters = @Parameter(name = "usuario id", required = true))
     public Response eliminarUsuario(@PathParam("id") Long id) {
-        Optional<Usuario> personalDeSalud = usuarioService.buscarPorId(id);
-        if (personalDeSalud.isPresent()) {
-            usuarioService.eliminar(personalDeSalud.get());
-            return Response.noContent().build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        usuarioService.eliminar(id);
+        return Response.noContent().build();
+    }
+
+    @PUT
+    @Path("/habilitacion/{id}/{habilitacion}")
+    @Operation(description = "Este endpoint permite habilitar o deshabilitar un usuario",
+            parameters = { @Parameter(name = "usuario id", required = true),
+                    @Parameter(name = "habilitacion", required = true) })
+    public Response habilitarUsuario(@PathParam("id") Long id, @PathParam("habilitacion") Boolean habilitado) {
+        Usuario usuario = usuarioService.habilitacionUsuario(id, habilitado);
+        return Response.status(Response.Status.CREATED).entity(usuario).build();
     }
 }
 
