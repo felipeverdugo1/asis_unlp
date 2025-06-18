@@ -5,12 +5,14 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class OrganizaciónSocialDTO {
+public class OrganizacionSocialDTO {
 
     @NotBlank(message = "Nombre es obligatorio")
     private String nombre;
     @NotBlank(message = "Geolocalizacion es obligatoria")
-    private String geolocalizacion;
+    private String domicilio;
+    private String actividadPrincipal;
     @NotNull(message = "El id del barrio es obligatorio")
     private Long barrio_id;
+    private Long referente_id;
 }
