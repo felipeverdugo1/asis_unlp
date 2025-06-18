@@ -1,5 +1,6 @@
 package model;
 
+import jakarta.inject.Inject;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,4 +25,5 @@ public class Rol {
     public Rol(String tipoRol) {
         this.nombre = tipoRol;
     }
+
 }

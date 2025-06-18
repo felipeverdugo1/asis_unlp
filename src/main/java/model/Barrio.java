@@ -29,7 +29,7 @@ public class Barrio {
     private String informacion;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "barrio", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "barrio", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Zona> zonas = new ArrayList<>();
 
     @JsonManagedReference
