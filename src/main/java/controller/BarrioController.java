@@ -123,19 +123,13 @@ public class BarrioController {
 
     @DELETE
     @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Este endpoint nos permite eliminar el barrio a partir de un id",
             parameters = @Parameter(name = "barrio id"))
     public Response delete(@PathParam("id") Long id) {
-        Optional<Barrio> objeto = barrioService.buscarPorId(id);
-        if (objeto.isPresent()) {
-            barrioService.eliminar(objeto.get());
-            return Response.noContent().build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).entity(Map.of(
-                    "error", "Barrio no encontrado",
-                    "code", 404
-            )).build();
-        }
+        barrioService.eliminar(id);
+        return Response.noContent().build();
+
     }
 }
 
