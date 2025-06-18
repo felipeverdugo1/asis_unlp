@@ -63,13 +63,15 @@ public class CampañaController {
                             {
                                "nombre": "Campaña 1",
                                "fechaInicio": "2025-06-13",
-                               "fechaFin": "2025-06-13"
+                               "fechaFin": "2025-06-13",
+                               "barrio_id": "1"
                             }
                             """
                             )}
                     )
             ))
     public Response post(Campaña Campaña) {
+        // TODO id buscar vos sabe
         service.crear(Campaña);
         return Response.status(Response.Status.CREATED).entity(Campaña).build();
     }
@@ -91,13 +93,17 @@ public class CampañaController {
                             {
                                "nombre": "Campaña 1",
                                "fechaInicio": "2025-06-13",
-                               "fechaFin": "2025-06-13"
+                               "fechaFin": "2025-06-13",
+                               "barrio_id": "1",
+                               "jornadas_id": ["2", "3"], (opcional)
+                               "reportes_id": ["3"] (opcional)
                             }
                             """
                             )}
                     )
             ))
     public Response put(@PathParam("id") Long id, Campaña Campaña) {
+        // TODO id buscar vos sabe
         if ( service.buscarPorId(id) != null) {
             service.actualizar(Campaña);
             return Response.ok().build();

@@ -38,10 +38,9 @@ public class Encuesta {
     @JoinColumn(name = "jornada_id", nullable = false)
     private Jornada jornada;
 
-
     @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "zona_id", nullable = true)
+    @JoinColumn(name = "zona_id", nullable = false)
     private Zona zona;
 
     @JsonBackReference

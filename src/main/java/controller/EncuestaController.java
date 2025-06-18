@@ -96,7 +96,8 @@ public class EncuestaController {
                                "fecha": "2025-06-13",
                                "encuestador_id": "3",
                                "zona_id": "1",
-                               "jornada_id": "1"
+                               "jornada_id": "1",
+                               "preguntas_id": ["3", "4"] (opcional)
                             }
                             """
                             )}

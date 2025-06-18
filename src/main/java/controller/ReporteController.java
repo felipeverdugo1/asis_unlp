@@ -67,7 +67,8 @@ public class ReporteController {
                                "fechaCreacion": "2025-04-24",
                                "nombreUnico": "/path/al/reporte.pdf",
                                "descripcion": "Reporte de niños con diabetes",
-                               "creadoPor_id": "1"
+                               "creadoPor_id": "1",
+                               "campaña_id": "2"
                             }
                             """
                             )}
@@ -97,7 +98,9 @@ public class ReporteController {
                                "fechaCreacion": "2025-04-24",
                                "nombreUnico": "/path/al/reporte.pdf",
                                "descripcion": "Reporte de niños con diabetes",
-                               "creadoPor_id": "1"
+                               "creadoPor_id": "1",
+                               "campaña_id": "2",
+                               "compartidoCon_id": "3" (opcional cuando se comparte)
                             }
                             """
                             )}

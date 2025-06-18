@@ -21,12 +21,12 @@ public class FiltroPersonalizado {
     private String nombre;
 
     // string con formato con el setup del filtro
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String criterios;
 
     @ManyToOne
     @JsonBackReference //Explicacion en model.Usuario
-    @JoinColumn(name = "usuario_id")
+    @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario propietario;
 
 }

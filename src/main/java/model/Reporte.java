@@ -8,6 +8,7 @@ import lombok.experimental.Accessors;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Data
@@ -32,13 +33,21 @@ public class Reporte {
 
     @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "creado_por")
+    @JoinColumn(name = "creado_por", nullable = false)
     private Usuario creadoPor;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "reporte_compartidos",
+            joinColumns = @JoinColumn(name = "reporte_id"),
+            inverseJoinColumns = @JoinColumn(name = "compartidoCon")
+    )
+    private List<Usuario> compartidoCon;
 
     @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "compartido_con")
-    private Usuario compartidoCon;
+    @JoinColumn(name = "campaña_id", nullable = false)
+    private Campaña campaña;
 
 
  

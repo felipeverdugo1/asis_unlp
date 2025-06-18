@@ -69,13 +69,16 @@ public class UsuarioController {
                                "nombreUsuario": "usuarionuevo",
                                "email": "usuarionuevo@gmail.com",
                                "password": "supersecreto",
-                               "habilitado": true
+                               "habilitado": true,
+                               "roles_id": ["3", "2"],
+                               "especialidad": "Panadero" (opcional para referente de org social)
                             }
                             """
                             )}
                     )
             ))
     public Response crearUsuario(Usuario usuario) {
+        // TODO id roles mapeo etc
         usuarioService.crear(usuario);
         return Response.status(Response.Status.CREATED).entity(usuario).build();
     }
@@ -98,13 +101,16 @@ public class UsuarioController {
                                "nombreUsuario": "usuarionuevo",
                                "email": "usuarionuevo@gmail.com",
                                "password": "supersecreto",
-                               "habilitado": true
+                               "habilitado": true,
+                               "roles_id": ["3", "2"],
+                               "especialidad": "Panadero" (opcional para referente de org social)
                             }
                             """
                             )}
                     )
             ))
     public Response actualizarUsuario(@PathParam("id") Long id, Usuario usuarioActualizado) {
+        // TODO id roles mapeo etc
         if ( usuarioService.buscarPorId(id) != null) {
             usuarioService.actualizar(usuarioActualizado);
             return Response.ok().build();

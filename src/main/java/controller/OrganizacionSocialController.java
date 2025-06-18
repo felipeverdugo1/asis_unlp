@@ -64,7 +64,8 @@ public class OrganizacionSocialController {
                                "nombre": "Organizacion Plato Lleno",
                                "domicilio": "Calle 52 n°420",
                                "actividadPrincipal": "Deportes",
-                               "barrio_id": "3"
+                               "barrio_id": "3",
+                               "referente_id": "5"
                             }
                             """
                             )}
@@ -94,7 +95,8 @@ public class OrganizacionSocialController {
                                "nombre": "Organizacion Plato Lleno",
                                "domicilio": "Calle 52 n°420",
                                "actividadPrincipal": "Deportes",
-                               "barrio_id": "3"
+                               "barrio_id": "3",
+                               "referente_id": "5"
                             }
                             """
                             )}

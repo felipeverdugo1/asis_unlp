@@ -28,12 +28,12 @@ public class OrganizacionSocial {
 
     @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "barrio_id")
+    @JoinColumn(name = "barrio_id", nullable = false)
     private Barrio barrio;
 
     @ManyToOne
     @JsonBackReference //Explicacion en model.Usuario
-    @JoinColumn(name = "usuario_id")
+    @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario referente;
 
 
