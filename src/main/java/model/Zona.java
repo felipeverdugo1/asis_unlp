@@ -9,7 +9,8 @@ import lombok.experimental.Accessors;
 import java.util.List;
 
 
-@Data
+@Getter
+@Setter
 @Accessors(chain = true)
 @NoArgsConstructor(access = AccessLevel.NONE)
 @Entity
@@ -35,5 +36,10 @@ public class Zona {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "zona_id")
     private List<Encuesta> encuestas;
+
+    @Override
+    public int hashCode(){
+        return this.id.hashCode();
+    }
 
 }

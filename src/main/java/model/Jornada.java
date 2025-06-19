@@ -10,10 +10,14 @@ import lombok.experimental.Accessors;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
-@Data
+@Getter
+@Setter
 @Accessors(chain = true)
 @NoArgsConstructor
 @Entity
@@ -39,11 +43,11 @@ public class Jornada {
     @OneToMany(mappedBy = "jornada", cascade = CascadeType.ALL)
     private List<Encuesta> encuestas = new ArrayList<>();
 
-    @JsonManagedReference
-    @ManyToMany
-    @JoinTable(name="jornada_zona", joinColumns = @JoinColumn(name="jornada_id"), inverseJoinColumns = @JoinColumn(name="zona_id"))
-    private List<Zona> zonas = new ArrayList<>();
-
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name="jornada_zona",
+            joinColumns = @JoinColumn(name="jornada_id"),
+            inverseJoinColumns = @JoinColumn(name="zona_id"))
+    private Set<Zona> zonas = new HashSet<>();
 
     public void agregarEncuesta(Encuesta encuesta) {
         this.encuestas.add(encuesta);
@@ -55,7 +59,7 @@ public class Jornada {
     }
 
     public void quitarZona(Zona zona) {
-        this.zonas.remove(zona);
+        this.zonas = this.zonas.stream().filter(zona1 -> !zona1.getId().equals(zona.getId())).collect(Collectors.toSet());
     }
 
 }
