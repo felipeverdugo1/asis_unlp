@@ -58,8 +58,8 @@ public class Jornada {
         this.zonas.add(zona);
     }
 
-    public void quitarZona(Zona zona) {
-        this.zonas = this.zonas.stream().filter(zona1 -> !zona1.getId().equals(zona.getId())).collect(Collectors.toSet());
+    public void quitarZona(Long id) {
+        this.zonas.removeIf(zona -> zona.getId().equals(id));
     }
 
 }

@@ -46,7 +46,7 @@ public class OrganizacionSocialController {
     public Response get(@PathParam("id") Long id) {
         Optional<OrganizacionSocial> objeto = service.buscarPorId(id);
         if (objeto.isPresent()) {
-            return Response.ok(objeto).build();
+            return Response.ok(objeto.get()).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }

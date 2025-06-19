@@ -32,11 +32,6 @@ public class Zona {
     @JoinColumn(name = "barrio_id", nullable = false)
     private Barrio barrio;
 
-    @JsonManagedReference
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "zona_id")
-    private List<Encuesta> encuestas;
-
     @Override
     public int hashCode(){
         return this.id.hashCode();

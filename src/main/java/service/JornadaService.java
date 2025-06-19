@@ -97,7 +97,7 @@ public class JornadaService extends GenericServiceImpl<Jornada, Long> {
         }
         Zona zona = zona_t.get();
         Jornada jornada = jornada_t.get();
-        jornada.quitarZona(zona);
+        jornada.quitarZona(zona.getId());
         jornadaDAO.actualizar(jornada);
         return jornada;
     }

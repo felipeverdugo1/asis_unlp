@@ -73,8 +73,8 @@ public class JornadaController {
                     )
             ))
     public Response post(JornadaDTO dto) {
-        service.crear(dto);
-        return Response.status(Response.Status.CREATED).entity(dto).build();
+        Jornada jornada = service.crear(dto);
+        return Response.status(Response.Status.CREATED).entity(jornada).build();
     }
 
 

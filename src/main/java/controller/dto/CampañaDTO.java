@@ -11,12 +11,9 @@ public class CampañaDTO {
 
     @NotBlank(message = "Nombre es obligatorio")
     private String nombre;
-    @NotBlank(message = "Geolocalizacion es obligatoria")
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
     @NotNull(message = "El id del barrio es obligatorio")
     private Long barrio_id;
-    private Long jornada_id;
-    private Long reportes_id;
 
 }
