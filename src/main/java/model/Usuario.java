@@ -41,7 +41,7 @@ public class Usuario {
     @JoinTable(
             name = "usuario_roles",
             joinColumns = @JoinColumn(name = "usuario_id"),
-            inverseJoinColumns = @JoinColumn(name = "rol_id", foreignKey = @ForeignKey(foreignKeyDefinition = "ON DELETE CASCADE"))
+            inverseJoinColumns = @JoinColumn(name = "rol_id")
     )
     private Set<Rol> roles = new HashSet<>();
 
@@ -56,8 +56,8 @@ public class Usuario {
         this.roles.add(rol);
     }
 
-    public void quitarRol(Rol rol) {
-        this.roles.remove(rol);
+    public void quitarRol(Long id) {
+        this.roles.removeIf(rol -> rol.getId().equals(id));
     }
 
     public void agregarFiltroPersonalizado(FiltroPersonalizado filtroPersonalizado) {
