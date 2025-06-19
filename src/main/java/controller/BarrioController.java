@@ -1,15 +1,23 @@
 package controller;
 
+import controller.dto.BarrioDTO;
 import io.swagger.v3.oas.annotations.media.*;
 import io.swagger.v3.oas.annotations.parameters.*;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import model.Barrio;
+import model.Zona;
 import service.BarrioService;
 import io.swagger.v3.oas.annotations.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
+import java.util.Map;
+
+import java.util.Optional;
 
 @Path("/barrio")
 @Tag(
@@ -19,13 +27,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class BarrioController {
 
     @Inject
-    BarrioService service;
+    BarrioService barrioService;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Este endpoint nos permite obtener todos los barrios registrados.")
     public Response get() {
-        return Response.ok(service.listarTodos()).build();
+        return Response.ok(barrioService.listarTodos()).build();
     }
 
     @GET
@@ -34,11 +42,14 @@ public class BarrioController {
     @Operation(description = "Este endpoint nos permite obtener el barrio a partir de un id",
             parameters = @Parameter(name = "barrio id"))
     public Response get(@PathParam("id") Long id) {
-        Barrio objeto = service.buscarPorId(id);
-        if (objeto != null) {
-            return Response.ok(objeto).build();
+        Optional<Barrio> objeto = barrioService.buscarPorId(id);
+        if (objeto.isPresent()) {
+            return Response.ok(objeto.get()).build();
         } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.status(Response.Status.NOT_FOUND).entity(Map.of(
+                    "error", "Barrio no encontrado",
+                    "code", 404
+            )).build();
         }
     }
 
@@ -47,7 +58,7 @@ public class BarrioController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Este endpoint nos permite crear un barrio.",
-    requestBody = @RequestBody(description = "un nuevo barrio en formato JSON",
+        requestBody = @RequestBody(description = "un nuevo barrio en formato JSON",
             required = true,
             content = @Content(
                 mediaType = "application/json",
@@ -63,9 +74,15 @@ public class BarrioController {
                             """
                 )}
             )
-    ))
-    public Response post(Barrio barrio) {
-        service.crear(barrio);
+        ),
+        responses = {
+                @ApiResponse(responseCode = "200", description = "Creacion exitosa"),
+                @ApiResponse(responseCode = "400", description = "Error de validacion."),
+                @ApiResponse(responseCode = "500", description = "Error interno.")
+        }
+    )
+    public Response post(BarrioDTO barrioDTO) {
+        Barrio barrio = barrioService.crear(barrioDTO);
         return Response.status(Response.Status.CREATED).entity(barrio).build();
     }
 
@@ -73,6 +90,7 @@ public class BarrioController {
     @PUT
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Este endpoint nos permite actualizar el barrio a partir de un id",
             parameters = @Parameter(name = "barrio id"),
             requestBody = @RequestBody(description = "un nuevo barrio en formato JSON",
@@ -91,29 +109,28 @@ public class BarrioController {
                             """
                             )}
                     )
-    ))
-    public Response put(@PathParam("id") Long id, Barrio barrio) {
-        if ( service.buscarPorId(id) != null) {
-            service.actualizar(barrio);
-            return Response.ok().build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+            ),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Actualizacion exitosa"),
+                    @ApiResponse(responseCode = "400", description = "Error de validacion."),
+                    @ApiResponse(responseCode = "500", description = "Error interno.")
+            }
+    )
+    public Response put(@PathParam("id") Long id, BarrioDTO barrioDTO) {
+        Barrio barrio = barrioService.actualizar(id, barrioDTO);
+        return Response.status(Response.Status.OK).entity(barrio).build();
     }
 
 
     @DELETE
     @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Este endpoint nos permite eliminar el barrio a partir de un id",
             parameters = @Parameter(name = "barrio id"))
     public Response delete(@PathParam("id") Long id) {
-        Barrio objeto = service.buscarPorId(id);
-        if (objeto != null) {
-            service.eliminar(id);
-            return Response.noContent().build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        barrioService.eliminar(id);
+        return Response.noContent().build();
+
     }
 }
 

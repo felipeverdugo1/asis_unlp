@@ -1,5 +1,7 @@
 package controller;
 
+import controller.dto.CampañaDTO;
+import controller.dto.ReporteDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,7 +13,11 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import model.Campaña;
+import model.Reporte;
 import service.CampañaService;
+
+import javax.swing.text.html.Option;
+import java.util.Optional;
 
 
 @Path("/campaña")
@@ -39,8 +45,8 @@ public class CampañaController {
     @Operation(description = "Este endpoint nos permite obtener la campaña a partir de un id",
             parameters = @Parameter(name = "campaña id"))
     public Response get(@PathParam("id") Long id) {
-        Campaña objeto = service.buscarPorId(id);
-        if (objeto != null) {
+        Optional<Campaña> objeto = service.buscarPorId(id);
+        if (objeto.isPresent()) {
             return Response.ok(objeto).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -70,15 +76,16 @@ public class CampañaController {
                             )}
                     )
             ))
-    public Response post(Campaña Campaña) {
+    public Response post(CampañaDTO dto) {
         // TODO id buscar vos sabe
-        service.crear(Campaña);
-        return Response.status(Response.Status.CREATED).entity(Campaña).build();
+        Campaña campaña = service.crear(dto);
+        return Response.status(Response.Status.CREATED).entity(campaña).build();
     }
 
 
     @PUT
     @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(description = "Este endpoint nos permite actualizar una campaña.",
             parameters = @Parameter(name = "campaña id"),
@@ -102,14 +109,9 @@ public class CampañaController {
                             )}
                     )
             ))
-    public Response put(@PathParam("id") Long id, Campaña Campaña) {
-        // TODO id buscar vos sabe
-        if ( service.buscarPorId(id) != null) {
-            service.actualizar(Campaña);
-            return Response.ok().build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+    public Response put(@PathParam("id") Long id, CampañaDTO dto) {
+        Campaña campaña = service.actualizar(id, dto);
+        return Response.ok().build();
     }
 
     @DELETE
@@ -117,13 +119,8 @@ public class CampañaController {
     @Operation(description = "Este endpoint nos permite eliminar la campaña a partir de un id",
             parameters = @Parameter(name = "campaña id"))
     public Response delete(@PathParam("id") Long id) {
-        Campaña objeto = service.buscarPorId(id);
-        if (objeto != null) {
-            service.eliminar(id);
-            return Response.noContent().build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        service.eliminar(id);
+        return Response.noContent().build();
     }
 }
 

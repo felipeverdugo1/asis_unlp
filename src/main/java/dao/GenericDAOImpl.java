@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
 
@@ -39,10 +40,12 @@ public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
     }
 
     @Override
-    public T buscarPorId(ID id) {
+    public Optional<T> buscarPorId(ID id) {
         try {
             T t = em.find(tipoEntidad, id);
-            return t;
+            return Optional.ofNullable(t);
+        } catch (NoResultException e) {
+            return Optional.empty();
         } catch (Exception e) {
             throw e;
         } finally {
@@ -66,14 +69,11 @@ public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
     }
 
     @Override
-    public void eliminar(ID id) {
+    public void eliminar(T entidad) {
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
-            T entidad = buscarPorId(id);
-            if (entidad != null) {
-                em.remove(entidad);
-            }
+            em.remove(entidad);
             tx.commit();
         } catch (Exception e) {
             if (tx != null && tx.isActive()) {
@@ -98,12 +98,15 @@ public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
 
 
     @Override
-    public T buscarPorCampo(String campo, Object valor) {
+    public Optional<T> buscarPorCampo(String campo, Object valor) {
         try {
             String jpql = "SELECT e FROM " + tipoEntidad.getSimpleName() + " e WHERE e." + campo + " = :valor";
-            return em.createQuery(jpql, tipoEntidad)
+            T resultado = em.createQuery(jpql, tipoEntidad)
                     .setParameter("valor", valor)
                     .getSingleResult();
+            return Optional.ofNullable(resultado);
+        } catch (NoResultException e) {
+            return Optional.empty();
         } catch (Exception e) {
             throw e;
         } finally {

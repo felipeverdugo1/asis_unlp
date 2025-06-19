@@ -3,16 +3,17 @@ package dao;
 import jakarta.persistence.EntityManager;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface GenericDAO<T, ID> {
     // Operaciones CRUD básicas
     void crear(T entidad);
-    T buscarPorId(ID id);
+    Optional<T> buscarPorId(ID id);
     void actualizar(T entidad);
-    void eliminar(ID id);
+    void eliminar(T entidad);
     List<T> listarTodos();
     void flush();
 
-    T buscarPorCampo(String campo, Object valor);
+    Optional<T> buscarPorCampo(String campo, Object valor);
     List<T> buscarTodosPorCampoLike(String campo, Object patron);
 }

@@ -1,5 +1,7 @@
 package controller;
 
+import controller.dto.OrganizacionSocialDTO;
+import controller.dto.ReporteDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,7 +13,10 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import model.OrganizacionSocial;
+import model.Reporte;
 import service.OrganizacionSocialService;
+
+import java.util.Optional;
 
 
 @Path("/organizacionSocial")
@@ -39,8 +44,8 @@ public class OrganizacionSocialController {
     @Operation(description = "Este endpoint nos permite obtener la organizacion a partir de un id",
             parameters = @Parameter(name = "organizacion id"))
     public Response get(@PathParam("id") Long id) {
-        OrganizacionSocial objeto = service.buscarPorId(id);
-        if (objeto != null) {
+        Optional<OrganizacionSocial> objeto = service.buscarPorId(id);
+        if (objeto.isPresent()) {
             return Response.ok(objeto).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -71,16 +76,17 @@ public class OrganizacionSocialController {
                             )}
                     )
             ))
-    public Response post(OrganizacionSocial OrganizacionSocial) {
-        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con service
-        service.crear(OrganizacionSocial);
-        return Response.status(Response.Status.CREATED).entity(OrganizacionSocial).build();
+    public Response post(OrganizacionSocialDTO dto) {
+        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con barrioService
+        OrganizacionSocial organizacionSocial = service.crear(dto);
+        return Response.status(Response.Status.CREATED).entity(organizacionSocial).build();
     }
 
 
     @PUT
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces({MediaType.APPLICATION_JSON})
     @Operation(description = "Este endpoint nos permite actualizar una organizacion.",
             parameters = @Parameter(name = "organizacion id"),
             requestBody = @RequestBody(description = "una organizacion en JSON",
@@ -102,14 +108,9 @@ public class OrganizacionSocialController {
                             )}
                     )
             ))
-    public Response put(@PathParam("id") Long id, OrganizacionSocial OrganizacionSocial) {
-        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con service
-        if ( service.buscarPorId(id) != null) {
-            service.actualizar(OrganizacionSocial);
-            return Response.ok().build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+    public Response put(@PathParam("id") Long id, OrganizacionSocialDTO dto) {
+        OrganizacionSocial organizacionSocial = service.actualizar(id, dto);
+        return Response.ok().build();
     }
 
 
@@ -118,14 +119,7 @@ public class OrganizacionSocialController {
     @Operation(description = "Este endpoint nos permite eliminar la organizacion a partir de un id",
             parameters = @Parameter(name = "organizacion id"))
     public Response delete(@PathParam("id") Long id) {
-        OrganizacionSocial objeto = service.buscarPorId(id);
-        if (objeto != null) {
-            service.eliminar(id);
-            return Response.noContent().build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        service.eliminar(id);
+        return Response.noContent().build();
     }
 }
-
-

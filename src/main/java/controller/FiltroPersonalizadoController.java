@@ -1,5 +1,7 @@
 package controller;
 
+import controller.dto.FiltroDTO;
+import controller.dto.ReporteDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,7 +13,10 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import model.FiltroPersonalizado;
+import model.Reporte;
 import service.FiltroPersonalizadoService;
+
+import java.util.Optional;
 
 
 @Path("/filtro")
@@ -39,8 +44,8 @@ public class FiltroPersonalizadoController {
     @Operation(description = "Este endpoint nos permite obtener el filtro a partir de un id",
             parameters = @Parameter(name = "filtro id"))
     public Response get(@PathParam("id") Long id) {
-        FiltroPersonalizado objeto = service.buscarPorId(id);
-        if (objeto != null) {
+        Optional<FiltroPersonalizado> objeto = service.buscarPorId(id);
+        if (objeto.isPresent()) {
             return Response.ok(objeto).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -69,15 +74,16 @@ public class FiltroPersonalizadoController {
                             )}
                     )
             ))
-    public Response post(FiltroPersonalizado filtroPersonalizado) {
-        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con service
-        service.crear(filtroPersonalizado);
+    public Response post(FiltroDTO dto) {
+        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con barrioService
+        FiltroPersonalizado filtroPersonalizado = service.crear(dto);
         return Response.status(Response.Status.CREATED).entity(filtroPersonalizado).build();
     }
 
 
     @PUT
     @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(description = "Este endpoint nos permite actualizar un filtro.",
             parameters = @Parameter(name = "filtro id"),
@@ -98,27 +104,19 @@ public class FiltroPersonalizadoController {
                             )}
                     )
             ))
-    public Response put(@PathParam("id") Long id, FiltroPersonalizado filtroPersonalizado) {
-        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con service
-        if ( service.buscarPorId(id) != null) {
-            service.actualizar(filtroPersonalizado);
-            return Response.ok().build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+    public Response put(@PathParam("id") Long id, FiltroDTO dto) {
+        FiltroPersonalizado filtroPersonalizado = service.actualizar(id, dto);
+        return Response.ok().build();
     }
+
+
 
     @DELETE
     @Path("{id}")
     @Operation(description = "Este endpoint nos permite eliminar el filtro a partir de un id",
             parameters = @Parameter(name = "filtro id"))
     public Response delete(@PathParam("id") Long id) {
-        FiltroPersonalizado objeto = service.buscarPorId(id);
-        if (objeto != null) {
-            service.eliminar(id);
-            return Response.noContent().build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        service.eliminar(id);
+        return Response.noContent().build();
     }
 }

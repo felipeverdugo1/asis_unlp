@@ -1,20 +1,27 @@
 package controller;
 
+import controller.dto.ReporteDTO;
+import controller.dto.ZonaDTO;
 import dao.GenericDAOImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import model.Reporte;
+import model.Zona;
 import service.GenericService;
 import service.GenericServiceImpl;
 import service.ReporteService;
+
+import java.util.Optional;
 
 
 @Path("/reporte")
@@ -42,8 +49,8 @@ public class ReporteController {
     @Operation(description = "Este endpoint nos permite obtener el reporte a partir de un id",
             parameters = @Parameter(name = "reporte id"))
     public Response get(@PathParam("id") Long id) {
-        Reporte objeto = service.buscarPorId(id);
-        if (objeto != null) {
+        Optional<Reporte> objeto = service.buscarPorId(id);
+        if (objeto.isPresent()) {
             return Response.ok(objeto).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -73,17 +80,24 @@ public class ReporteController {
                             """
                             )}
                     )
-            ))
-    public Response post(Reporte Reporte) {
-        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con service
-        service.crear(Reporte);
-        return Response.status(Response.Status.CREATED).entity(Reporte).build();
+            ), responses = {
+            @ApiResponse(responseCode = "200", description = "Creacion exitosa"),
+            @ApiResponse(responseCode = "400", description = "Error de validacion."),
+            @ApiResponse(responseCode = "500", description = "Error interno.")
+    }
+    )
+
+    public Response post(@Valid ReporteDTO dto) {
+        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con barrioService
+        Reporte reporte = service.crear(dto);
+        return Response.status(Response.Status.CREATED).entity(reporte).build();
     }
 
 
     @PUT
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Este endpoint nos permite actualizar el reporte a partir de un id",
             parameters = @Parameter(name = "reporte id"),
             requestBody = @RequestBody(description = "un reporte en formato JSON",
@@ -106,29 +120,20 @@ public class ReporteController {
                             )}
                     )
             ))
-    public Response put(@PathParam("id") Long id, Reporte Reporte) {
-        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con service
-        if ( service.buscarPorId(id) != null) {
-            service.actualizar(Reporte);
-            return Response.ok().build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+    public Response put(@PathParam("id") Long id, ReporteDTO dto) {
+        Reporte reporte = service.actualizar(id, dto);
+        return Response.ok().build();
     }
 
 
     @DELETE
     @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Este endpoint nos permite obtener el reporte a partir de un id",
             parameters = @Parameter(name = "reporte id"))
     public Response delete(@PathParam("id") Long id) {
-        Reporte objeto = service.buscarPorId(id);
-        if (objeto != null) {
-            service.eliminar(id);
-            return Response.noContent().build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        service.eliminar(id);
+        return Response.noContent().build();
     }
 }
 
