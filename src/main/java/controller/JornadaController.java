@@ -1,5 +1,6 @@
 package controller;
 
+import controller.dto.JornadaDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,6 +12,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import model.Jornada;
+import model.Usuario;
 import service.JornadaService;
 
 import java.util.Optional;
@@ -42,7 +44,7 @@ public class JornadaController {
     public Response get(@PathParam("id") Long id) {
         Optional<Jornada> objeto = service.buscarPorId(id);
         if (objeto.isPresent()) {
-            return Response.ok(objeto).build();
+            return Response.ok(objeto.get()).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
@@ -62,7 +64,6 @@ public class JornadaController {
                                     summary = "Jornada 1",
                                     value = """
                             {
-                               "nombre": "Campaña 1",
                                "fechaInicio": "2025-06-13",
                                "fechaFin": "2025-06-13",
                                "campaña_id": "1"
@@ -71,10 +72,9 @@ public class JornadaController {
                             )}
                     )
             ))
-    public Response post(Jornada Jornada) {
-        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con barrioService
-        service.crear(Jornada);
-        return Response.status(Response.Status.CREATED).entity(Jornada).build();
+    public Response post(JornadaDTO dto) {
+        service.crear(dto);
+        return Response.status(Response.Status.CREATED).entity(dto).build();
     }
 
 
@@ -92,7 +92,6 @@ public class JornadaController {
                                     summary = "Jornada 1",
                                     value = """
                             {
-                               "nombre": "Campaña 1",
                                "fechaInicio": "2025-06-13",
                                "fechaFin": "2025-06-13",
                                "campaña_id": "1"
@@ -101,14 +100,9 @@ public class JornadaController {
                             )}
                     )
             ))
-    public Response put(@PathParam("id") Long id, Jornada Jornada) {
-        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con barrioService
-        if ( service.buscarPorId(id) != null) {
-            service.actualizar(Jornada);
+    public Response put(@PathParam("id") Long id, JornadaDTO dto) {
+            service.actualizar(id, dto);
             return Response.ok().build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
     }
 
 
@@ -124,6 +118,28 @@ public class JornadaController {
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+    }
+
+    @PUT
+    @Path("/agregarZona/{id}/{zona_id}")
+    @Operation(description = "Este endpoint permite habilitar o deshabilitar un usuario",
+            parameters = { @Parameter(name = "usuario id", required = true),
+                    @Parameter(name = "zona_id", required = true) })
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response agregarZona(@PathParam("id") Long id, @PathParam("zona_id") Long zona_id) {
+        Jornada jornada = service.agregarZona(id, zona_id);
+        return Response.status(Response.Status.CREATED).entity(jornada).build();
+    }
+
+    @PUT
+    @Path("/quitarZona/{id}/{zona_id}")
+    @Operation(description = "Este endpoint permite habilitar o deshabilitar un usuario",
+            parameters = { @Parameter(name = "usuario id", required = true),
+                    @Parameter(name = "zona_id", required = true) })
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response quitarZona(@PathParam("id") Long id, @PathParam("zona_id") Long zona_id) {
+        Jornada jornada = service.quitarZona(id, zona_id);
+        return Response.status(Response.Status.CREATED).entity(jornada).build();
     }
 }
 
