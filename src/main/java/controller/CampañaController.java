@@ -47,7 +47,7 @@ public class CampañaController {
     public Response get(@PathParam("id") Long id) {
         Optional<Campaña> objeto = service.buscarPorId(id);
         if (objeto.isPresent()) {
-            return Response.ok(objeto).build();
+            return Response.ok(objeto.get()).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
@@ -77,7 +77,6 @@ public class CampañaController {
                     )
             ))
     public Response post(CampañaDTO dto) {
-        // TODO id buscar vos sabe
         Campaña campaña = service.crear(dto);
         return Response.status(Response.Status.CREATED).entity(campaña).build();
     }
@@ -101,9 +100,7 @@ public class CampañaController {
                                "nombre": "Campaña 1",
                                "fechaInicio": "2025-06-13",
                                "fechaFin": "2025-06-13",
-                               "barrio_id": "1",
-                               "jornadas_id": ["2", "3"], (opcional)
-                               "reportes_id": ["3"] (opcional)
+                               "barrio_id": "1"
                             }
                             """
                             )}

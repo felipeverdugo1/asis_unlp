@@ -4,6 +4,7 @@ package service;
 import controller.dto.RolDTO;
 import dao.RolDAO;
 import exceptions.EntidadExistenteException;
+import exceptions.NoPuedesHacerEsoException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
@@ -54,6 +55,11 @@ public class RolService extends GenericServiceImpl<Rol, Long> {
         if (rol_t.isEmpty()) {
             throw new EntidadExistenteException("No existe un rol con ese id.");
         }
-        rolDAO.eliminar(rol_t.get());
+        List<Usuario> usuarios = usuarioService.getUsuariosByRol(id);
+        if (usuarios.isEmpty()) {
+            rolDAO.eliminar(rol_t.get());
+        } else {
+            throw new NoPuedesHacerEsoException("Existen usuarios con ese rol asignado.");
+        }
     }
 }

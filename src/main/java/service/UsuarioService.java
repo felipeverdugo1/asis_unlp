@@ -82,7 +82,7 @@ public class UsuarioService extends GenericServiceImpl<Usuario, Long> {
             if (rol_t.isPresent()) {
                 Usuario usuario = usuario_t.get();
                 Rol rol = rol_t.get();
-                usuario.quitarRol(rol);
+                usuario.quitarRol(rol.getId());
                 usuarioDAO.actualizar(usuario);
                 return usuario;
             } else {
@@ -115,8 +115,8 @@ public class UsuarioService extends GenericServiceImpl<Usuario, Long> {
         Optional<Usuario> usuario_t = usuarioDAO.buscarPorId(id);
         if (usuario_t.isPresent()) {
             Usuario usuario = usuario_t.get();
-            //usuario.getRoles().clear();
-            //usuarioDAO.actualizar(usuario);
+            usuario.getRoles().clear();
+            usuarioDAO.actualizar(usuario);
             usuarioDAO.eliminar(usuario);
         } else {
             throw new EntidadNoEncontradaException("No existe el usuario.");
@@ -146,6 +146,9 @@ public class UsuarioService extends GenericServiceImpl<Usuario, Long> {
             }
             if (dto.getHabilitado() != null) {
                 usuario.setHabilitado(dto.getHabilitado());
+            }
+            if (dto.getEspecialidad() != null) {
+                usuario.setEspecialidad(dto.getEspecialidad());
             }
             usuarioDAO.actualizar(usuario);
             return usuario;
