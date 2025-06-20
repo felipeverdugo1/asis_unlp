@@ -126,6 +126,23 @@ public abstract class GenericDAOImpl<T, ID> implements GenericDAO<T, ID> {
         }
     }
 
+    public List<Object> buscarValoresPorCampo(String campo) {
+        String jpql = "SELECT e." + campo + " FROM " + tipoEntidad.getSimpleName() + " e";
+        return em.createQuery(jpql, Object.class).getResultList();
+    }
+
+    public boolean existeOtroConMismoCampo(Long id, String campo, Object valor) {
+        String jpql = "SELECT COUNT(e) FROM " + tipoEntidad.getSimpleName() + " e " +
+                "WHERE e." + campo + " = :valor AND e.id <> :id";
+
+        Long count = em.createQuery(jpql, Long.class)
+                .setParameter("valor", valor)
+                .setParameter("id", id)
+                .getSingleResult();
+
+        return count > 0;
+    }
+
     @Transactional
     public void flush() {
         em.flush();

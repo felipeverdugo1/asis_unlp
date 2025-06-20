@@ -33,11 +33,11 @@ public class FiltroPersonalizadoService extends GenericServiceImpl<FiltroPersona
     public FiltroPersonalizado crear(FiltroDTO dto) {
         Optional<FiltroPersonalizado> filtroExistente = filtroPersonalizadoDAO.buscarPorCampo("nombre", dto.getNombre());
         if (filtroExistente.isPresent()) {
-            throw new EntidadExistenteException("Ya existe un filtro con ese tipo");
+            throw new EntidadExistenteException("Ya existe un filtro con ese nombre");
         }
 
         if (dto.getNombre() == null || dto.getCriterios() == null) {
-            throw new FaltanArgumentosException("El tipo y criterio son obligatorios");
+            throw new FaltanArgumentosException("El nombre y criterio son obligatorios");
         }
 
         FiltroPersonalizado nuevoFiltro = new FiltroPersonalizado();
@@ -63,6 +63,9 @@ public class FiltroPersonalizadoService extends GenericServiceImpl<FiltroPersona
 
         FiltroPersonalizado filtroPersonalizado = filtroPersonalizadoOptional.get();
 
+        if (filtroPersonalizadoDAO.existeOtroConMismoCampo(id,"nombre", dto.getNombre())) {
+            throw new EntidadExistenteException("Ya existe otro filtro con ese nombre");
+        }
         if (dto.getNombre() != null) {
             filtroPersonalizado.setNombre(dto.getNombre());
         }

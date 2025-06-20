@@ -3,6 +3,7 @@ package controller;
 import controller.dto.ReporteDTO;
 import controller.dto.ZonaDTO;
 import dao.GenericDAOImpl;
+import exceptions.EntidadNoEncontradaException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -51,9 +52,9 @@ public class ReporteController {
     public Response get(@PathParam("id") Long id) {
         Optional<Reporte> objeto = service.buscarPorId(id);
         if (objeto.isPresent()) {
-            return Response.ok(objeto).build();
+            return Response.ok(objeto.get()).build();
         } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            throw new EntidadNoEncontradaException("No existe el reporte.");
         }
     }
 

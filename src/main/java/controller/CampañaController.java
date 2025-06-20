@@ -2,10 +2,13 @@ package controller;
 
 import controller.dto.CampañaDTO;
 import controller.dto.ReporteDTO;
+import exceptions.EntidadNoEncontradaException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.inject.Inject;
@@ -20,7 +23,7 @@ import javax.swing.text.html.Option;
 import java.util.Optional;
 
 
-@Path("/campaña")
+@Path("/campania")
 @Tag(
         name = "Campañas",
         description = "Controller que nos permite hacer operaciones sobre las campañas"
@@ -42,14 +45,14 @@ public class CampañaController {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Este endpoint nos permite obtener la campaña a partir de un id",
-            parameters = @Parameter(name = "campaña id"))
+    @Operation(description = "Este endpoint nos permite obtener el reporte a partir de un id",
+            parameters = @Parameter(name = "campania id"))
     public Response get(@PathParam("id") Long id) {
         Optional<Campaña> objeto = service.buscarPorId(id);
         if (objeto.isPresent()) {
             return Response.ok(objeto.get()).build();
         } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            throw new EntidadNoEncontradaException("No existe la campaña.");
         }
     }
 
@@ -113,6 +116,7 @@ public class CampañaController {
 
     @DELETE
     @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Este endpoint nos permite eliminar la campaña a partir de un id",
             parameters = @Parameter(name = "campaña id"))
     public Response delete(@PathParam("id") Long id) {
