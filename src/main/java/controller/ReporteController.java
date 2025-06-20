@@ -17,6 +17,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import model.Reporte;
+import model.Usuario;
 import model.Zona;
 import service.GenericService;
 import service.GenericServiceImpl;
@@ -136,6 +137,30 @@ public class ReporteController {
         service.eliminar(id);
         return Response.noContent().build();
     }
+
+    @PUT
+    @Path("/agregarUsuarioCompartido/{id}/{usuario_id}")
+    @Operation(description = "Este endpoint permite compartir un reporte a un usuario",
+            parameters = { @Parameter(name = "reporte id", required = true),
+                    @Parameter(name = "usuario id", required = true) })
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response agregar(@PathParam("id") Long id, @PathParam("usuario_id") Long compartidoCon_id) {
+        Reporte reporte = service.agregarUsuarioCompartido(id, compartidoCon_id);
+        return Response.status(Response.Status.CREATED).entity(reporte).build();
+    }
+
+    @PUT
+    @Path("/quitarUsuarioCompartido/{id}/{usuario_id}")
+    @Operation(description = "Este endpoint desvincula un usuario de un reporte",
+            parameters = { @Parameter(name = "reporte id", required = true),
+                    @Parameter(name = "usuario id", required = true) })
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response quitarUsuarioCompartido(@PathParam("id") Long id, @PathParam("usuario_id") Long compartidoCon_id) {
+        Reporte reporte = service.quitarUsuarioCompartido(id, compartidoCon_id);
+        return Response.status(Response.Status.CREATED).entity(reporte).build();
+    }
+
+
 }
 
 
