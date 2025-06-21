@@ -35,6 +35,23 @@ public class UsuarioService extends GenericServiceImpl<Usuario, Long> {
     }
 
     public Usuario crear(UsuarioDTO usuarioDTO) {
+
+        if (usuarioDTO.getNombreUsuario() == null) {
+            throw new FaltanArgumentosException("El campo nombreUsuario es obligatorio.");
+        }
+        if (usuarioDTO.getEmail() == null) {
+            throw new FaltanArgumentosException("El campo email es obligatorio.");
+        }
+        if (usuarioDTO.getPassword() == null) {
+            throw new FaltanArgumentosException("El campo password es obligatorio.");
+        }
+        if (usuarioDTO.getHabilitado() == null) {
+            throw new FaltanArgumentosException("El campo habilitado es obligatorio.");
+        }
+        if (usuarioDTO.getRoles_id() == null) {
+            throw new FaltanArgumentosException("El campo roles_id es obligatorio.");
+        }
+
         Optional<Usuario> usuario_t = usuarioDAO.buscarPorCampo("email", usuarioDTO.getEmail());
         if (usuario_t.isPresent()) {
             throw new EntidadExistenteException("Ya existe un usuario con ese email");
