@@ -37,6 +37,12 @@ public class ZonaService extends GenericServiceImpl<Zona, Long> {
     }
 
     public Zona crear(ZonaDTO zonaDTO) {
+        if (zonaDTO.getNombre() == null){
+            throw new FaltanArgumentosException("El campo nombre es obligatorio.");
+        }
+        if (zonaDTO.getGeolocalizacion() == null){
+            throw new FaltanArgumentosException("El campo geolocalizacion es obligatorio.");
+        }
         Optional<Zona> zona = zonaDAO.buscarPorCampo("nombre", zonaDTO.getNombre());
         // si es duplicado
         if ( zona.isPresent() ) {

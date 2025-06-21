@@ -3,6 +3,7 @@ package controller;
 import controller.dto.ReporteDTO;
 import controller.dto.ZonaDTO;
 import dao.GenericDAOImpl;
+import exceptions.EntidadNoEncontradaException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,6 +17,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import model.Reporte;
+import model.Usuario;
 import model.Zona;
 import service.GenericService;
 import service.GenericServiceImpl;
@@ -51,9 +53,9 @@ public class ReporteController {
     public Response get(@PathParam("id") Long id) {
         Optional<Reporte> objeto = service.buscarPorId(id);
         if (objeto.isPresent()) {
-            return Response.ok(objeto).build();
+            return Response.ok(objeto.get()).build();
         } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            throw new EntidadNoEncontradaException("No existe el reporte.");
         }
     }
 
@@ -135,6 +137,30 @@ public class ReporteController {
         service.eliminar(id);
         return Response.noContent().build();
     }
+
+    @PUT
+    @Path("/agregarUsuarioCompartido/{id}/{usuario_id}")
+    @Operation(description = "Este endpoint permite compartir un reporte a un usuario",
+            parameters = { @Parameter(name = "reporte id", required = true),
+                    @Parameter(name = "usuario id", required = true) })
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response agregar(@PathParam("id") Long id, @PathParam("usuario_id") Long compartidoCon_id) {
+        Reporte reporte = service.agregarUsuarioCompartido(id, compartidoCon_id);
+        return Response.status(Response.Status.CREATED).entity(reporte).build();
+    }
+
+    @PUT
+    @Path("/quitarUsuarioCompartido/{id}/{usuario_id}")
+    @Operation(description = "Este endpoint desvincula un usuario de un reporte",
+            parameters = { @Parameter(name = "reporte id", required = true),
+                    @Parameter(name = "usuario id", required = true) })
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response quitarUsuarioCompartido(@PathParam("id") Long id, @PathParam("usuario_id") Long compartidoCon_id) {
+        Reporte reporte = service.quitarUsuarioCompartido(id, compartidoCon_id);
+        return Response.status(Response.Status.CREATED).entity(reporte).build();
+    }
+
+
 }
 
 

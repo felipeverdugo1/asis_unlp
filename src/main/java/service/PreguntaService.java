@@ -31,8 +31,8 @@ public class PreguntaService extends GenericServiceImpl<Pregunta, Long> {
     }
 
     public Pregunta crear(PreguntaDTO dto) {
-        if (dto.getEncuesta_id() == null) {
-            throw new FaltanArgumentosException("El encuesta_id es obligatorio");
+        if (dto.getEncuesta_id() == null || dto.getPregunta() == null || dto.getTipo() == null || dto.getRespuesta() == null) {
+            throw new FaltanArgumentosException("el tipo es obligatorio , la pregunta es obligatoria , la respuesta es obligatoria y la encuesta es obligatoria");
         }
 
         Pregunta nuevaPregunta = new Pregunta();

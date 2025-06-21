@@ -4,6 +4,7 @@ package service;
 import controller.dto.RolDTO;
 import dao.RolDAO;
 import exceptions.EntidadExistenteException;
+import exceptions.FaltanArgumentosException;
 import exceptions.NoPuedesHacerEsoException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.RequestScoped;
@@ -29,6 +30,9 @@ public class RolService extends GenericServiceImpl<Rol, Long> {
     public RolService() {  super(null); }
 
     public Rol crear(RolDTO dto) {
+        if (dto.getNombre() == null){
+            throw new FaltanArgumentosException("El campo nombre es obligatorio.");
+        }
         Optional<Rol> rol_t = rolDAO.buscarPorCampo("nombre", dto.getNombre());
         if (rol_t.isPresent()) {
             throw new EntidadExistenteException("Ya existe un rol con ese nombre.");

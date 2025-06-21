@@ -5,6 +5,7 @@ import dao.CampañaDAO;
 import dao.JornadaDAO;
 import dao.ZonaDAO;
 import exceptions.EntidadNoEncontradaException;
+import exceptions.FaltanArgumentosException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
@@ -36,6 +37,16 @@ public class JornadaService extends GenericServiceImpl<Jornada, Long> {
     // Métodos específicos de Usuario si los necesitás
 
     public Jornada crear(JornadaDTO jornadaDTO) {
+        if (jornadaDTO.getCampaña_id() == null ){
+            throw new FaltanArgumentosException("El campo campaña_id es obligatorio.");
+        }
+        if (jornadaDTO.getFechaFin() == null ){
+            throw new FaltanArgumentosException("El campo fecha_fin es obligatorio.");
+        }
+        if (jornadaDTO.getFechaInicio() == null ){
+            throw new FaltanArgumentosException("El campo fecha_inicio es obligatorio.");
+        }
+
         Jornada jornada = new Jornada();
         Optional<Campaña> campaña = campañaDAO.buscarPorId(jornadaDTO.getCampaña_id());
         if (campaña.isEmpty()) {

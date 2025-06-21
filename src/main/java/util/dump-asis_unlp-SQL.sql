@@ -286,7 +286,6 @@ DROP TABLE IF EXISTS `reportes`;
 CREATE TABLE `reportes` (
   `fecha_creacion` date NOT NULL,
   `campaña_id` bigint DEFAULT NULL,
-  `compartido_con` bigint DEFAULT NULL,
   `creado_por` bigint DEFAULT NULL,
   `id` bigint NOT NULL AUTO_INCREMENT,
   `descripcion` varchar(255) NOT NULL,

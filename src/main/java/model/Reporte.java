@@ -8,7 +8,10 @@ import lombok.experimental.Accessors;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 
 @Data
@@ -40,15 +43,23 @@ public class Reporte {
     @JoinTable(
             name = "reporte_compartidos",
             joinColumns = @JoinColumn(name = "reporte_id"),
-            inverseJoinColumns = @JoinColumn(name = "compartidoCon")
+            inverseJoinColumns = @JoinColumn(name = "usuario_id")
     )
-    private List<Usuario> compartidoCon;
+    private Set<Usuario> compartidoCon = new HashSet<>();
 
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "campaña_id", nullable = false)
     private Campaña campaña;
 
+    public void agregarUsuarioCompartido(Usuario usuario) {
+        this.compartidoCon.add(usuario);
+    }
 
- 
+    public void quitarUsuarioCompartido(Long id) {
+        this.compartidoCon.removeIf(usuario -> usuario.getId().equals(id));
+    }
+
+
+
 }

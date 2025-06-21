@@ -13,5 +13,7 @@ public class CampañaDAO extends GenericDAOImpl<Campaña, Long> {
         super(Campaña.class);
     }
 
-    // Si necesitás métodos específicos, acá los agregás
+
+
+
 }

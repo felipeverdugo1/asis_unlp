@@ -2,6 +2,7 @@ package controller;
 
 import controller.dto.PreguntaDTO;
 import controller.dto.ReporteDTO;
+import exceptions.EntidadNoEncontradaException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -46,9 +47,9 @@ public class PreguntaController {
     public Response get(@PathParam("id") Long id) {
         Optional<Pregunta> objeto = service.buscarPorId(id);
         if (objeto.isPresent()) {
-            return Response.ok(objeto).build();
+            return Response.ok(objeto.get()).build();
         } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            throw new EntidadNoEncontradaException("No existe la pregunta.");
         }
     }
 

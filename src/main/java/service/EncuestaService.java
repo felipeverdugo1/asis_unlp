@@ -144,7 +144,7 @@ public class EncuestaService extends GenericServiceImpl<Encuesta, Long> {
     public void eliminar(Long id) {
         Optional<Encuesta> encuesta = encuestaDAO.buscarPorId(id);
         if ( encuesta.isPresent() ) {
-            encuestaDAO.actualizar(encuesta.get());
+            encuestaDAO.eliminar(encuesta.get());
         } else {
             throw new EntidadNoEncontradaException("El encuesta no existe");
         }

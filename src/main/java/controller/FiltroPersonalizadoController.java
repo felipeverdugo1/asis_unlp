@@ -2,6 +2,7 @@ package controller;
 
 import controller.dto.FiltroDTO;
 import controller.dto.ReporteDTO;
+import exceptions.EntidadNoEncontradaException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -46,9 +47,9 @@ public class FiltroPersonalizadoController {
     public Response get(@PathParam("id") Long id) {
         Optional<FiltroPersonalizado> objeto = service.buscarPorId(id);
         if (objeto.isPresent()) {
-            return Response.ok(objeto).build();
+            return Response.ok(objeto.get()).build();
         } else {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            throw new EntidadNoEncontradaException("No existe el filtro.");
         }
     }
 
@@ -113,6 +114,7 @@ public class FiltroPersonalizadoController {
 
     @DELETE
     @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Este endpoint nos permite eliminar el filtro a partir de un id",
             parameters = @Parameter(name = "filtro id"))
     public Response delete(@PathParam("id") Long id) {
