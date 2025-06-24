@@ -1,10 +1,19 @@
 # ASIS UNLP
 
+## Documentacion de API
+- Se puede acceder mediante `https://localhost:8080/docs`
+
+## Entrega 4
+- Se armaron los ABML de las entidades y los endpoints extras.
+- Se pueden visualizar y probar en el swagger: `https://localhost:8080/docs`
+- Se deja en la rama `entrega-4`
+
+## Entrega 3
+- Se genero un servlet en src/main/java/tests_servlet/ el cual quedo en la rama `entrega-3` para evitar conflictos.
+
 ## Reentrega 2
 - En la carpeta reentrega_entrega_2/
 
-## Entrega 3
-- Se genero un servlet en src/main/java/tests_servlet/
 ### Ejecucion del Test
 1. Levantar el motor MySQL en su local con puerto 3306.
 2. Levantar el proyecto con IntelliJ Tomcat 11.0.7 (Mas abajo esta el paso a paso de la configuracion).
