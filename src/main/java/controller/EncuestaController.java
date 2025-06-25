@@ -85,7 +85,6 @@ public class EncuestaController {
             }
     )
     public Response post(EncuestaDTO encuestaDTO) {
-        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con barrioService
         Encuesta encuesta = service.crear(encuestaDTO);
         return Response.status(Response.Status.CREATED).entity(encuesta).build();
     }

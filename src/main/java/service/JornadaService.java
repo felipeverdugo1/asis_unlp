@@ -4,11 +4,13 @@ import controller.dto.JornadaDTO;
 import dao.CampañaDAO;
 import dao.JornadaDAO;
 import dao.ZonaDAO;
+import dao.BarrioDAO;
 import exceptions.EntidadNoEncontradaException;
 import exceptions.FaltanArgumentosException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
+import model.Barrio;
 import model.Campaña;
 import model.Jornada;
 import model.Zona;
@@ -24,6 +26,8 @@ public class JornadaService extends GenericServiceImpl<Jornada, Long> {
     private CampañaDAO campañaDAO;
     @Inject
     private ZonaDAO zonaDAO;
+    @Inject
+    private BarrioDAO barrioDAO;
 
     @Inject
     public JornadaService(JornadaDAO dao, JornadaDAO jornadaDAO) {
@@ -82,15 +86,27 @@ public class JornadaService extends GenericServiceImpl<Jornada, Long> {
         return jornada;
     }
 
-    public Jornada agregarZona(Long id, Long zona_id){
+    public Jornada agregarZona(Long id, Long zona_id) {
         Optional<Jornada> jornada_t = jornadaDAO.buscarPorId(id);
-        if(jornada_t.isEmpty()){
+        if (jornada_t.isEmpty()) {
             throw new EntidadNoEncontradaException("No existe una jornada con ese id");
         }
         Optional<Zona> zona_t = zonaDAO.buscarPorId(zona_id);
-        if(zona_t.isEmpty()){
+        if (zona_t.isEmpty()) {
             throw new EntidadNoEncontradaException("No existe una zona con ese id");
         }
+        Optional<Campaña> campaña = campañaDAO.buscarPorId(jornada_t.get().getCampaña().getId());
+        if (campaña.isPresent()) {
+            Optional<Barrio> barrio = barrioDAO.buscarPorId(campaña.get().getBarrio().getId());
+            if (barrio.isPresent()) {
+                boolean barrioExiste = barrio.get().getZonas().stream()
+                        .anyMatch(z -> z.getId().equals(zona_t.get().getId()));
+                if (!barrioExiste) {
+                    throw new EntidadNoEncontradaException("La zona indicada no corresponde al barrio de la campaña.");
+                }
+            }
+        }
+
         Jornada jornada = jornada_t.get();
         jornada.agregarZona(zona_t.get());
         jornadaDAO.actualizar(jornada);
