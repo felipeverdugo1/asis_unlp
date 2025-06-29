@@ -1,0 +1,24 @@
+<table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Email</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let usuario of usuarios">
+        <td>{{ usuario.id }}</td>
+        <td>{{ usuario.nombreUsuario }}</td>
+        <td>{{ usuario.email }}</td>
+        <td>
+          <button (click)="onEdit.emit(usuario.id)"> Editar</button>
+          <button (click)="onDelete.emit(usuario.id)"> Borrar</button>
+        </td>
+      </tr>
+      <tr *ngIf="usuarios.length === 0">
+        <td colspan="6">No hay usuarios cargados.</td>
+      </tr>
+    </tbody>
+  </table>
