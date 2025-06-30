@@ -1,2 +1,5 @@
 ## gitignore para la carpeta raiz
 ## existen .gitignores dentro de cada subcarpeta
+
+.idea/
+target/
