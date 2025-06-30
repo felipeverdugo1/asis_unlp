@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
-import { ListaUsuariosPage } from './pages/usuarios/lista-usuarios';
-import { FormUsuarioPage } from './pages/usuarios/form-usuario';
+import { ListaUsuariosPage, FormUsuarioPage } from './pages/usuarios/usuario.pages';
 import { Home } from './components/home/home';
 
 export const routes: Routes = [

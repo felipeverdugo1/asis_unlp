@@ -2,20 +2,21 @@ import { Component, OnInit } from '@angular/core';
 import { UsuariosService } from '../../services/usuarios.service';
 import { Usuario } from '../../models/usuario.model';
 import { Router, RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms'; 
 import { CommonModule } from '@angular/common';
-import { TablaUsuarios } from '../../components/usuario/usuario';
+import { ListarUsuarios } from '../../components/usuario/listar-usuario';
 import { Observable } from 'rxjs';
 
 @Component({
   standalone :true,
-  imports : [CommonModule,RouterModule,TablaUsuarios],
+  imports : [CommonModule,RouterModule,ListarUsuarios],
   template: `
     <h2>Usuarios</h2>
-    <tabla-usuarios 
+    <listar-usuarios 
     [usuarios]="(usuarios$ | async) ?? []"
       (onEdit)="editarUsuario($event)"
       (onDelete)="borrarUsuario($event)">
-    </tabla-usuarios>
+    </listar-usuarios>
     <button (click)="nuevoUsuario()" class="btn-add"> Agregar Usuario</button>
 
   `,
@@ -66,3 +67,28 @@ export class ListaUsuariosPage implements OnInit {
 }
 
 
+
+@Component({
+  standalone: true, 
+  imports: [FormsModule, CommonModule], 
+  template: `
+    <form>
+      <input 
+        [(ngModel)]="usuario.nombreUsuario" 
+        name="nombreUsuario" 
+        placeholder="Nombre"
+      >
+      <input
+        [(ngModel)]="usuario.email"
+        name="email"
+        placeholder="Email"
+      >
+    </form>
+  `,
+})
+export class FormUsuarioPage {
+  usuario = {
+    nombreUsuario: '',
+    email: ''
+  };
+}

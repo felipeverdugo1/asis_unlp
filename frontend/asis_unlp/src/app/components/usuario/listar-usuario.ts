@@ -5,12 +5,12 @@ import { RouterModule } from '@angular/router';
 
 @Component({
   standalone : true,
-  selector: 'tabla-usuarios',
+  selector: 'listar-usuarios',
   imports : [CommonModule,RouterModule],
   templateUrl: './usuario.html',
   styleUrls: ['./usuario.css']
 })
-export class TablaUsuarios {
+export class ListarUsuarios {
   @Input() usuarios: Usuario[] = [];
   @Output() onEdit = new EventEmitter<number>();
   @Output() onDelete = new EventEmitter<number>();
