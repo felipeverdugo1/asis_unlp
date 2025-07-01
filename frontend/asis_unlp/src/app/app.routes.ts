@@ -11,14 +11,16 @@ export const routes: Routes = [
     path: 'usuario', 
     children: [
       { path: '', component: ListaUsuariosPage },
-      { path: 'nuevo', component: FormUsuarioPage }
+      { path: 'nuevo', component: FormUsuarioPage },
+      { path: 'editar/:id', component: FormUsuarioPage }
     ]
   },
   {
     path: 'rol', 
     children: [
       { path: '', component: ListarRolesPage },
-      { path: 'nuevo', component: FormRolPage }
+      { path: 'nuevo', component: FormRolPage },
+      { path: 'editar/:id', component: FormRolPage }
     ],
   },
   {

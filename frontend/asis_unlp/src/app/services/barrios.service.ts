@@ -26,6 +26,7 @@ export class BarriosService {
   }
 
   updateBarrio(barrio: Barrio): Observable<Barrio> {
+    console.log(barrio)
     return this.http.put<Barrio>(`${this.apiUrl}/${barrio.id}`, barrio);
   }
 

@@ -5,12 +5,7 @@ export interface Usuario {
     password: string;
     habilitado?: boolean;    // Opcional
     especialidad?: string;   // Opcional
-  }
-  
-
-  export interface Rol {
-    id: number;
-    nombre: string;
+    roles_id: number[];
   }
   
   export interface FiltroGuardado {

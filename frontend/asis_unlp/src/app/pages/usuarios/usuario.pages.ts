@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UsuariosService } from '../../services/usuarios.service';
 import { Usuario } from '../../models/usuario.model';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms'; 
 import { CommonModule } from '@angular/common';
 import { ListarUsuarios } from '../../components/usuario/listar-usuario';
@@ -73,22 +73,61 @@ export class ListaUsuariosPage implements OnInit {
   standalone: true, 
   imports: [FormsModule, CommonModule, FormUsuario], 
   template: `
-    <h2>Nuevo Barrio</h2>
-    <form-usuario [usuario]="usuario" (onSubmit)="guardarUsuario($event)"></form-usuario>
+    <h2>{{ esEdicion ? 'Editar usuario' : 'Nuevo usuario' }}</h2>
+    
+    <ng-container *ngIf="!loading; else cargando">
+      <form-usuario [usuario]="usuario" (onSubmit)="guardarUsuario($event)"></form-usuario>
+    </ng-container>
+    <ng-template #cargando>
+      <p>Cargando usuario...</p>
+    </ng-template>
   `,
 })
 export class FormUsuarioPage {
-  usuario: Usuario = { nombreUsuario: '', email: '', password: '', habilitado: true, especialidad: "" };
+  usuario: Usuario = { 
+    nombreUsuario: '', 
+    email: '', 
+    password: '', 
+    habilitado: true, 
+    especialidad: "",
+    roles_id: [] 
+  };
+
+  esEdicion = false;
+  loading = false;
 
   constructor(
     private usuarioService: UsuariosService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute,
   ) {}
 
+  ngOnInit(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.esEdicion = true;
+      this.loading = true;
+      this.usuarioService.getUsuario(+id).subscribe({
+        next: (data) => {
+          this.usuario = data;
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error('Error al cargar usuario:', err);
+          this.loading = false;
+        }
+      });
+    }
+  }
+
   guardarUsuario(usuario: Usuario) {
-    this.usuarioService.crearUsuario(usuario).subscribe({
+    const req = this.esEdicion
+      ? this.usuarioService.updateUsuario(usuario)
+      : this.usuarioService.crearUsuario(usuario);
+
+    req.subscribe({
       next: () => this.router.navigate(['/usuario']),
-      error: (err) => console.error('Error al guardar barrio:', err)
+      error: (err) => console.error('Error al guardar usuario:', err)
     });
   }
 

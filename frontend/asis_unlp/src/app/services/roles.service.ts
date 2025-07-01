@@ -24,4 +24,13 @@ export class RolesService {
   crearRol(rol: Rol): Observable<Rol>{
     return this.http.post<Rol>(this.apiUrl, rol);
   }
+
+  updateRol(rol: Rol): Observable<Rol> {
+      console.log(rol)
+      return this.http.put<Rol>(`${this.apiUrl}/${rol.id}`, rol);
+  }
+  
+  getRol(id: number): Observable<Rol> {
+    return this.http.get<Rol>(`${this.apiUrl}/${id}`);
+  }
 }

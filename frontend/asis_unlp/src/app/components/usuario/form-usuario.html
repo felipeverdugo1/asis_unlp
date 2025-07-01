@@ -24,6 +24,13 @@
         Especialidad
         <input id="especialidad" name="especialidad" [(ngModel)]="usuario.especialidad" required>
     </label>
+
+    <label for="roles">Roles:</label>
+        <select id="roles" name="roles_id" [(ngModel)]="usuario.roles_id" multiple>
+        <option *ngFor="let rol of roles" [value]="rol.id">
+            {{ rol.nombre }}
+        </option>
+    </select>
     
 
     <button type="submit">Guardar</button> 
