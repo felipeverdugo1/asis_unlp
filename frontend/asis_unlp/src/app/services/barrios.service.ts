@@ -24,4 +24,12 @@ export class BarriosService {
   createBarrio(barrio: BarrioForm): Observable<Barrio> {
     return this.http.post<Barrio>(this.apiUrl, barrio);
   }
+
+  updateBarrio(barrio: Barrio): Observable<Barrio> {
+    return this.http.put<Barrio>(`${this.apiUrl}/${barrio.id}`, barrio);
+  }
+
+  getBarrio(id: number): Observable<Barrio> {
+    return this.http.get<Barrio>(`${this.apiUrl}/${id}`);
+  }
 }

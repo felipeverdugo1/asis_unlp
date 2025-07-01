@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { BarriosService } from '../../services/barrios.service';
 import { Barrio, BarrioForm } from '../../models/barrio.model';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute,Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms'; 
 import { CommonModule } from '@angular/common';
 import { ListarBarrios } from '../../components/barrio/listar-barrios';
 import { FormBarrio } from '../../components/barrio/form-barrio';
 import { Observable } from 'rxjs';
-import { Subject } from 'rxjs';
 
 @Component({
   standalone :true,
@@ -74,20 +73,51 @@ export class ListaBarriosPage implements OnInit {
   standalone: true,
   imports: [CommonModule, FormsModule, FormBarrio],
   template: `
-    <h2>Nuevo Barrio</h2>
-    <form-barrio [barrio]="barrio" (onSubmit)="guardarBarrio($event)"></form-barrio>
+    <h2>{{ esEdicion ? 'Editar Barrio' : 'Nuevo Barrio' }}</h2>
+    
+    <ng-container *ngIf="!loading; else cargando">
+      <form-barrio [barrio]="barrio" (onSubmit)="guardarBarrio($event)"></form-barrio>
+    </ng-container>
+    <ng-template #cargando>
+      <p>Cargando barrio...</p>
+    </ng-template>
   `
 })
-export class FormBarrioPage {
-  barrio: BarrioForm = { nombre: '', informacion: '', geolocalizacion: '' };
+export class FormBarrioPage implements OnInit {
+  barrio: Barrio = { nombre: '', geolocalizacion: '', informacion: '' };
+  esEdicion = false;
+  loading = false;
 
   constructor(
     private barriosService: BarriosService,
+    private route: ActivatedRoute,
     private router: Router
   ) {}
 
-  guardarBarrio(barrio: BarrioForm) {
-    this.barriosService.createBarrio(barrio).subscribe({
+  ngOnInit(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.esEdicion = true;
+      this.loading = true;
+      this.barriosService.getBarrio(+id).subscribe({
+        next: (data) => {
+          this.barrio = data;
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error('Error al cargar barrio:', err);
+          this.loading = false;
+        }
+      });
+    }
+  }
+
+  guardarBarrio(barrio: Barrio) {
+    const req = this.esEdicion
+      ? this.barriosService.updateBarrio(barrio)
+      : this.barriosService.createBarrio(barrio);
+
+    req.subscribe({
       next: () => this.router.navigate(['/barrio']),
       error: (err) => console.error('Error al guardar barrio:', err)
     });

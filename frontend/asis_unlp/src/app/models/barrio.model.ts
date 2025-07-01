@@ -1,5 +1,5 @@
 export interface Barrio {
-    id: number;
+    id?: number;
     nombre: string;
     geolocalizacion: string;
     informacion: string;

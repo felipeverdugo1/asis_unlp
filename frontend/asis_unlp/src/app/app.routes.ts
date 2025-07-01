@@ -16,7 +16,8 @@ export const routes: Routes = [
     path: 'barrio',
     children: [
       { path: '', component: ListaBarriosPage },
-      { path: 'nuevo', component: FormBarrioPage }
+      { path: 'nuevo', component: FormBarrioPage },
+      { path: 'editar/:id', component: FormBarrioPage }
     ]
   }
 ];
