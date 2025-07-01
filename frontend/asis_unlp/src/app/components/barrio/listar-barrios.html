@@ -1,0 +1,23 @@
+<table class="table">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Información</th>
+        <th>Geolocalizacion</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let barrio of barrios">
+        <td>{{ barrio.nombre }}</td>
+        <td>{{ barrio.informacion }}</td>
+        <td>{{ barrio.geolocalizacion }}</td>
+        <td>
+          <button (click)="onEdit.emit(barrio.id)"> Editar</button>
+          <button (click)="onDelete.emit(barrio.id)"> Borrar</button>
+        </td>
+      </tr>
+      <tr *ngIf="barrios.length === 0">
+        <td colspan="6">No hay barrios cargados.</td>
+      </tr>
+    </tbody>
+  </table>

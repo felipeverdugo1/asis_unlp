@@ -1,0 +1,11 @@
+
+<form (ngSubmit)="onSubmit.emit(barrio)">
+  <label for="nombre">Nombre del barrio:</label>
+  <input id="nombre" name="nombre" [(ngModel)]="barrio.nombre" required>
+  <label for="informacion">Información del barrio:</label>
+  <input id="informacion" name="informacion" [(ngModel)]="barrio.informacion" required>
+  <label for="geolocalizacion">Geolocalización del barrio:</label>
+  <input id="geolocalizacion" name="geolocalizacion" [(ngModel)]="barrio.geolocalizacion" required>
+
+  <button type="submit">Guardar</button>
+</form>
