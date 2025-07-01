@@ -5,6 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms'; 
 import { CommonModule } from '@angular/common';
 import { ListarUsuarios } from '../../components/usuario/listar-usuario';
+import { FormUsuario } from '../../components/usuario/form-usuario';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -70,25 +71,25 @@ export class ListaUsuariosPage implements OnInit {
 
 @Component({
   standalone: true, 
-  imports: [FormsModule, CommonModule], 
+  imports: [FormsModule, CommonModule, FormUsuario], 
   template: `
-    <form>
-      <input 
-        [(ngModel)]="usuario.nombreUsuario" 
-        name="nombreUsuario" 
-        placeholder="Nombre"
-      >
-      <input
-        [(ngModel)]="usuario.email"
-        name="email"
-        placeholder="Email"
-      >
-    </form>
+    <h2>Nuevo Barrio</h2>
+    <form-usuario [usuario]="usuario" (onSubmit)="guardarUsuario($event)"></form-usuario>
   `,
 })
 export class FormUsuarioPage {
-  usuario = {
-    nombreUsuario: '',
-    email: ''
-  };
+  usuario: Usuario = { nombreUsuario: '', email: '', password: '', habilitado: true, especialidad: "" };
+
+  constructor(
+    private usuarioService: UsuariosService,
+    private router: Router
+  ) {}
+
+  guardarUsuario(usuario: Usuario) {
+    this.usuarioService.crearUsuario(usuario).subscribe({
+      next: () => this.router.navigate(['/usuario']),
+      error: (err) => console.error('Error al guardar barrio:', err)
+    });
+  }
+
 }

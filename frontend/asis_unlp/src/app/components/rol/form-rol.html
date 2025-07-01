@@ -1,0 +1,10 @@
+
+<form style="display: flex; flex-direction: column; gap: 10px; max-width: 500px;" (ngSubmit)="onSubmit.emit(rol)">
+    <label for="nombre">
+        Nombre del rol:
+        <input id="nombre" name="nombre" [(ngModel)]="rol.nombre" required>
+    </label>   
+
+    <button type="submit">Guardar</button> 
+    <button type="button" (click)="goBack()">Atras</button>
+</form>

@@ -1,8 +1,8 @@
 export interface Usuario {
-    id: number;
+    id?: number;
     nombreUsuario: string;
     email: string;
-    password?: string;       // Opcional 
+    password: string;
     habilitado?: boolean;    // Opcional
     especialidad?: string;   // Opcional
   }

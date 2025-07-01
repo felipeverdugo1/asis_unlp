@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { ListaUsuariosPage, FormUsuarioPage } from './pages/usuarios/usuario.pages';
+import { ListarRolesPage, FormRolPage } from './pages/roles/rol.pages';
 import { Home } from './components/home/home';
+
 
 export const routes: Routes = [
   { path: '', component: Home }, 
@@ -10,5 +12,13 @@ export const routes: Routes = [
       { path: '', component: ListaUsuariosPage },
       { path: 'nuevo', component: FormUsuarioPage }
     ]
+  },
+  {
+    path: 'rol', 
+    children: [
+      { path: '', component: ListarRolesPage },
+      { path: 'nuevo', component: FormRolPage }
+    ]
   }
+
 ];
