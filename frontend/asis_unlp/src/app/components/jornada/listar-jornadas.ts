@@ -1,18 +1,17 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Usuario } from '../../models/usuario.model';
+import { Jornada } from '../../models/jornada.model';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 @Component({
   standalone : true,
-  selector: 'listar-usuarios',
+  selector: 'listar-jornadas',
   imports : [CommonModule,RouterModule],
-  templateUrl: './listar-usuario.html',
-  styleUrls: ['../component-style.css']
+  templateUrl: './listar-jornadas.html',
+  styleUrls: ['../../../styles.css']
 })
-export class ListarUsuarios {
-  @Input() usuarios: Usuario[] = [];
+export class ListarJornadas {
+  @Input() jornadas: Jornada[] = [];
   @Output() onEdit = new EventEmitter<number>();
   @Output() onDelete = new EventEmitter<number>();
-
 }

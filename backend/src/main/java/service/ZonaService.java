@@ -79,6 +79,7 @@ public class ZonaService extends GenericServiceImpl<Zona, Long> {
                 }
                 zona_actualizada.setNombre(zonaDTO.getNombre());
             }
+
             if (zonaDTO.getGeolocalizacion() != null) {
                 zona_actualizada.setGeolocalizacion(zonaDTO.getGeolocalizacion());
             }

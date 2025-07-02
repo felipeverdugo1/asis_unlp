@@ -1,0 +1,23 @@
+<table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Fecha Inicio</th>
+        <th>Fecha Fin</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let jornada of jornadas">
+        <td>{{ jornada.id }}</td>
+        <td>{{ jornada.fechaInicio }}</td>
+        <td>{{ jornada.fechaFin }}</td>
+        <td>
+          <button (click)="onEdit.emit(jornada.id)"> Editar</button>
+          <button (click)="onDelete.emit(jornada.id)"> Borrar</button>
+        </td>
+      </tr>
+      <tr *ngIf="jornadas.length === 0">
+        <td colspan="6">No hay jornadas cargadas.</td>
+      </tr>
+    </tbody>
+  </table>
