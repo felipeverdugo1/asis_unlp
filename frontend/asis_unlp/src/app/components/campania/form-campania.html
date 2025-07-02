@@ -1,0 +1,18 @@
+
+<form (ngSubmit)="onSubmit.emit(campania)">
+  <label>Nombre:</label>
+  <input [(ngModel)]="campania.nombre" name="nombre" required />
+  <label>Fecha Inicio:</label>
+  <input type="date" [(ngModel)]="campania.fechaInicio" name="fechaInicio" required />
+  <label>Fecha Fin:</label>
+  <input type="date" [(ngModel)]="campania.fechaFin" name="fechaFin" required />
+
+  <label>Barrio:</label>
+  <select [(ngModel)]="campania.barrio_id" name="barrio_id" required>
+    <option *ngFor="let barrio of barrios" [value]="barrio.id">
+      {{ barrio.nombre }}
+    </option>
+  </select>
+
+  <button type="submit">Guardar</button>
+</form>

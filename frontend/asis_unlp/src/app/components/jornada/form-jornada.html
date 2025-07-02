@@ -1,0 +1,8 @@
+
+<form (ngSubmit)="onSubmit.emit(jornada)">
+  <label for="fechaInicio">Fecha Inicio:</label>
+  <input id="fechaInicio" type="date" name="fechaInicio" [(ngModel)]="jornada.fechaInicio" required>
+  <label for="fechaFin">Fecha Fin:</label>
+  <input id="fechaFin" type="date" name="fechaFin" [(ngModel)]="jornada.fechaFin" required>
+  <button type="submit">Guardar</button>
+</form>

@@ -19,3 +19,5 @@ public class CampañaDTO {
     private Long barrio_id;
 
 }
+
+

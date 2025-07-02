@@ -1,0 +1,28 @@
+<table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Fecha Inicio</th>
+        <th>Fecha Fin</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let campania of campanias">
+        <td>{{ campania.id }}</td>
+        <td>{{ campania.nombre }}</td>
+        <td>{{ campania.fechaInicio }}</td>
+        <td>{{ campania.fechaFin }}</td>
+        <td>
+          <button (click)="onEdit.emit(campania.id)"> Editar</button>
+          <button (click)="onDelete.emit(campania.id)"> Borrar</button>
+          <button [routerLink]="['/campania', campania.id, 'jornadas']">
+            Ver Jornadas
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="campanias.length === 0">
+        <td colspan="6">No hay campañas cargadas.</td>
+      </tr>
+    </tbody>
+  </table>
