@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class OrganizacionSocialDTO {
-
+    private Long id;
     @NotBlank(message = "Nombre es obligatorio")
     private String nombre;
     @NotBlank(message = "Geolocalizacion es obligatoria")

@@ -1,0 +1,19 @@
+<form #encuestadorForm="ngForm" (ngSubmit)="encuestadorForm.valid && onSubmit.emit(encuestador)">
+  <label>Nombre:</label>
+  <input [(ngModel)]="encuestador.nombre" name="nombre" required />
+
+  <label>Dni:</label>
+  <input [(ngModel)]="encuestador.dni" name="dni" required />
+
+  <label>Edad:</label>
+  <input [(ngModel)]="encuestador.edad" name="edad" required />
+
+  <label>Genero:</label>
+  <input [(ngModel)]="encuestador.genero" name="genero" required />
+
+  <label>Ocupacion</label>
+  <input [(ngModel)]="encuestador.ocupacion" name="ocupacion" required />
+
+
+  <button type="submit" [disabled]="!encuestadorForm.valid">Guardar</button>
+</form>

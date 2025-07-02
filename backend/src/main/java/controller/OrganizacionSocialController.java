@@ -2,6 +2,7 @@ package controller;
 
 import controller.dto.OrganizacionSocialDTO;
 import controller.dto.ReporteDTO;
+import controller.dto.ZonaDTO;
 import exceptions.EntidadNoEncontradaException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -46,8 +47,15 @@ public class OrganizacionSocialController {
             parameters = @Parameter(name = "organizacion id"))
     public Response get(@PathParam("id") Long id) {
         Optional<OrganizacionSocial> objeto = service.buscarPorId(id);
-        if (objeto.isPresent()) {
-            return Response.ok(objeto.get()).build();
+            if (objeto.isPresent()) {
+                OrganizacionSocialDTO dto = new OrganizacionSocialDTO();
+                dto.setId(objeto.get().getId());
+                dto.setNombre(objeto.get().getNombre());
+                dto.setDomicilio(objeto.get().getDomicilio());
+                dto.setActividadPrincipal(objeto.get().getActividadPrincipal());
+                dto.setReferente_id(objeto.get().getReferente().getId());
+                dto.setBarrio_id(objeto.get().getBarrio().getId());
+            return Response.ok(dto).build();
         } else {
             throw new EntidadNoEncontradaException("No existe la organización.");
         }
