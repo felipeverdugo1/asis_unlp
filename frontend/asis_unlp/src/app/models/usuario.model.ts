@@ -1,16 +1,11 @@
 export interface Usuario {
-    id: number;
+    id?: number;
     nombreUsuario: string;
     email: string;
-    password?: string;       // Opcional 
+    password: string;
     habilitado?: boolean;    // Opcional
     especialidad?: string;   // Opcional
-  }
-  
-
-  export interface Rol {
-    id: number;
-    nombre: string;
+    roles_id: number[];
   }
   
   export interface FiltroGuardado {

@@ -1,0 +1,38 @@
+
+<form style="display: flex; flex-direction: column; gap: 10px; max-width: 500px;" (ngSubmit)="onSubmit.emit(usuario)">
+    <label for="nombreUsuario">
+        Nombre del usuario:
+        <input id="nombreUsuario" name="nombreUsuario" [(ngModel)]="usuario.nombreUsuario" required>
+    </label>
+
+    <label for="email">
+        Email:
+        <input id="email" name="email" [(ngModel)]="usuario.email" required>
+    </label>
+
+    <label for="password">
+        Password:
+        <input id="password" name="password" [(ngModel)]="usuario.password" required>
+    </label>
+
+    <label>
+        Habilitado
+        <input type="checkbox" name="habilitado" [(ngModel)]="usuario.habilitado">    
+    </label>
+    
+    <label for="especialidad">
+        Especialidad
+        <input id="especialidad" name="especialidad" [(ngModel)]="usuario.especialidad" required>
+    </label>
+
+    <label for="roles">Roles:</label>
+        <select id="roles" name="roles_id" [(ngModel)]="usuario.roles_id" multiple>
+        <option *ngFor="let rol of roles" [value]="rol.id">
+            {{ rol.nombre }}
+        </option>
+    </select>
+    
+
+    <button type="submit">Guardar</button> 
+    <button type="button" (click)="goBack()">Atras</button>
+</form>

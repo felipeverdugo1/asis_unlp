@@ -145,28 +145,39 @@ public class UsuarioService extends GenericServiceImpl<Usuario, Long> {
         if (usuario_t.isPresent()) {
             Usuario usuario = usuario_t.get();
             if (dto.getEmail() != null) {
-                Optional<Usuario> usuario_existente = usuarioDAO.buscarPorCampo("email", dto.getEmail());
-                if (usuario_existente.isPresent()) {
-                    throw new EntidadNoEncontradaException("Ya existe un usuario con ese email.");
+                if (!dto.getEmail().equals(usuario.getEmail())) {
+                    Optional<Usuario> usuario_existente = usuarioDAO.buscarPorCampo("email", dto.getEmail());
+                    if (usuario_existente.isPresent()) {
+                        throw new EntidadNoEncontradaException("Ya existe un usuario con ese email.");
+                    }
+                    usuario.setEmail(dto.getEmail());
                 }
-                usuario.setEmail(dto.getEmail());
             }
+
             if (dto.getPassword() != null) {
-                usuario.setPassword(dto.getPassword());
-            }
-            if (dto.getNombreUsuario() != null) {
-                Optional<Usuario> usuario_existente_2 = usuarioDAO.buscarPorCampo("nombreUsuario", dto.getNombreUsuario());
-                if (usuario_existente_2.isPresent()) {
-                    throw new EntidadNoEncontradaException("Ya existe un usuario con ese username.");
+                if (!dto.getPassword().equals(usuario.getPassword())) {
+                    usuario.setPassword(dto.getPassword());
                 }
-                usuario.setNombreUsuario(dto.getNombreUsuario());
             }
+
+            if (dto.getNombreUsuario() != null) {
+                if (!dto.getNombreUsuario().equals(usuario.getNombreUsuario())) {
+                    Optional<Usuario> usuario_existente_2 = usuarioDAO.buscarPorCampo("nombreUsuario", dto.getNombreUsuario());
+                    if (usuario_existente_2.isPresent()) {
+                        throw new EntidadNoEncontradaException("Ya existe un usuario con ese username.");
+                    }
+                    usuario.setNombreUsuario(dto.getNombreUsuario());
+                }
+            }
+
             if (dto.getHabilitado() != null) {
                 usuario.setHabilitado(dto.getHabilitado());
             }
+
             if (dto.getEspecialidad() != null) {
                 usuario.setEspecialidad(dto.getEspecialidad());
             }
+
             usuarioDAO.actualizar(usuario);
             return usuario;
         } else {
