@@ -15,6 +15,8 @@ import model.Campaña;
 import model.Jornada;
 import model.Zona;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RequestScoped
@@ -127,5 +129,15 @@ public class JornadaService extends GenericServiceImpl<Jornada, Long> {
         jornada.quitarZona(zona.getId());
         jornadaDAO.actualizar(jornada);
         return jornada;
+    }
+
+    public List<Jornada> listarJornadaByCampania(Long campania_id){
+        Optional<Campaña> campaña_t = campañaDAO.buscarPorId(campania_id);
+        if (campaña_t.isEmpty()){
+            throw new EntidadNoEncontradaException("No existe una campaña con ese id");
+        }
+        List<Jornada> response = new ArrayList<>();
+        response = jornadaDAO.listarJornadasByCampania(campania_id);
+        return response;
     }
 }

@@ -1,6 +1,7 @@
 package controller;
 
 import controller.dto.JornadaDTO;
+import controller.dto.JornadaFechasDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -12,7 +13,6 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import model.Jornada;
-import model.Usuario;
 import service.JornadaService;
 
 import java.util.Optional;
@@ -44,7 +44,12 @@ public class JornadaController {
     public Response get(@PathParam("id") Long id) {
         Optional<Jornada> objeto = service.buscarPorId(id);
         if (objeto.isPresent()) {
-            return Response.ok(objeto.get()).build();
+            JornadaFechasDTO jornadaFechasDTO = new JornadaFechasDTO();
+            jornadaFechasDTO.setId(objeto.get().getId());
+            jornadaFechasDTO.setFechaInicio(objeto.get().getFechaInicio().toString());
+            jornadaFechasDTO.setFechaFin(objeto.get().getFechaFin().toString());
+            jornadaFechasDTO.setCampaña_id(objeto.get().getCampaña().getId());
+            return Response.ok(jornadaFechasDTO).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
@@ -140,6 +145,15 @@ public class JornadaController {
     public Response quitarZona(@PathParam("id") Long id, @PathParam("zona_id") Long zona_id) {
         Jornada jornada = service.quitarZona(id, zona_id);
         return Response.status(Response.Status.CREATED).entity(jornada).build();
+    }
+
+    @GET
+    @Path("/campania/{campania_id}")
+    @Operation(description = "Este endpoint permite traer todas las jornadas a partir de una campaña",
+            parameters = { @Parameter(name = "campania id", required = true)})
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getJornadasByCampania(@PathParam("campania_id") Long id) {
+        return Response.ok(service.listarJornadaByCampania(id)).build();
     }
 }
 
