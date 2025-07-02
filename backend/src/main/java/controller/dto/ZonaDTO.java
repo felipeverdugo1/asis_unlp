@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 public class ZonaDTO {
-
+    private Long id;
     @NotBlank(message = "Nombre es obligatorio")
     private String nombre;
     @NotBlank(message = "Geolocalizacion es obligatoria")
