@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ZonaDTO {
-
+    private Long id;
     @NotBlank(message = "Nombre es obligatorio")
     private String nombre;
     @NotBlank(message = "Geolocalizacion es obligatoria")

@@ -84,7 +84,7 @@ export class ListaBarriosPage implements OnInit {
   `
 })
 export class FormBarrioPage implements OnInit {
-  barrio: Barrio = { nombre: '', geolocalizacion: '', informacion: '' };
+  barrio: Barrio = { id : 0 ,nombre: '', geolocalizacion: '', informacion: '' };
   esEdicion = false;
   loading = false;
 

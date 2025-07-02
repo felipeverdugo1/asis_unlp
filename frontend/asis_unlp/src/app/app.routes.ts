@@ -3,6 +3,7 @@ import { ListaUsuariosPage, FormUsuarioPage } from './pages/usuarios/usuario.pag
 import { ListaBarriosPage, FormBarrioPage } from './pages/barrios/barrio.pages';
 import { ListarRolesPage, FormRolPage } from './pages/roles/rol.pages';
 import { Home } from './components/home/home';
+import { FormZonaPage, ListarZonaPage } from './pages/zonas/zona.pages';
 
 
 export const routes: Routes = [
@@ -29,6 +30,13 @@ export const routes: Routes = [
       { path: '', component: ListaBarriosPage },
       { path: 'nuevo', component: FormBarrioPage },
       { path: 'editar/:id', component: FormBarrioPage }
+]},
+  { 
+    path: 'zona', 
+    children: [
+      { path: '', component: ListarZonaPage },
+      { path: 'nueva', component: FormZonaPage },
+      { path: 'editar/:id', component: FormZonaPage }
     ]
   }
 ];

@@ -21,6 +21,7 @@ export class BarriosService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
+
   createBarrio(barrio: BarrioForm): Observable<Barrio> {
     return this.http.post<Barrio>(this.apiUrl, barrio);
   }
@@ -33,4 +34,5 @@ export class BarriosService {
   getBarrio(id: number): Observable<Barrio> {
     return this.http.get<Barrio>(`${this.apiUrl}/${id}`);
   }
+
 }
