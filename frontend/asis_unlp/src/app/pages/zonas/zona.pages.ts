@@ -9,7 +9,7 @@ import { ListarZonas } from '../../components/zona/listar-zona';
 import { Observable } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { FormZona } from '../../components/zona/form-zona';
-import { log } from 'console';
+
 
 
 @Component({
@@ -77,6 +77,11 @@ export class ListarZonaPage implements OnInit {
     template: `
     <h2>{{ esEdicion ? 'Editar Zona' : 'Nueva Zona' }}</h2>
     
+    <div *ngIf="errorMensaje" class="error-box">
+      {{ errorMensaje }}
+    </div>
+
+
     <ng-container *ngIf="!loading; else cargando">
       <form-zona 
       [barrios]="barrios"
@@ -95,6 +100,7 @@ export class ListarZonaPage implements OnInit {
     barrios: Barrio[] = [];
     esEdicion = false;
     loading = false;
+    errorMensaje: string | null = null;
 
   
     constructor(
@@ -107,6 +113,7 @@ export class ListarZonaPage implements OnInit {
     ngOnInit(): void {
 
     // Cargar barrios
+    this.errorMensaje = null;
     this.barrioService.getBarrios().subscribe({
       next: (barrios) => this.barrios = barrios,
       error: (err) => console.error('Error al cargar barrios:', err)
@@ -133,14 +140,17 @@ export class ListarZonaPage implements OnInit {
 
 
     guardarZona(zona: Zona) {
-      console.log(zona);
+
       const req = this.esEdicion
         ? this.zonaService.updateZona(zona)
         : this.zonaService.createZona(zona);
   
       req.subscribe({
         next: () => this.router.navigate(['/zona']),
-        error: (err) => console.error('Error al guardar zona:', err)
+        error: (err) => {
+          // Si el backend devuelve { error: 'mensaje' }
+          this.errorMensaje = err.error?.error || 'Error inesperado al guardar la zona.';
+        }
       });
     }
     

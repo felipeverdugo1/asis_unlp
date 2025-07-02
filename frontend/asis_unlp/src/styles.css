@@ -13,3 +13,11 @@
     padding: 4px 8px;
     cursor: pointer;
   }
+
+  .error-box {
+    background: #ffe6e6;
+    color: #d8000c;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+  }
