@@ -131,6 +131,15 @@ public class ZonaController {
         service.eliminar(id);
         return Response.noContent().build();
     }
+
+    @GET
+    @Path("/barrio/{barrio_id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Este endpoint nos permite obtener todas las zonas pertenecientes a un barrio por su id.",
+            parameters = @Parameter(name = "barrio id"))
+    public Response getZonasByBarrio(@PathParam("barrio_id") Long barrio_id) {
+        return Response.ok(service.listarZonasByBarrio(barrio_id)).build();
+    }
 }
 
 
