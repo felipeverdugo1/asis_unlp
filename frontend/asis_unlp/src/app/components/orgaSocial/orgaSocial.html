@@ -1,0 +1,26 @@
+<table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Domicilio</th>
+        <th>actividadPrincipal</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let orgaSocial of orgaSociales">
+        <td>{{ orgaSocial.id }}</td>
+        <td>{{ orgaSocial.nombre }}</td>
+        <td>{{ orgaSocial.domicilio }}</td>
+        <td>{{ orgaSocial.actividadPrincipal }}</td>
+        <td>
+          <button (click)="onEdit.emit(orgaSocial.id)"> Editar</button>
+          <button (click)="onDelete.emit(orgaSocial.id)"> Borrar</button>
+        </td>
+      </tr>
+      <tr *ngIf="orgaSociales.length === 0">
+        <td colspan="6">No hay orgaSociales cargadas.</td>
+      </tr>
+    </tbody>
+  </table>

@@ -72,8 +72,14 @@ public class ZonaService extends GenericServiceImpl<Zona, Long> {
         if ( zona.isPresent() ) {
             Zona zona_actualizada = zona.get();
             if (zonaDTO.getNombre() != null) {
+                Optional<Zona> zona_existente = zonaDAO.buscarPorCampo("nombre", zonaDTO.getNombre());
+
+                if (zona_existente.isPresent() && !zona_existente.get().getId().equals(id)) {
+                    throw new EntidadExistenteException("Ya existe una zona con ese nombre.");
+                }
                 zona_actualizada.setNombre(zonaDTO.getNombre());
             }
+
             if (zonaDTO.getGeolocalizacion() != null) {
                 zona_actualizada.setGeolocalizacion(zonaDTO.getGeolocalizacion());
             }

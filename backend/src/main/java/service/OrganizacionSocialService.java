@@ -74,11 +74,21 @@ public class OrganizacionSocialService extends GenericServiceImpl<OrganizacionSo
         OrganizacionSocial orgSocial = orgSocialOpt.get();
 
         if (dto.getNombre() != null) {
+            Optional<OrganizacionSocial> orga_existente = orgSocialDAO.buscarPorCampo("nombre", dto.getNombre());
+
+            if (orga_existente.isPresent() && !orga_existente.get().getId().equals(id)) {
+                throw new EntidadExistenteException("Ya existe una organizacion social con ese nombre.");
+            }
             orgSocial.setNombre(dto.getNombre());
         }
 
+
         if (dto.getDomicilio() != null) {
             orgSocial.setDomicilio(dto.getDomicilio());
+        }
+
+        if (dto.getActividadPrincipal() != null) {
+            orgSocial.setActividadPrincipal(dto.getActividadPrincipal());
         }
 
         if (dto.getBarrio_id() != null) {

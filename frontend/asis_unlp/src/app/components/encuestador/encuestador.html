@@ -1,0 +1,30 @@
+<table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Dni</th>
+        <th>Edad</th>
+        <th>Genero</th>
+        <th>Ocupacion</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let encuestador of encuestadores">
+        <td>{{ encuestador.id }}</td>
+        <td>{{ encuestador.nombre }}</td>
+        <td>{{ encuestador.dni }}</td>
+        <td>{{ encuestador.edad }}</td>
+        <td>{{ encuestador.genero }}</td>
+        <td>{{ encuestador.ocupacion }}</td>
+        <td>
+          <button (click)="onEdit.emit(encuestador.id)"> Editar</button>
+          <button (click)="onDelete.emit(encuestador.id)"> Borrar</button>
+        </td>
+      </tr>
+      <tr *ngIf="encuestadores.length === 0">
+        <td colspan="6">No hay encuestadores cargadas.</td>
+      </tr>
+    </tbody>
+  </table>

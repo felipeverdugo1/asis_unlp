@@ -1,6 +1,7 @@
 package controller;
 
 import controller.dto.CampañaDTO;
+import controller.dto.CampañaFechasDTO;
 import controller.dto.ReporteDTO;
 import exceptions.EntidadNoEncontradaException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -50,7 +51,13 @@ public class CampañaController {
     public Response get(@PathParam("id") Long id) {
         Optional<Campaña> objeto = service.buscarPorId(id);
         if (objeto.isPresent()) {
-            return Response.ok(objeto.get()).build();
+            CampañaFechasDTO campañaFechasDTO = new CampañaFechasDTO();
+            campañaFechasDTO.setId(objeto.get().getId());
+            campañaFechasDTO.setNombre(objeto.get().getNombre());
+            campañaFechasDTO.setFechaInicio(objeto.get().getFechaInicio().toString());
+            campañaFechasDTO.setFechaFin(objeto.get().getFechaFin().toString());
+            campañaFechasDTO.setBarrio_id(objeto.get().getBarrio().getId());
+            return Response.ok(campañaFechasDTO).build();
         } else {
             throw new EntidadNoEncontradaException("No existe la campaña.");
         }

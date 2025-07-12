@@ -48,7 +48,12 @@ public class ZonaController {
     public Response get(@PathParam("id") Long id) {
         Optional<Zona> objeto = service.buscarPorId(id);
         if (objeto.isPresent()) {
-            return Response.ok(objeto.get()).build();
+            ZonaDTO zonaDTO = new ZonaDTO();
+            zonaDTO.setId(objeto.get().getId());
+            zonaDTO.setNombre(objeto.get().getNombre());
+            zonaDTO.setGeolocalizacion(objeto.get().getGeolocalizacion());
+            zonaDTO.setBarrio_id(objeto.get().getBarrio().getId());
+            return Response.ok(zonaDTO).build();
         } else {
             throw new EntidadNoEncontradaException("No existe la zona.");
         }

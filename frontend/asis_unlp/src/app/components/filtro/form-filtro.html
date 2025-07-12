@@ -1,0 +1,17 @@
+<form #zonaForm="ngForm" (ngSubmit)="zonaForm.valid && onSubmit.emit(zona)">
+  <label>Nombre:</label>
+  <input [(ngModel)]="zona.nombre" name="nombre" required />
+
+  <label>Geolocalización:</label>
+  <input [(ngModel)]="zona.geolocalizacion" name="geolocalizacion" required />
+
+  <label>Barrio:</label>
+  <select [(ngModel)]="zona.barrio_id" name="barrio_id" required>
+    <option [ngValue]="null" disabled>-- Seleccionar barrio --</option>
+    <option *ngFor="let barrio of barrios" [ngValue]="barrio.id">
+      {{ barrio.nombre }}
+    </option>
+  </select>
+
+  <button type="submit" [disabled]="!zonaForm.valid">Guardar</button>
+</form>

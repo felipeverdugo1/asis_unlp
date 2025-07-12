@@ -1,0 +1,22 @@
+<table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let rol of roles">
+        <td>{{ rol.id }}</td>
+        <td>{{ rol.nombre }}</td>
+        <td>
+          <button (click)="onEdit.emit(rol.id)"> Editar</button>
+          <button (click)="onDelete.emit(rol.id)"> Borrar</button>
+        </td>
+      </tr>
+      <tr *ngIf="roles.length === 0">
+        <td colspan="6">No hay roles cargados.</td>
+      </tr>
+    </tbody>
+  </table>

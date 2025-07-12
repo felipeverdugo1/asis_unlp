@@ -1,1 +1,23 @@
 /* You can add global styles to this file, and also import other style files */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .table th, .table td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  button {
+    margin-right: 5px;
+    padding: 4px 8px;
+    cursor: pointer;
+  }
+
+  .error-box {
+    background: #ffe6e6;
+    color: #d8000c;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+  }
