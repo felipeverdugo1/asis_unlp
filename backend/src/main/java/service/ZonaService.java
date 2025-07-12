@@ -13,6 +13,7 @@ import model.Encuesta;
 import model.Zona;
 import exceptions.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -111,5 +112,14 @@ public class ZonaService extends GenericServiceImpl<Zona, Long> {
         } else {
             throw new EntidadNoEncontradaException("El Zona no existe");
         }
+    }
+
+    public List<Zona> listarZonasByBarrio(Long barrio_id) {
+        Optional<Barrio> barrio_t = barrioDAO.buscarPorId(barrio_id);
+        if (barrio_t.isEmpty()) {
+            throw new EntidadNoEncontradaException("El barrio no existe.");
+        }
+        List<Zona> zonas = new ArrayList<>();
+        return zonaDAO.listarZonasByBarrio(barrio_id);
     }
 }
