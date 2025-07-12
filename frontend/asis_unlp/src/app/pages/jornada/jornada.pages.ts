@@ -15,6 +15,11 @@ import { log } from 'console';
   imports: [CommonModule, RouterModule, ListarJornadas],
   template: `
     <h2>Jornadas de Campaña {{ idCampania }}</h2>
+
+    <div *ngIf="errorMensaje" class="error-box">
+      {{ errorMensaje }}
+    </div>
+
     <listar-jornadas
       [jornadas]="(jornadas$ | async) ?? []"
       (onEdit)="editarJornada($event)"
@@ -39,6 +44,7 @@ import { log } from 'console';
 export class ListarJornadaPage implements OnInit {
   jornadas$!: Observable<Jornada[]>;
   idCampania!: number;
+  errorMensaje: string | null = null;
 
   constructor(
     private jornadaService: JornadaService,
@@ -49,6 +55,7 @@ export class ListarJornadaPage implements OnInit {
   ngOnInit(): void {
     this.idCampania = +this.route.snapshot.paramMap.get('idCampania')!;
     this.cargarJornadas();
+    this.errorMensaje = null;
   }
 
   cargarJornadas() {
@@ -67,7 +74,7 @@ export class ListarJornadaPage implements OnInit {
     if (confirm('¿Borrar jornada?')) {
       this.jornadaService.deleteJornada(id).subscribe({
         next: () => this.cargarJornadas(),
-        error: (err) => console.error('Error al borrar:', err)
+        error: (err) => this.errorMensaje = err.error?.error || 'Error inesperado al borrar la jornada.'
       });
     }
   }
@@ -79,6 +86,10 @@ export class ListarJornadaPage implements OnInit {
     imports: [CommonModule, FormsModule, FormJornada],
     template: `
     <h2>{{ esEdicion ? 'Editar Jornada ' + jornada.id + ' de Campaña' + idCampania : 'Nueva jornada para Campaña ' + idCampania }}</h2>
+
+    <div *ngIf="errorMensaje" class="error-box">
+      {{ errorMensaje }}
+    </div>
 
     <ng-container *ngIf="!loading; else cargando">
       <form-jornada
@@ -97,7 +108,7 @@ export class ListarJornadaPage implements OnInit {
     idCampania!: number;
     esEdicion = false;
     loading = false;
-
+    errorMensaje: string | null = null;
   
     constructor(
       private jornadaService: JornadaService,
@@ -107,6 +118,7 @@ export class ListarJornadaPage implements OnInit {
   
     ngOnInit(): void {
     this.idCampania = +this.route.snapshot.paramMap.get('idCampania')!;
+    this.errorMensaje = null;
 
     // Cargar zonas
     //this.zonaService.getZonas().subscribe({
@@ -125,7 +137,7 @@ export class ListarJornadaPage implements OnInit {
             this.loading = false;
           },
           error: (err) => {
-            console.error('Error al cargar jornada:', err);
+            this.errorMensaje = err.error?.error || 'Error inesperado al cargar la jornada.';
             this.loading = false;
           }
         });
@@ -145,7 +157,9 @@ export class ListarJornadaPage implements OnInit {
 
       req.subscribe({
         next: () => this.router.navigate(['/campania', this.idCampania, 'jornadas']),
-        error: (err) => console.error('Error al guardar jornada:', err)
+        error: (err) => {
+          this.errorMensaje = err.error?.error || 'Error inesperado al guardar la jornada.';
+        }
       });
     }
     

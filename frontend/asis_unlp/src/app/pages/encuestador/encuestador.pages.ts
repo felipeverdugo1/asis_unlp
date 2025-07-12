@@ -17,6 +17,11 @@ import { FormEncuestador } from '../../components/encuestador/form-encuestador';
   imports: [CommonModule, RouterModule, ListarEncuestadores],
   template: `
     <h2>Encuestadores</h2>
+
+    <div *ngIf="errorMensaje" class="error-box">
+      {{ errorMensaje }}
+    </div>
+
     <listar-encuestadores 
       [encuestadores]="(encuestadores$ | async) ?? []"
       (onEdit)="editarEncuestador($event)"
@@ -38,6 +43,7 @@ import { FormEncuestador } from '../../components/encuestador/form-encuestador';
 })
 export class ListarEncuestadorPage implements OnInit {
   encuestadores$!: Observable<Encuestador[]>;
+  errorMensaje: string | null = null;
 
   constructor(
     private encuestadoresService: EncuestadorService,
@@ -46,6 +52,7 @@ export class ListarEncuestadorPage implements OnInit {
 
   ngOnInit(): void {
     this.cargarEncuestadores();
+    this.errorMensaje = null;
   }
 
   cargarEncuestadores() {
@@ -64,7 +71,7 @@ export class ListarEncuestadorPage implements OnInit {
     if (confirm('¿Borrar encuestador?')) {
       this.encuestadoresService.deleteEncuestador(id).subscribe({
         next: () => this.cargarEncuestadores(),
-        error: (err) => console.error('Error al borrar:', err)
+        error: (err) => this.errorMensaje = err.error?.error || 'Error inesperado al borrar el encuestador.'
       });
     }
   }
@@ -80,7 +87,6 @@ export class ListarEncuestadorPage implements OnInit {
     <div *ngIf="errorMensaje" class="error-box">
       {{ errorMensaje }}
     </div>
-
 
     <ng-container *ngIf="!loading; else cargando">
       <form-encuestador 
@@ -120,7 +126,7 @@ export class ListarEncuestadorPage implements OnInit {
             this.loading = false;
           },
           error: (err) => {
-            console.error('Error al cargar encuestador:', err);
+            this.errorMensaje = err.error?.error || 'Error inesperado al cargar el encuestador.';
             this.loading = false;
           }
         });

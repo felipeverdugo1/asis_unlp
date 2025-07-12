@@ -13,6 +13,11 @@ import { Observable } from 'rxjs';
   imports : [CommonModule,RouterModule,ListarUsuarios],
   template: `
     <h2>Usuarios</h2>
+
+    <div *ngIf="errorMensaje" class="error-box">
+      {{ errorMensaje }}
+    </div>
+
     <listar-usuarios 
     [usuarios]="(usuarios$ | async) ?? []"
       (onEdit)="editarUsuario($event)"
@@ -35,6 +40,7 @@ import { Observable } from 'rxjs';
 })
 export class ListaUsuariosPage implements OnInit {
   usuarios$!: Observable<Usuario[]>;
+  errorMensaje: string | null = null;
 
   constructor(
     private usuariosService: UsuariosService,
@@ -43,6 +49,7 @@ export class ListaUsuariosPage implements OnInit {
 
   ngOnInit(): void {
     this.usuarios$ = this.usuariosService.getUsuarios();
+    this.errorMensaje = null;
   }
   
   cargarUsuarios() {
@@ -61,7 +68,7 @@ export class ListaUsuariosPage implements OnInit {
     if (confirm('¿Borrar usuario?')) {
       this.usuariosService.deleteUsuario(id).subscribe({
         next: () => this.cargarUsuarios(),
-        error: (err) => console.error('Error al borrar:', err)
+        error: (err) => this.errorMensaje = err.error?.error || 'Error inesperado al borrar el usuario.'
       });
     }
   }
@@ -74,6 +81,10 @@ export class ListaUsuariosPage implements OnInit {
   imports: [FormsModule, CommonModule, FormUsuario], 
   template: `
     <h2>{{ esEdicion ? 'Editar usuario' : 'Nuevo usuario' }}</h2>
+
+    <div *ngIf="errorMensaje" class="error-box">
+      {{ errorMensaje }}
+    </div>
     
     <ng-container *ngIf="!loading; else cargando">
       <form-usuario [usuario]="usuario" (onSubmit)="guardarUsuario($event)"></form-usuario>
@@ -95,6 +106,7 @@ export class FormUsuarioPage {
 
   esEdicion = false;
   loading = false;
+  errorMensaje: string | null = null;
 
   constructor(
     private usuarioService: UsuariosService,
@@ -103,6 +115,7 @@ export class FormUsuarioPage {
   ) {}
 
   ngOnInit(): void {
+    this.errorMensaje = null;
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.esEdicion = true;
@@ -113,7 +126,7 @@ export class FormUsuarioPage {
           this.loading = false;
         },
         error: (err) => {
-          console.error('Error al cargar usuario:', err);
+          this.errorMensaje = err.error?.error || 'Error inesperado al cargar el usuario.';
           this.loading = false;
         }
       });
@@ -127,7 +140,7 @@ export class FormUsuarioPage {
 
     req.subscribe({
       next: () => this.router.navigate(['/usuario']),
-      error: (err) => console.error('Error al guardar usuario:', err)
+      error: (err) => this.errorMensaje = err.error?.error || 'Error inesperado al guardar el usuario.'
     });
   }
 

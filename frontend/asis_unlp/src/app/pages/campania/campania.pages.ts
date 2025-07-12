@@ -17,6 +17,11 @@ import { log } from 'console';
   imports: [CommonModule, RouterModule, ListarCampanias],
   template: `
     <h2>Campaña</h2>
+
+    <div *ngIf="errorMensaje" class="error-box">
+      {{ errorMensaje }}
+    </div>
+
     <listar-campanias 
       [campanias]="(campanias$ | async) ?? []"
       (onEdit)="editarCampania($event)"
@@ -38,6 +43,7 @@ import { log } from 'console';
 })
 export class ListarCampaniaPage implements OnInit {
   campanias$!: Observable<Campania[]>;
+  errorMensaje: string | null = null;
 
   constructor(
     private campaniasService: CampaniaService,
@@ -46,6 +52,7 @@ export class ListarCampaniaPage implements OnInit {
 
   ngOnInit(): void {
     this.cargarCampanias();
+    this.errorMensaje = null;
   }
 
   cargarCampanias() {
@@ -64,7 +71,7 @@ export class ListarCampaniaPage implements OnInit {
     if (confirm('¿Borrar campaña?')) {
       this.campaniasService.deleteCampania(id).subscribe({
         next: () => this.cargarCampanias(),
-        error: (err) => console.error('Error al borrar:', err)
+        error: (err) => this.errorMensaje = err.error?.error || 'Error inesperado al borrar la campaña.'
       });
     }
   }
@@ -76,6 +83,10 @@ export class ListarCampaniaPage implements OnInit {
     imports: [CommonModule, FormsModule, FormCampania],
     template: `
     <h2>{{ esEdicion ? 'Editar campaña' : 'Nueva campaña' }}</h2>
+
+    <div *ngIf="errorMensaje" class="error-box">
+      {{ errorMensaje }}
+    </div>
 
     <ng-container *ngIf="!loading; else cargando">
       <form-campania
@@ -95,7 +106,7 @@ export class ListarCampaniaPage implements OnInit {
     barrios: Barrio[] = [];
     esEdicion = false;
     loading = false;
-
+    errorMensaje: string | null = null;
   
     constructor(
       private campaniaService: CampaniaService,
@@ -105,14 +116,12 @@ export class ListarCampaniaPage implements OnInit {
     ) {}
   
     ngOnInit(): void {
-
-    // Cargar barrios
-    this.barrioService.getBarrios().subscribe({
-      next: (barrios) => this.barrios = barrios,
-      error: (err) => console.error('Error al cargar barrios:', err)
-    });
-
-
+      this.errorMensaje = null;
+      // Cargar barrios
+      this.barrioService.getBarrios().subscribe({
+        next: (barrios) => this.barrios = barrios,
+        error: (err) => this.errorMensaje = err.error?.error || 'Error inesperado al cargar los barrios.'
+      });
 
       const id = this.route.snapshot.paramMap.get('id');
       if (id) {
@@ -124,7 +133,7 @@ export class ListarCampaniaPage implements OnInit {
             this.loading = false;
           },
           error: (err) => {
-            console.error('Error al cargar campaña:', err);
+            this.errorMensaje = err.error?.error || 'Error inesperado al cargar la campaña.';
             this.loading = false;
           }
         });
@@ -140,7 +149,7 @@ export class ListarCampaniaPage implements OnInit {
 
       req.subscribe({
         next: () => this.router.navigate(['/campania']),
-        error: (err) => console.error('Error al guardar campaña:', err)
+        error: (err) => this.errorMensaje = err.error?.error || 'Error inesperado al guardar la campaña.'
       });
     }
     

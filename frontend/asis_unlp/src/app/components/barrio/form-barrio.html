@@ -1,5 +1,5 @@
 
-<form (ngSubmit)="onSubmit.emit(barrio)">
+<form #barrioForm="ngForm" (ngSubmit)="barrioForm.valid && onSubmit.emit(barrio)">
   <label for="nombre">Nombre del barrio:</label>
   <input id="nombre" name="nombre" [(ngModel)]="barrio.nombre" required>
   <label for="informacion">Información del barrio:</label>
@@ -7,5 +7,5 @@
   <label for="geolocalizacion">Geolocalización del barrio:</label>
   <input id="geolocalizacion" name="geolocalizacion" [(ngModel)]="barrio.geolocalizacion" required>
 
-  <button type="submit">Guardar</button>
+  <button type="submit" [disabled]="!barrioForm.valid">Guardar</button>
 </form>

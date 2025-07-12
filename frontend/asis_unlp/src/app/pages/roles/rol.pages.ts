@@ -13,6 +13,11 @@ import { Observable } from 'rxjs';
   imports : [CommonModule,RouterModule,ListarRoles],
   template: `
     <h2>Roles</h2>
+
+    <div *ngIf="errorMensaje" class="error-box">
+      {{ errorMensaje }}
+    </div>
+
     <listar-roles 
     [roles]="(roles$ | async) ?? []"
       (onEdit)="editarRol($event)"
@@ -35,6 +40,7 @@ import { Observable } from 'rxjs';
 })
 export class ListarRolesPage implements OnInit {
   roles$!: Observable<Rol[]>;
+  errorMensaje: string | null = null;
 
   constructor(
     private rolesService: RolesService,
@@ -43,6 +49,7 @@ export class ListarRolesPage implements OnInit {
 
   ngOnInit(): void {
     this.roles$ = this.rolesService.getRoles();
+    this.errorMensaje = null;
   }
   
   cargarRol() {
@@ -61,7 +68,7 @@ export class ListarRolesPage implements OnInit {
     if (confirm('¿Borrar rol?')) {
       this.rolesService.deleteRol(id).subscribe({
         next: () => this.cargarRol(),
-        error: (err) => console.error('Error al borrar:', err)
+        error: (err) => this.errorMensaje = err.error?.error || 'Error inesperado al borrar el rol.'
       });
     }
   }
@@ -74,6 +81,10 @@ export class ListarRolesPage implements OnInit {
   imports: [FormsModule, CommonModule, FormRol], 
   template: `
     <h2>{{ esEdicion ? 'Editar Rol' : 'Nuevo Rol' }}</h2>
+
+    <div *ngIf="errorMensaje" class="error-box">
+      {{ errorMensaje }}
+    </div>
     
     <ng-container *ngIf="!loading; else cargando">
       <form-rol [rol]="rol" (onSubmit)="guardarRol($event)"></form-rol>
@@ -87,6 +98,7 @@ export class FormRolPage {
   rol: Rol = { nombre: '' };
   esEdicion = false;
   loading = false;
+  errorMensaje: string | null = null;
 
   constructor(
     private rolesService: RolesService,
@@ -95,6 +107,7 @@ export class FormRolPage {
   ) {}
 
   ngOnInit(): void {
+    this.errorMensaje = null;
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.esEdicion = true;
@@ -105,7 +118,7 @@ export class FormRolPage {
           this.loading = false;
         },
         error: (err) => {
-          console.error('Error al cargar rol:', err);
+          this.errorMensaje = err.error?.error || 'Error inesperado al cargar el rol.';
           this.loading = false;
         }
       });
@@ -119,7 +132,7 @@ export class FormRolPage {
 
     req.subscribe({
       next: () => this.router.navigate(['/rol']),
-      error: (err) => console.error('Error al guardar rol:', err)
+      error: (err) => this.errorMensaje = err.error?.error || 'Error inesperado al guardar el rol.'
     });
   }
 
