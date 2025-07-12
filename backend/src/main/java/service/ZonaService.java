@@ -23,6 +23,8 @@ public class ZonaService extends GenericServiceImpl<Zona, Long> {
 
     @Inject
     private EncuestaDAO encuestaDAO;
+    @Inject
+    private JornadaService jornadaService;
 
     @Inject
     public ZonaService(ZonaDAO dao) {super(dao);}
@@ -105,9 +107,7 @@ public class ZonaService extends GenericServiceImpl<Zona, Long> {
     public void eliminar(Long id) {
         Optional<Zona> zona = zonaDAO.buscarPorId(id);
         if ( zona.isPresent() ) {
-            //Barrio barrio = zona.get().getBarrio();
-            //barrio.getZonas().remove(zona.get());
-            //barrioDAO.actualizar(barrio);
+            jornadaService.limpiarZona(id);
             zonaDAO.eliminar(zona.get());
         } else {
             throw new EntidadNoEncontradaException("El Zona no existe");

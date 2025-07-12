@@ -73,7 +73,7 @@ public class EncuestaService extends GenericServiceImpl<Encuesta, Long> {
             throw new EntidadNoEncontradaException("La Zona no existe");
         }
 
-        if (!jornada_t.get().getZonas().contains(zona_t.get())) {
+        if (jornada_t.get().getZonas().stream().noneMatch(z -> z.getId().equals(zona_t.get().getId()))) {
             throw new EntidadNoEncontradaException("La zona no corresponde a la jornada.");
         }
 

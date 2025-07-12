@@ -44,9 +44,11 @@ public class Jornada {
     private List<Encuesta> encuestas = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name="jornada_zona",
+    @JoinTable(
+            name = "jornada_zona",
             joinColumns = @JoinColumn(name="jornada_id"),
-            inverseJoinColumns = @JoinColumn(name="zona_id"))
+            inverseJoinColumns = @JoinColumn(name="zona_id")
+    )
     private Set<Zona> zonas = new HashSet<>();
 
     public void agregarEncuesta(Encuesta encuesta) {

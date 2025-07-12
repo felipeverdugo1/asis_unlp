@@ -3,10 +3,7 @@ package service;
 import controller.dto.CampañaDTO;
 import dao.BarrioDAO;
 import dao.CampañaDAO;
-import exceptions.EntidadExistenteException;
-import exceptions.EntidadNoEncontradaException;
-import exceptions.FaltanArgumentosException;
-import exceptions.RangoDeFechasInvalidoException;
+import exceptions.*;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import model.Campaña;
@@ -78,9 +75,6 @@ public class CampañaService extends GenericServiceImpl<Campaña, Long> {
             if (campañaDAO.existeOtroConMismoCampo(id,"nombre", dto.getNombre())) {
                 throw new EntidadExistenteException("Ya existe otra campaña con ese nombre");
             }
-
-
-
             // Preparar fechas para validación
             LocalDate fechaInicioActualizada = dto.getFechaInicio() != null ? dto.getFechaInicio() : campaña.getFechaInicio();
             LocalDate fechaFinActualizada = dto.getFechaFin() != null ? dto.getFechaFin() : campaña.getFechaFin();
@@ -102,8 +96,6 @@ public class CampañaService extends GenericServiceImpl<Campaña, Long> {
             }
 
 
-
-
             if (dto.getBarrio_id() != null) {
                 barrioDAO.buscarPorId(dto.getBarrio_id()).ifPresentOrElse(
                         campaña::setBarrio,
@@ -118,7 +110,15 @@ public class CampañaService extends GenericServiceImpl<Campaña, Long> {
 
     public void eliminar(Long id) {
         campañaDAO.buscarPorId(id).ifPresentOrElse(
-                campañaDAO::eliminar,
+                campañaExistente -> {
+                    if (!campañaExistente.getJornadas().isEmpty()) {
+                        throw new NoPuedesHacerEsoException("La Campaña tiene Jornadas asignadas, no se puede eliminar.");
+                    }
+                    if (!campañaExistente.getReportes().isEmpty()) {
+                        throw new NoPuedesHacerEsoException("La Campaña tiene Reportes relacionados, no se puede eliminar.");
+                    }
+                    campañaDAO.eliminar(campañaExistente);
+                },
                 () -> { throw new EntidadNoEncontradaException("La campaña no existe"); }
         );
     }

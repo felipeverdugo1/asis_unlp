@@ -7,6 +7,7 @@ import dao.ZonaDAO;
 import exceptions.EntidadExistenteException;
 import exceptions.EntidadNoEncontradaException;
 import exceptions.FaltanArgumentosException;
+import exceptions.NoPuedesHacerEsoException;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import model.Barrio;
@@ -93,12 +94,22 @@ public class BarrioService extends GenericServiceImpl<Barrio, Long> {
     }
 
     public void eliminar(Long id) {
-        Optional<Barrio> barrio = barrioDAO.buscarPorId(id);
-        if ( barrio.isPresent() ) {
-            barrioDAO.eliminar(barrio.get());
-        } else {
+        Optional<Barrio> barrio_t = barrioDAO.buscarPorId(id);
+        if ( barrio_t.isEmpty() ) {
             throw new EntidadNoEncontradaException("El Barrio no existe");
         }
+        Barrio barrio = barrio_t.get();
+        if (!barrio.getCampañas().isEmpty()) {
+            throw new NoPuedesHacerEsoException("El Barrio tiene Campañas asignadas, no se puede eliminar.");
+        }
+        if (!barrio.getZonas().isEmpty()) {
+            throw new NoPuedesHacerEsoException("El Barrio tiene Zonas asignadas, no se puede eliminar.");
+        }
+        if (!barrio.getOrganizacionesSociales().isEmpty()) {
+            throw new NoPuedesHacerEsoException("El Barrio tiene Organizaciones Sociales asignadas, no se puede eliminar.");
+        }
+
+        barrioDAO.eliminar(barrio);
     }
 
 }

@@ -7,6 +7,7 @@ import dao.ZonaDAO;
 import dao.BarrioDAO;
 import exceptions.EntidadNoEncontradaException;
 import exceptions.FaltanArgumentosException;
+import exceptions.NoPuedesHacerEsoException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
@@ -139,5 +140,40 @@ public class JornadaService extends GenericServiceImpl<Jornada, Long> {
         List<Jornada> response = new ArrayList<>();
         response = jornadaDAO.listarJornadasByCampania(campania_id);
         return response;
+    }
+
+    public List<Jornada> listarJornadasByZonas(Long zona_id){
+        Optional<Zona> zona_t = zonaDAO.buscarPorId(zona_id);
+        if (zona_t.isEmpty()){
+            throw new EntidadNoEncontradaException("No existe una zona con ese id");
+        }
+        List<Jornada> response = new ArrayList<>();
+        response = jornadaDAO.buscarJornadasPorZonaId(zona_id);
+        return response;
+    }
+
+    public void limpiarZona(Long zona_id) {
+        List<Jornada> jornadas = listarJornadasByZonas(zona_id);
+        if (!jornadas.isEmpty()){
+            for (Jornada jornada : jornadas){
+                quitarZona(jornada.getId(), zona_id);
+            }
+        }
+    }
+
+    public void eliminar(Long id) {
+        Optional<Jornada> jornada_t = jornadaDAO.buscarPorId(id);
+        if (jornada_t.isEmpty()){
+            throw new EntidadNoEncontradaException("No existe esa jornada");
+        }
+        Jornada jornada = jornada_t.get();
+        if (!jornada.getZonas().isEmpty()){
+            throw new NoPuedesHacerEsoException("La Jornada tiene Zonas asignadas, no puede eliminarse.");
+        }
+        if (!jornada.getEncuestas().isEmpty()){
+            throw new NoPuedesHacerEsoException("La Jornada tiene Encuestas, no puede eliminarse.");
+        }
+
+        jornadaDAO.eliminar(jornada);
     }
 }

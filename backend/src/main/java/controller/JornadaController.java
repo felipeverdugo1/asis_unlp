@@ -49,6 +49,7 @@ public class JornadaController {
             jornadaFechasDTO.setFechaInicio(objeto.get().getFechaInicio().toString());
             jornadaFechasDTO.setFechaFin(objeto.get().getFechaFin().toString());
             jornadaFechasDTO.setCampaña_id(objeto.get().getCampaña().getId());
+            jornadaFechasDTO.setZonas(objeto.get().getZonas());
             return Response.ok(jornadaFechasDTO).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -118,7 +119,7 @@ public class JornadaController {
     public Response delete(@PathParam("id") Long id) {
         Optional<Jornada> objeto = service.buscarPorId(id);
         if (objeto.isPresent()) {
-            service.eliminar(objeto.get());
+            service.eliminar(objeto.get().getId());
             return Response.noContent().build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
