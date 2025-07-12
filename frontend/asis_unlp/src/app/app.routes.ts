@@ -16,6 +16,7 @@ export const routes: Routes = [
   { path: '', component: Home }, 
   { 
     path: 'usuario', 
+    data: { title: 'Usuarios' },
     children: [
       { path: '', component: ListaUsuariosPage },
       { path: 'nuevo', component: FormUsuarioPage },
@@ -24,6 +25,7 @@ export const routes: Routes = [
   },
   {
     path: 'rol', 
+    data: { title: 'Roles' },
     children: [
       { path: '', component: ListarRolesPage },
       { path: 'nuevo', component: FormRolPage },
@@ -32,39 +34,43 @@ export const routes: Routes = [
   },
   {
     path: 'barrio',
+    data: { title: 'Barrios' },
     children: [
       { path: '', component: ListaBarriosPage },
       { path: 'nuevo', component: FormBarrioPage },
-      { path: 'editar/:id', component: FormBarrioPage }
-    ]
-  },
-  {
-    path: 'barrio/:idBarrio/zonas',
-    children: [
-      { path: '', component: ListarZonaPage },
-      { path: 'nueva', component: FormZonaPage },
-      { path: 'editar/:id', component: FormZonaPage }
+      { path: 'editar/:id', component: FormBarrioPage },
+      {
+        path: ':idBarrio/zonas',
+        data: { title: 'Zonas' },
+        children: [
+          { path: '', component: ListarZonaPage },
+          { path: 'nueva', component: FormZonaPage },
+          { path: 'editar/:id', component: FormZonaPage }
+        ]
+      }
     ]
   },
   { 
-    path: 'campania', 
+    path: 'campania',
+    data: { title: 'Campañas' },
     children: [
       { path: '', component: ListarCampaniaPage },
       { path: 'nueva', component: FormCampaniaPage },
-      { path: 'editar/:id', component: FormCampaniaPage }
+      { path: 'editar/:id', component: FormCampaniaPage },
+      {
+        path: ':idCampania/jornadas',
+        data: { title: 'Jornadas' },
+        children: [
+          { path: '', component: ListarJornadaPage },
+          { path: 'nuevo', component: FormJornadaPage },
+          { path: 'editar/:idJornada', component: FormJornadaPage }
+        ]
+      }
     ]
   },
-  {
-    path: 'campania/:idCampania/jornadas',
-    children: [
-      { path: '', component: ListarJornadaPage },
-      { path: 'nuevo', component: FormJornadaPage },
-      { path: 'editar/:idJornada', component: FormJornadaPage }
-    ]
-  }
-  ,
   { 
     path: 'encuestador', 
+    data: { title: 'Encuestadores' },
     children: [
       { path: '', component: ListarEncuestadorPage },
       { path: 'nuevo', component: FormEncuestadorPage },
@@ -73,6 +79,7 @@ export const routes: Routes = [
   },
   { 
     path: 'organizacionSocial', 
+    data: { title: 'Org. Sociales' },
     children: [
       { path: '', component: ListarOrgaSocialPage },
       { path: 'nueva', component: FormOrgaSocialPage },
