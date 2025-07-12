@@ -18,7 +18,12 @@ import { Usuario } from '../../models/usuario.model';
   standalone: true,
   imports: [CommonModule, RouterModule, ListarOrgaSocial],
   template: `
-    <h2>OrgaSocial</h2>
+    <h2>Organizaciones Sociales</h2>
+
+    <div *ngIf="errorMensaje" class="error-box">
+      {{ errorMensaje }}
+    </div>
+
     <listar-orgaSociales 
       [orgaSociales]="(orgaSociales$ | async) ?? []"
       (onEdit)="editarOrgaSocial($event)"
@@ -40,6 +45,7 @@ import { Usuario } from '../../models/usuario.model';
 })
 export class ListarOrgaSocialPage implements OnInit {
   orgaSociales$!: Observable<OrgaSocial[]>;
+  errorMensaje: string | null = null;
 
   constructor(
     private orgaSocialService: OrgaSocialService,
@@ -48,6 +54,7 @@ export class ListarOrgaSocialPage implements OnInit {
 
   ngOnInit(): void {
     this.cargarOrgaSocial();
+    this.errorMensaje = null;
   }
 
   cargarOrgaSocial() {
@@ -66,7 +73,7 @@ export class ListarOrgaSocialPage implements OnInit {
     if (confirm('¿Borrar organizacion social?')) {
       this.orgaSocialService.deleteOrgaSocial(id).subscribe({
         next: () => this.cargarOrgaSocial(),
-        error: (err) => console.error('Error al borrar:', err)
+        error: (err) => this.errorMensaje = err.error?.error || 'Error inesperado al borrar la organizacion social.'
       });
     }
   }
@@ -77,12 +84,11 @@ export class ListarOrgaSocialPage implements OnInit {
     standalone: true,
     imports: [CommonModule, FormsModule,FormOrgaSocial],
     template: `
-    <h2>{{ esEdicion ? 'Editar OrgaSocial' : 'Nueva OrgaSocial' }}</h2>
+    <h2>{{ esEdicion ? 'Editar Org. Social' : 'Nueva Org. Social' }}</h2>
     
     <div *ngIf="errorMensaje" class="error-box">
       {{ errorMensaje }}
     </div>
-
 
     <ng-container *ngIf="!loading; else cargando">
       <form-orgaSocial 
@@ -93,7 +99,7 @@ export class ListarOrgaSocialPage implements OnInit {
       </form-orgaSocial>
     </ng-container>
     <ng-template #cargando>
-      <p>Cargando OrgaSocial...</p>
+      <p>Cargando org. social...</p>
     </ng-template>
   `
   })
@@ -121,7 +127,7 @@ export class ListarOrgaSocialPage implements OnInit {
     this.errorMensaje = null;
     this.usuarioService.getUsuarios().subscribe({
       next: (usuarios) => this.usuarios = usuarios,
-      error: (err) => console.error('Error al cargar usuarios:', err)
+      error: (err) => this.errorMensaje = err.error?.error || 'Error inesperado al cargar los usuarios.'
     });
 
 
@@ -129,7 +135,7 @@ export class ListarOrgaSocialPage implements OnInit {
         this.errorMensaje = null;
         this.barrioService.getBarrios().subscribe({
           next: (barrios) => this.barrios = barrios,
-          error: (err) => console.error('Error al cargar usuarios:', err)
+          error: (err) => this.errorMensaje = err.error?.error || 'Error inesperado al cargar los barrios.'
         });
     
 
@@ -144,7 +150,7 @@ export class ListarOrgaSocialPage implements OnInit {
             this.loading = false;
           },
           error: (err) => {
-            console.error('Error al cargar OrgaSocial:', err);
+            this.errorMensaje = err.error?.error || 'Error inesperado al cargar la organizacion social.';
             this.loading = false;
           }
         });
@@ -162,7 +168,7 @@ export class ListarOrgaSocialPage implements OnInit {
         next: () => this.router.navigate(['/organizacionSocial']),
         error: (err) => {
           // Si el backend devuelve { error: 'mensaje' }
-          this.errorMensaje = err.error?.error || 'Error inesperado al guardar la OrgaSocial.';
+          this.errorMensaje = err.error?.error || 'Error inesperado al guardar la organizacion social.';
         }
       });
     }

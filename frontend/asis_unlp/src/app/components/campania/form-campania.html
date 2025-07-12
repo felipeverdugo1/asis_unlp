@@ -1,5 +1,5 @@
 
-<form (ngSubmit)="onSubmit.emit(campania)">
+<form #campaniaForm="ngForm" (ngSubmit)="campaniaForm.valid && onSubmit.emit(campania)">
   <label>Nombre:</label>
   <input [(ngModel)]="campania.nombre" name="nombre" required />
   <label>Fecha Inicio:</label>
@@ -14,5 +14,5 @@
     </option>
   </select>
 
-  <button type="submit">Guardar</button>
+  <button type="submit" [disabled]="!campaniaForm.valid">Guardar</button>
 </form>

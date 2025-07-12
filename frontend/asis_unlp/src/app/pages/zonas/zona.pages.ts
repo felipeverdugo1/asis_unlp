@@ -17,6 +17,11 @@ import { FormZona } from '../../components/zona/form-zona';
   imports: [CommonModule, RouterModule, ListarZonas],
   template: `
     <h2>Zonas</h2>
+    
+    <div *ngIf="errorMensaje" class="error-box">
+      {{ errorMensaje }}
+    </div>
+    
     <listar-zonas 
       [zonas]="(zonas$ | async) ?? []"
       (onEdit)="editarZona($event)"
@@ -38,6 +43,7 @@ import { FormZona } from '../../components/zona/form-zona';
 })
 export class ListarZonaPage implements OnInit {
   zonas$!: Observable<Zona[]>;
+  errorMensaje: string | null = null;
 
   constructor(
     private zonasService: ZonaService,
@@ -46,6 +52,7 @@ export class ListarZonaPage implements OnInit {
 
   ngOnInit(): void {
     this.cargarZonas();
+    this.errorMensaje = null;
   }
 
   cargarZonas() {
@@ -64,7 +71,7 @@ export class ListarZonaPage implements OnInit {
     if (confirm('¿Borrar zona?')) {
       this.zonasService.deleteZona(id).subscribe({
         next: () => this.cargarZonas(),
-        error: (err) => console.error('Error al borrar:', err)
+        error: (err) => this.errorMensaje = err.error?.error || 'Error inesperado al borrar la zona.'
       });
     }
   }
@@ -116,7 +123,7 @@ export class ListarZonaPage implements OnInit {
     this.errorMensaje = null;
     this.barrioService.getBarrios().subscribe({
       next: (barrios) => this.barrios = barrios,
-      error: (err) => console.error('Error al cargar barrios:', err)
+      error: (err) => this.errorMensaje = err.error?.error || 'Error inesperado al cargar los barrios.'
     });
 
 
@@ -131,7 +138,7 @@ export class ListarZonaPage implements OnInit {
             this.loading = false;
           },
           error: (err) => {
-            console.error('Error al cargar zona:', err);
+            this.errorMensaje = err.error?.error || 'Error inesperado al cargar la zona.';
             this.loading = false;
           }
         });

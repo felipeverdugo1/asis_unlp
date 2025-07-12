@@ -1,5 +1,5 @@
 
-<form style="display: flex; flex-direction: column; gap: 10px; max-width: 500px;" (ngSubmit)="onSubmit.emit(usuario)">
+<form #usuarioForm="ngForm" style="display: flex; flex-direction: column; gap: 10px; max-width: 500px;" (ngSubmit)="usuarioForm.valid && onSubmit.emit(usuario)">
     <label for="nombreUsuario">
         Nombre del usuario:
         <input id="nombreUsuario" name="nombreUsuario" [(ngModel)]="usuario.nombreUsuario" required>
@@ -33,6 +33,6 @@
     </select>
     
 
-    <button type="submit">Guardar</button> 
+    <button type="submit" [disabled]="!usuarioForm.valid">Guardar</button> 
     <button type="button" (click)="goBack()">Atras</button>
 </form>

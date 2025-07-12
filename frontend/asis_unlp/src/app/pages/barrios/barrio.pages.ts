@@ -13,6 +13,11 @@ import { Observable } from 'rxjs';
   imports : [CommonModule,RouterModule,ListarBarrios],
   template: `
     <h2>Barrios</h2>
+
+    <div *ngIf="errorMensaje" class="error-box">
+      {{ errorMensaje }}
+    </div>
+
     <listar-barrios
       [barrios]="(barrios$ | async) ?? []"
       (onEdit)="editarBarrio($event)"
@@ -35,6 +40,7 @@ import { Observable } from 'rxjs';
 })
 export class ListaBarriosPage implements OnInit {
   barrios$!: Observable<Barrio[]>;
+  errorMensaje: string | null = null;
 
   constructor(
     private barriosService: BarriosService,
@@ -43,6 +49,7 @@ export class ListaBarriosPage implements OnInit {
 
   ngOnInit(): void {
     this.barrios$ = this.barriosService.getBarrios();
+    this.errorMensaje = null;
   }
 
   cargarBarrios() {
@@ -61,7 +68,7 @@ export class ListaBarriosPage implements OnInit {
     if (confirm('¿Borrar barrio?')) {
       this.barriosService.deleteBarrio(id).subscribe({
         next: () => this.cargarBarrios(),
-        error: (err) => console.error('Error al borrar:', err)
+        error: (err) => this.errorMensaje = err.error?.error || 'Error inesperado al borrar el barrio.'
       });
     }
   }
@@ -74,6 +81,10 @@ export class ListaBarriosPage implements OnInit {
   imports: [CommonModule, FormsModule, FormBarrio],
   template: `
     <h2>{{ esEdicion ? 'Editar Barrio' : 'Nuevo Barrio' }}</h2>
+
+    <div *ngIf="errorMensaje" class="error-box">
+      {{ errorMensaje }}
+    </div>
     
     <ng-container *ngIf="!loading; else cargando">
       <form-barrio [barrio]="barrio" (onSubmit)="guardarBarrio($event)"></form-barrio>
@@ -87,6 +98,7 @@ export class FormBarrioPage implements OnInit {
   barrio: Barrio = { id : 0 ,nombre: '', geolocalizacion: '', informacion: '' };
   esEdicion = false;
   loading = false;
+  errorMensaje: string | null = null;
 
   constructor(
     private barriosService: BarriosService,
@@ -95,6 +107,7 @@ export class FormBarrioPage implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.errorMensaje = null;
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.esEdicion = true;
@@ -105,7 +118,7 @@ export class FormBarrioPage implements OnInit {
           this.loading = false;
         },
         error: (err) => {
-          console.error('Error al cargar barrio:', err);
+          this.errorMensaje = err.error?.error || 'Error inesperado al cargar el barrio.';
           this.loading = false;
         }
       });
@@ -119,7 +132,7 @@ export class FormBarrioPage implements OnInit {
 
     req.subscribe({
       next: () => this.router.navigate(['/barrio']),
-      error: (err) => console.error('Error al guardar barrio:', err)
+      error: (err) => this.errorMensaje = err.error?.error || 'Error inesperado al guardar el barrio.'
     });
   }
 }
