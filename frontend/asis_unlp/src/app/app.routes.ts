@@ -36,9 +36,10 @@ export const routes: Routes = [
       { path: '', component: ListaBarriosPage },
       { path: 'nuevo', component: FormBarrioPage },
       { path: 'editar/:id', component: FormBarrioPage }
-]},
-  { 
-    path: 'zona', 
+    ]
+  },
+  {
+    path: 'barrio/:idBarrio/zonas',
     children: [
       { path: '', component: ListarZonaPage },
       { path: 'nueva', component: FormZonaPage },
@@ -54,14 +55,14 @@ export const routes: Routes = [
     ]
   },
   {
-  path: 'campania/:idCampania/jornadas',
-  children: [
-    { path: '', component: ListarJornadaPage },
-    { path: 'nuevo', component: FormJornadaPage },
-    { path: 'editar/:idJornada', component: FormJornadaPage }
-  ]
-}
-,
+    path: 'campania/:idCampania/jornadas',
+    children: [
+      { path: '', component: ListarJornadaPage },
+      { path: 'nuevo', component: FormJornadaPage },
+      { path: 'editar/:idJornada', component: FormJornadaPage }
+    ]
+  }
+  ,
   { 
     path: 'encuestador', 
     children: [

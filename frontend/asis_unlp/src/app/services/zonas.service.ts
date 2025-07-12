@@ -36,6 +36,8 @@ export class ZonaService {
     return this.http.post<Zona>(this.apiUrl, zona);
   }
 
-
+  getZonasPorBarrio(idBarrio: number): Observable<Zona[]> {
+    return this.http.get<Zona[]>(`${this.apiUrl}/barrio/${idBarrio}`);
+  }
 
 }

@@ -25,7 +25,7 @@ import { log } from 'console';
       (onEdit)="editarJornada($event)"
       (onDelete)="borrarJornada($event)">
     </listar-jornadas>
-    <button [routerLink]="['nuevo']">
+    <button [routerLink]="['nuevo']" class="btn-add">
         Nueva Jornada
     </button>
   `,

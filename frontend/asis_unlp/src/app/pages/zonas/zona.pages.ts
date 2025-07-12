@@ -27,7 +27,7 @@ import { FormZona } from '../../components/zona/form-zona';
       (onEdit)="editarZona($event)"
       (onDelete)="borrarZona($event)">
     </listar-zonas>
-    <button (click)="nuevaZona()" class="btn-add">Agregar Zona</button>
+    <button [routerLink]="['nueva']" class="btn-add">Nueva Zona</button>
   `,
   styles: [`
     .btn-add {
@@ -43,28 +43,27 @@ import { FormZona } from '../../components/zona/form-zona';
 })
 export class ListarZonaPage implements OnInit {
   zonas$!: Observable<Zona[]>;
+  idBarrio!: number;
   errorMensaje: string | null = null;
 
   constructor(
     private zonasService: ZonaService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
+    this.idBarrio = +this.route.snapshot.paramMap.get('idBarrio')!;
     this.cargarZonas();
     this.errorMensaje = null;
   }
 
   cargarZonas() {
-    this.zonas$ = this.zonasService.getZonas();
-  }
-
-  nuevaZona() {
-    this.router.navigate(['/zona/nueva']);
+    this.zonas$ = this.zonasService.getZonasPorBarrio(this.idBarrio);
   }
 
   editarZona(id: number) {
-    this.router.navigate(['/zona/editar', id]);
+    this.router.navigate(['/barrio', this.idBarrio, 'zonas', 'editar', id]);
   }
 
   borrarZona(id: number) {
@@ -82,7 +81,7 @@ export class ListarZonaPage implements OnInit {
     standalone: true,
     imports: [CommonModule, FormsModule,FormZona],
     template: `
-    <h2>{{ esEdicion ? 'Editar Zona' : 'Nueva Zona' }}</h2>
+    <h2>{{ esEdicion ? 'Editar Zona' + zona.nombre + ' de Barrio' + idBarrio : 'Nueva Zona para Barrio ' + idBarrio }}</h2>
     
     <div *ngIf="errorMensaje" class="error-box">
       {{ errorMensaje }}
@@ -91,7 +90,6 @@ export class ListarZonaPage implements OnInit {
 
     <ng-container *ngIf="!loading; else cargando">
       <form-zona 
-      [barrios]="barrios"
       [zona]="zona" 
       (onSubmit)="guardarZona($event)">
       </form-zona>
@@ -104,7 +102,7 @@ export class ListarZonaPage implements OnInit {
 
   export class FormZonaPage implements OnInit {
     zona : Zona = { id: 0, nombre : '',geolocalizacion: '', barrio_id : 0}
-    barrios: Barrio[] = [];
+    idBarrio!: number;
     esEdicion = false;
     loading = false;
     errorMensaje: string | null = null;
@@ -118,15 +116,8 @@ export class ListarZonaPage implements OnInit {
     ) {}
   
     ngOnInit(): void {
-
-    // Cargar barrios
-    this.errorMensaje = null;
-    this.barrioService.getBarrios().subscribe({
-      next: (barrios) => this.barrios = barrios,
-      error: (err) => this.errorMensaje = err.error?.error || 'Error inesperado al cargar los barrios.'
-    });
-
-
+      this.idBarrio = +this.route.snapshot.paramMap.get('idBarrio')!;
+      this.errorMensaje = null;
 
       const id = this.route.snapshot.paramMap.get('id');
       if (id) {
@@ -147,15 +138,17 @@ export class ListarZonaPage implements OnInit {
 
 
     guardarZona(zona: Zona) {
+      if (!this.esEdicion) {
+        zona.barrio_id = this.idBarrio;
+      }
 
       const req = this.esEdicion
         ? this.zonaService.updateZona(zona)
         : this.zonaService.createZona(zona);
   
       req.subscribe({
-        next: () => this.router.navigate(['/zona']),
+        next: () => this.router.navigate(['/barrio', this.idBarrio, 'zonas']),
         error: (err) => {
-          // Si el backend devuelve { error: 'mensaje' }
           this.errorMensaje = err.error?.error || 'Error inesperado al guardar la zona.';
         }
       });
