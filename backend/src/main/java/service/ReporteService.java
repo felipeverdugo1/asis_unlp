@@ -191,9 +191,8 @@ public class ReporteService extends GenericServiceImpl<Reporte, Long> {
     public void eliminar(Long id) {
         Optional<Reporte> reporte = reporteDAO.buscarPorId(id);
         if (reporte.isPresent()) {
-            //Barrio barrio = zona.get().getBarrio();
-            //barrio.getZonas().remove(zona.get());
-            //barrioDAO.actualizar(barrio);
+            reporte.get().getCompartidoCon().clear();
+            reporteDAO.actualizar(reporte.get());
             reporteDAO.eliminar(reporte.get());
         } else {
             throw new EntidadNoEncontradaException("El reporte no existe");

@@ -1,6 +1,7 @@
 package controller;
 
 import controller.dto.BarrioDTO;
+import exceptions.EntidadNoEncontradaException;
 import io.swagger.v3.oas.annotations.media.*;
 import io.swagger.v3.oas.annotations.parameters.*;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -128,8 +129,13 @@ public class BarrioController {
     @Operation(description = "Este endpoint nos permite eliminar el barrio a partir de un id",
             parameters = @Parameter(name = "barrio id"))
     public Response delete(@PathParam("id") Long id) {
-        barrioService.eliminar(id);
-        return Response.noContent().build();
+        Optional<Barrio> barrio_t = barrioService.buscarPorId(id);
+        if (barrio_t.isPresent()) {
+            barrioService.eliminar(id);
+            return Response.noContent().build();
+        } else {
+            throw new EntidadNoEncontradaException("Barrio no encontrado");
+        }
 
     }
 }

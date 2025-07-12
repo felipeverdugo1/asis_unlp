@@ -23,6 +23,8 @@ public class ZonaService extends GenericServiceImpl<Zona, Long> {
 
     @Inject
     private EncuestaDAO encuestaDAO;
+    @Inject
+    private JornadaService jornadaService;
 
     @Inject
     public ZonaService(ZonaDAO dao) {super(dao);}
@@ -73,12 +75,14 @@ public class ZonaService extends GenericServiceImpl<Zona, Long> {
         if ( zona.isPresent() ) {
             Zona zona_actualizada = zona.get();
             if (zonaDTO.getNombre() != null) {
-                Optional<Zona> zona_existente = zonaDAO.buscarPorCampo("nombre", zonaDTO.getNombre());
+                if (!zonaDTO.getNombre().equals(zona_actualizada.getNombre())) {
+                    Optional<Zona> zona_existente = zonaDAO.buscarPorCampo("nombre", zonaDTO.getNombre());
 
-                if (zona_existente.isPresent() && !zona_existente.get().getId().equals(id)) {
-                    throw new EntidadExistenteException("Ya existe una zona con ese nombre.");
+                    if (zona_existente.isPresent() && !zona_existente.get().getId().equals(id)) {
+                        throw new EntidadExistenteException("Ya existe una zona con ese nombre.");
+                    }
+                    zona_actualizada.setNombre(zonaDTO.getNombre());
                 }
-                zona_actualizada.setNombre(zonaDTO.getNombre());
             }
 
             if (zonaDTO.getGeolocalizacion() != null) {
@@ -105,9 +109,7 @@ public class ZonaService extends GenericServiceImpl<Zona, Long> {
     public void eliminar(Long id) {
         Optional<Zona> zona = zonaDAO.buscarPorId(id);
         if ( zona.isPresent() ) {
-            //Barrio barrio = zona.get().getBarrio();
-            //barrio.getZonas().remove(zona.get());
-            //barrioDAO.actualizar(barrio);
+            jornadaService.limpiarZona(id);
             zonaDAO.eliminar(zona.get());
         } else {
             throw new EntidadNoEncontradaException("El Zona no existe");

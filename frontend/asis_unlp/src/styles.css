@@ -38,6 +38,7 @@ ESTILO DEL HEADER Y LA NAVEGACION
   background: #004030;
   color: white;
   padding: 1rem;
+  border-radius: 6px;
 }
 
 .header-home-btn {

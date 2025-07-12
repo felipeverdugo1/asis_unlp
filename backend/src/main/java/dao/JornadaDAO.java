@@ -32,4 +32,11 @@ public class JornadaDAO extends GenericDAOImpl<Jornada, Long> {
         } finally {
         }
     }
+
+    public List<Jornada> buscarJornadasPorZonaId(Long zonaId) {
+        String jpql = "SELECT j FROM Jornada j JOIN j.zonas z WHERE z.id = :zonaId";
+        return em.createQuery(jpql, Jornada.class)
+                .setParameter("zonaId", zonaId)
+                .getResultList();
+    }
 }

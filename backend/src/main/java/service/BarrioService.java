@@ -7,6 +7,7 @@ import dao.ZonaDAO;
 import exceptions.EntidadExistenteException;
 import exceptions.EntidadNoEncontradaException;
 import exceptions.FaltanArgumentosException;
+import exceptions.NoPuedesHacerEsoException;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import model.Barrio;
@@ -78,11 +79,15 @@ public class BarrioService extends GenericServiceImpl<Barrio, Long> {
 
             //Seteo variables nuevas
             if (barrioDTO.getInformacion() != null){
-                barrioExistente.get().setInformacion(barrioDTO.getInformacion());
+                if (!barrioDTO.getInformacion().equals(barrioExistente.get().getInformacion())) {
+                    barrioExistente.get().setInformacion(barrioDTO.getInformacion());
+                }
             }
 
             if (barrioDTO.getGeolocalizacion() != null){
-                barrioExistente.get().setGeolocalizacion(barrioDTO.getGeolocalizacion());
+                if (!barrioDTO.getGeolocalizacion().equals(barrioExistente.get().getGeolocalizacion())) {
+                    barrioExistente.get().setGeolocalizacion(barrioDTO.getGeolocalizacion());
+                }
             }
             barrioDAO.actualizar(barrioExistente.get());
             return barrioExistente.get();
@@ -93,12 +98,22 @@ public class BarrioService extends GenericServiceImpl<Barrio, Long> {
     }
 
     public void eliminar(Long id) {
-        Optional<Barrio> barrio = barrioDAO.buscarPorId(id);
-        if ( barrio.isPresent() ) {
-            barrioDAO.eliminar(barrio.get());
-        } else {
+        Optional<Barrio> barrio_t = barrioDAO.buscarPorId(id);
+        if ( barrio_t.isEmpty() ) {
             throw new EntidadNoEncontradaException("El Barrio no existe");
         }
+        Barrio barrio = barrio_t.get();
+        if (!barrio.getCampañas().isEmpty()) {
+            throw new NoPuedesHacerEsoException("El Barrio tiene Campañas asignadas, no se puede eliminar.");
+        }
+        if (!barrio.getZonas().isEmpty()) {
+            throw new NoPuedesHacerEsoException("El Barrio tiene Zonas asignadas, no se puede eliminar.");
+        }
+        if (!barrio.getOrganizacionesSociales().isEmpty()) {
+            throw new NoPuedesHacerEsoException("El Barrio tiene Organizaciones Sociales asignadas, no se puede eliminar.");
+        }
+
+        barrioDAO.eliminar(barrio);
     }
 
 }

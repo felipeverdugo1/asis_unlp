@@ -6,6 +6,7 @@ import dao.EncuestadorDAO;
 import exceptions.EntidadExistenteException;
 import exceptions.EntidadNoEncontradaException;
 import exceptions.FaltanArgumentosException;
+import exceptions.NoPuedesHacerEsoException;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import model.Encuestador;
@@ -77,19 +78,27 @@ public class EncuestadorService extends GenericServiceImpl<Encuestador, Long> {
             }
             //Seteo variables nuevas
             if (encuestadorDTO.getNombre() != null){
-                encuestadorExistente.get().setNombre(encuestadorDTO.getNombre());
+                if (!encuestadorDTO.getNombre().equals(encuestadorExistente.get().getNombre())) {
+                    encuestadorExistente.get().setNombre(encuestadorDTO.getNombre());
+                }
             }
 
             if (encuestadorDTO.getEdad() != null){
-                encuestadorExistente.get().setEdad(encuestadorDTO.getEdad());
+                if (!encuestadorDTO.getEdad().equals(encuestadorExistente.get().getEdad())) {
+                    encuestadorExistente.get().setEdad(encuestadorDTO.getEdad());
+                }
             }
 
             if (encuestadorDTO.getOcupacion() != null){
-                encuestadorExistente.get().setOcupacion(encuestadorDTO.getOcupacion());
+                if (!encuestadorDTO.getOcupacion().equals(encuestadorExistente.get().getOcupacion())) {
+                    encuestadorExistente.get().setOcupacion(encuestadorDTO.getOcupacion());
+                }
             }
 
             if (encuestadorDTO.getGenero() != null){
-                encuestadorExistente.get().setGenero(encuestadorDTO.getGenero());
+                if (!encuestadorDTO.getGenero().equals(encuestadorExistente.get().getGenero())) {
+                    encuestadorExistente.get().setGenero(encuestadorDTO.getGenero());
+                }
             }
             encuestadorDAO.actualizar(encuestadorExistente.get());
             return encuestadorExistente.get();
@@ -100,11 +109,15 @@ public class EncuestadorService extends GenericServiceImpl<Encuestador, Long> {
     }
 
     public void eliminar(Long id) {
-        Optional<Encuestador> encuestador = encuestadorDAO.buscarPorId(id);
-        if ( encuestador.isPresent() ) {
-            encuestadorDAO.eliminar(encuestador.get());
-        } else {
+        Optional<Encuestador> encuestador_t = encuestadorDAO.buscarPorId(id);
+        if ( encuestador_t.isEmpty() ) {
             throw new EntidadNoEncontradaException("El encuestador no existe");
+        } else {
+            Encuestador encuestador = encuestador_t.get();
+            if (!encuestador.getEncuestas().isEmpty()) {
+                throw new NoPuedesHacerEsoException("El encuestador tiene Encuestas relacionadas, no se puede eliminar.");
+            }
+            encuestadorDAO.eliminar(encuestador);
         }
     }
 }

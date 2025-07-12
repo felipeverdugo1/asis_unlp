@@ -33,11 +33,6 @@ public abstract class GenericServiceImpl<T, ID> implements GenericService<T, ID>
     }
 
     @Override
-    public void eliminar(T entidad) {
-        genericDAO.eliminar(entidad);
-    }
-
-    @Override
     public List<T> listarTodos() {
         return genericDAO.listarTodos();
     }
