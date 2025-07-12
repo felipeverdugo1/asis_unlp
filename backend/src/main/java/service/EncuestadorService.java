@@ -78,19 +78,27 @@ public class EncuestadorService extends GenericServiceImpl<Encuestador, Long> {
             }
             //Seteo variables nuevas
             if (encuestadorDTO.getNombre() != null){
-                encuestadorExistente.get().setNombre(encuestadorDTO.getNombre());
+                if (!encuestadorDTO.getNombre().equals(encuestadorExistente.get().getNombre())) {
+                    encuestadorExistente.get().setNombre(encuestadorDTO.getNombre());
+                }
             }
 
             if (encuestadorDTO.getEdad() != null){
-                encuestadorExistente.get().setEdad(encuestadorDTO.getEdad());
+                if (!encuestadorDTO.getEdad().equals(encuestadorExistente.get().getEdad())) {
+                    encuestadorExistente.get().setEdad(encuestadorDTO.getEdad());
+                }
             }
 
             if (encuestadorDTO.getOcupacion() != null){
-                encuestadorExistente.get().setOcupacion(encuestadorDTO.getOcupacion());
+                if (!encuestadorDTO.getOcupacion().equals(encuestadorExistente.get().getOcupacion())) {
+                    encuestadorExistente.get().setOcupacion(encuestadorDTO.getOcupacion());
+                }
             }
 
             if (encuestadorDTO.getGenero() != null){
-                encuestadorExistente.get().setGenero(encuestadorDTO.getGenero());
+                if (!encuestadorDTO.getGenero().equals(encuestadorExistente.get().getGenero())) {
+                    encuestadorExistente.get().setGenero(encuestadorDTO.getGenero());
+                }
             }
             encuestadorDAO.actualizar(encuestadorExistente.get());
             return encuestadorExistente.get();

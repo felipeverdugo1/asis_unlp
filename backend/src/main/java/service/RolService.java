@@ -49,6 +49,9 @@ public class RolService extends GenericServiceImpl<Rol, Long> {
             throw new EntidadExistenteException("No existe un rol con ese id.");
         }
         Rol rol = rol_t.get();
+        if (rolDAO.existeOtroConMismoCampo(id,"nombre", dto.getNombre())) {
+            throw new EntidadExistenteException("Ya existe otra rol con ese nombre");
+        }
         rol.setNombre(dto.getNombre());
         rolDAO.actualizar(rol);
         return rol;

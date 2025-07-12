@@ -72,9 +72,16 @@ public class CampañaService extends GenericServiceImpl<Campaña, Long> {
             throw new EntidadNoEncontradaException("La campaña no existe");
         }
             campaña = campañaOpt.get();
-            if (campañaDAO.existeOtroConMismoCampo(id,"nombre", dto.getNombre())) {
-                throw new EntidadExistenteException("Ya existe otra campaña con ese nombre");
+
+        if (dto.getNombre() != null) {
+            if (!dto.getNombre().equals(campaña.getNombre())) {
+                if (campañaDAO.existeOtroConMismoCampo(id,"nombre", dto.getNombre())) {
+                    throw new EntidadExistenteException("Ya existe otra campaña con ese nombre");
+                }
+                campaña.setNombre(dto.getNombre());
             }
+        }
+
             // Preparar fechas para validación
             LocalDate fechaInicioActualizada = dto.getFechaInicio() != null ? dto.getFechaInicio() : campaña.getFechaInicio();
             LocalDate fechaFinActualizada = dto.getFechaFin() != null ? dto.getFechaFin() : campaña.getFechaFin();
@@ -91,16 +98,13 @@ public class CampañaService extends GenericServiceImpl<Campaña, Long> {
                 campaña.setFechaFin(dto.getFechaFin());
             }
 
-            if (dto.getNombre() != null) {
-                campaña.setNombre(dto.getNombre());
-            }
-
-
             if (dto.getBarrio_id() != null) {
-                barrioDAO.buscarPorId(dto.getBarrio_id()).ifPresentOrElse(
-                        campaña::setBarrio,
-                        () -> { throw new EntidadNoEncontradaException("El barrio no existe"); }
-                );
+                if (!dto.getBarrio_id().equals(campaña.getBarrio().getId())) {
+                    barrioDAO.buscarPorId(dto.getBarrio_id()).ifPresentOrElse(
+                            campaña::setBarrio,
+                            () -> { throw new EntidadNoEncontradaException("El barrio no existe"); }
+                    );
+                }
             }
 
         campañaDAO.actualizar(campaña);

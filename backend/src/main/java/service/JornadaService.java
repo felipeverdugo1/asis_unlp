@@ -8,6 +8,7 @@ import dao.BarrioDAO;
 import exceptions.EntidadNoEncontradaException;
 import exceptions.FaltanArgumentosException;
 import exceptions.NoPuedesHacerEsoException;
+import exceptions.RangoDeFechasInvalidoException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
@@ -16,6 +17,7 @@ import model.Campaña;
 import model.Jornada;
 import model.Zona;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -73,12 +75,24 @@ public class JornadaService extends GenericServiceImpl<Jornada, Long> {
         }
         Jornada jornada = jornada_t.get();
         if(dto.getCampaña_id() != null){
-            Optional<Campaña> campaña_t = campañaDAO.buscarPorId(dto.getCampaña_id());
-            if (campaña_t.isEmpty()){
-                throw new EntidadNoEncontradaException("No existe una campaña con ese id");
+            if (!dto.getCampaña_id().equals(jornada.getCampaña().getId())) {
+                Optional<Campaña> campaña_t = campañaDAO.buscarPorId(dto.getCampaña_id());
+                if (campaña_t.isEmpty()){
+                    throw new EntidadNoEncontradaException("No existe una campaña con ese id");
+                }
+                jornada.setCampaña(campaña_t.get());
             }
-            jornada.setCampaña(campaña_t.get());
         }
+
+        // Preparar fechas para validación
+        LocalDate fechaInicioActualizada = dto.getFechaInicio() != null ? dto.getFechaInicio() : jornada.getFechaInicio();
+        LocalDate fechaFinActualizada = dto.getFechaFin() != null ? dto.getFechaFin() : jornada.getFechaFin();
+
+        // Validar consistencia
+        if (fechaInicioActualizada.isAfter(fechaFinActualizada)) {
+            throw new RangoDeFechasInvalidoException("La fecha de inicio no puede ser posterior a la fecha de fin");
+        }
+
         if (dto.getFechaFin() != null){
             jornada.setFechaFin(dto.getFechaFin());
         }

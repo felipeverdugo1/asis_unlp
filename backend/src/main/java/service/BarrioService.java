@@ -79,11 +79,15 @@ public class BarrioService extends GenericServiceImpl<Barrio, Long> {
 
             //Seteo variables nuevas
             if (barrioDTO.getInformacion() != null){
-                barrioExistente.get().setInformacion(barrioDTO.getInformacion());
+                if (!barrioDTO.getInformacion().equals(barrioExistente.get().getInformacion())) {
+                    barrioExistente.get().setInformacion(barrioDTO.getInformacion());
+                }
             }
 
             if (barrioDTO.getGeolocalizacion() != null){
-                barrioExistente.get().setGeolocalizacion(barrioDTO.getGeolocalizacion());
+                if (!barrioDTO.getGeolocalizacion().equals(barrioExistente.get().getGeolocalizacion())) {
+                    barrioExistente.get().setGeolocalizacion(barrioDTO.getGeolocalizacion());
+                }
             }
             barrioDAO.actualizar(barrioExistente.get());
             return barrioExistente.get();

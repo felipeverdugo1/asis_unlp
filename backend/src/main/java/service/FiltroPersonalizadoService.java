@@ -63,22 +63,29 @@ public class FiltroPersonalizadoService extends GenericServiceImpl<FiltroPersona
 
         FiltroPersonalizado filtroPersonalizado = filtroPersonalizadoOptional.get();
 
-        if (filtroPersonalizadoDAO.existeOtroConMismoCampo(id,"nombre", dto.getNombre())) {
-            throw new EntidadExistenteException("Ya existe otro filtro con ese nombre");
-        }
         if (dto.getNombre() != null) {
-            filtroPersonalizado.setNombre(dto.getNombre());
+            if (!dto.getNombre().equals(filtroPersonalizado.getNombre())) {
+                if (filtroPersonalizadoDAO.existeOtroConMismoCampo(id,"nombre", dto.getNombre())) {
+                    throw new EntidadExistenteException("Ya existe otro filtro con ese nombre");
+                }
+                filtroPersonalizado.setNombre(dto.getNombre());
+            }
+
         }
 
         if (dto.getCriterios() != null) {
-            filtroPersonalizado.setCriterios(dto.getCriterios());
+            if (!dto.getCriterios().equals(filtroPersonalizado.getCriterios())) {
+                filtroPersonalizado.setCriterios(dto.getCriterios());
+            }
         }
 
         if (dto.getPropietario_id() != null) {
-            usuarioDAO.buscarPorId(dto.getPropietario_id()).ifPresentOrElse(
-                    filtroPersonalizado::setPropietario,
-                    () -> { throw new EntidadNoEncontradaException("El propietario no existe"); }
-            );
+            if (!dto.getPropietario_id().equals(filtroPersonalizado.getPropietario().getId())) {
+                usuarioDAO.buscarPorId(dto.getPropietario_id()).ifPresentOrElse(
+                        filtroPersonalizado::setPropietario,
+                        () -> { throw new EntidadNoEncontradaException("El propietario no existe"); }
+                );
+            }
         }
 
         filtroPersonalizadoDAO.actualizar(filtroPersonalizado);

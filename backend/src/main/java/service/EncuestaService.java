@@ -108,15 +108,19 @@ public class EncuestaService extends GenericServiceImpl<Encuesta, Long> {
             }
             //Seteo variables nuevas
             if (encuestaDTO.getFecha() != null){
-                encuestaExistente.get().setFecha(encuestaDTO.getFecha());
+                if (!encuestaDTO.getFecha().equals(encuestaExistente.get().getFecha())) {
+                    encuestaExistente.get().setFecha(encuestaDTO.getFecha());
+                }
             }
 
             if (encuestaDTO.getEncuestador_id() != null){
-                Optional<Encuestador> encuestador_t = encuestadorDAO.buscarPorId(encuestaDTO.getEncuestador_id());
-                if (encuestador_t.isPresent()) {
-                    encuestaExistente.get().setEncuestador(encuestador_t.get());
-                }else {
-                    throw new EntidadNoEncontradaException("El encuestador no existe");
+                if (!encuestaDTO.getEncuestador_id().equals(encuestaExistente.get().getId())) {
+                    Optional<Encuestador> encuestador_t = encuestadorDAO.buscarPorId(encuestaDTO.getEncuestador_id());
+                    if (encuestador_t.isPresent()) {
+                        encuestaExistente.get().setEncuestador(encuestador_t.get());
+                    }else {
+                        throw new EntidadNoEncontradaException("El encuestador no existe");
+                    }
                 }
             }
             // si se cambian jornada y zona, la zona debe pertenecer al mismo barrio
