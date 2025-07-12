@@ -21,3 +21,56 @@
     border-radius: 4px;
     margin-bottom: 15px;
   }
+
+/* ESTILOS DE LO QUE MUESTRA app.html EL CUERPO DE LA APP*/
+.main {
+  padding: 1rem;
+}
+
+/********************************************
+ESTILO DEL HEADER Y LA NAVEGACION
+********************************************/
+
+.header-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: #004030;
+  color: white;
+  padding: 1rem;
+}
+
+.header-home-btn {
+  background: #4A9782;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.header-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.header-breadcrumb-link {
+  color: #DCD0A8;
+  text-decoration: none;
+}
+
+.header-breadcrumb-link:hover {
+  text-decoration: underline;
+}
+
+.header-breadcrumb-current {
+  font-weight: bold;
+  color: #FFF9E5;
+}
+
+.breadcrumb-separator {
+  color: #999;
+}
