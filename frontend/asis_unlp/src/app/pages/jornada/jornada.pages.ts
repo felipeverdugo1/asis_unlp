@@ -4,11 +4,13 @@ import { Jornada } from '../../models/jornada.model';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ListarJornadas } from '../../components/jornada/listar-jornadas'; 
-import { Observable } from 'rxjs';
+import { Observable,catchError,lastValueFrom } from 'rxjs';
 import { FormsModule } from '@angular/forms';
-import { FormJornada, FormActualizarJornada } from '../../components/jornada/form-jornada';
+import { FormJornada, FormAdministrarZonas } from '../../components/jornada/form-jornada';
 import { log } from 'console';
-
+import { Zona } from '../../models/zona.model';
+import { CampaniaService } from '../../services/campanias.service'
+import { ZonaService } from '../../services/zonas.service'
 
 @Component({
   standalone: true,
@@ -22,6 +24,7 @@ import { log } from 'console';
 
     <listar-jornadas
       [jornadas]="(jornadas$ | async) ?? []"
+      (onAdministrarZonas)="administrarZonas($event)"
       (onEdit)="editarJornada($event)"
       (onDelete)="borrarJornada($event)">
     </listar-jornadas>
@@ -68,6 +71,10 @@ export class ListarJornadaPage implements OnInit {
 
   editarJornada(id: number) {
     this.router.navigate(['campania', this.idCampania, 'jornadas', 'editar', id]);
+  }
+
+  administrarZonas(id: number) {
+    this.router.navigate(['campania', this.idCampania, 'jornadas', 'administrarZonas', id]);
   }
 
   borrarJornada(id: number) {
@@ -163,4 +170,120 @@ export class ListarJornadaPage implements OnInit {
       });
     }
     
+  }
+
+
+
+  @Component({
+    standalone: true,
+    imports: [CommonModule, FormAdministrarZonas],
+    template: `
+      <h2>Administrar Zonas de la Jornada</h2>
+  
+      <div *ngIf="errorMensaje" class="error-box">
+        {{ errorMensaje }}
+      </div>
+      
+      <form-administrar-zonas
+        [zonas]="(zonasDisponibles$ | async) ?? []"
+        (onSubmit)="guardarZonasDesdeForm($event)">
+      </form-administrar-zonas>
+    `,
+  })
+  export class AdministrarZonasPage implements OnInit {
+    zonasDisponibles$!: Observable<(Zona & { seleccionada?: boolean })[]>;
+    errorMensaje: string | null = null;
+    idCampania!: number;
+    idJornada!: number;
+  
+    constructor(
+      private route: ActivatedRoute,
+      private router: Router,
+      private jornadaService: JornadaService,
+      private campaniaService: CampaniaService,
+      private zonaService: ZonaService
+    ) {}
+  
+    ngOnInit(): void {
+      this.idCampania = +this.route.snapshot.paramMap.get('idCampania')!;
+      this.idJornada = +this.route.snapshot.paramMap.get('idJornada')!;
+      this.cargarDatos();
+    }
+  
+    cargarDatos() {
+      this.zonasDisponibles$ = new Observable<(Zona & { seleccionada?: boolean })[]>(observer => {
+        this.jornadaService.getJornada(this.idJornada).subscribe({
+          next: (jornada) => {
+            this.campaniaService.getCampania(this.idCampania).subscribe({
+              next: (campania) => {
+                this.zonaService.getZonasPorBarrio(campania.barrio_id).subscribe({
+                  next: (zonasBarrio) => {
+                    const zonasAsociadas = jornada.zonas ?? [];
+                    const zonasConSeleccion = zonasBarrio.map(z => ({
+                      ...z,
+                      seleccionada: zonasAsociadas.some(za => za.id === z.id)
+                    }));
+                    observer.next(zonasConSeleccion);
+                    observer.complete();
+                  },
+                  error: (error) => {
+                    this.errorMensaje = 'Error al cargar zonas del barrio.';
+                    observer.error(error);
+                  }
+                });
+              },
+              error: (error) => {
+                this.errorMensaje = 'Error al cargar campaña.';
+                observer.error(error);
+              }
+            });
+          },
+          error: (error) => {
+            this.errorMensaje = 'Error al cargar jornada.';
+            observer.error(error);
+          }
+        });
+      }).pipe(
+        catchError(error => {
+          // Si ocurre un error, devolvemos un array vacío
+          return [];
+        })
+      );
+    }
+  
+    
+  
+
+    guardarZonasDesdeForm(zonas: (Zona & { seleccionada?: boolean })[]) {
+      this.jornadaService.getJornada(this.idJornada).subscribe({
+        next: (jornada) => {
+          const zonasSeleccionadas = zonas.filter(z => z.seleccionada).map(z => z.id);
+          const zonasActuales = jornada.zonas?.map(z => z.id) || [];
+          
+          const zonasAAgregar = zonasSeleccionadas.filter(id => !zonasActuales.includes(id));
+          const zonasAQuitar = zonasActuales.filter(id => !zonasSeleccionadas.includes(id));
+          
+          const operaciones: Promise<any>[] = [];
+          
+          zonasAAgregar.forEach(idZona => {
+            operaciones.push(lastValueFrom(this.jornadaService.agregarZona(this.idJornada, idZona)));
+          });
+          
+          zonasAQuitar.forEach(idZona => {
+            operaciones.push(lastValueFrom(this.jornadaService.quitarZona(this.idJornada, idZona)));
+          });
+          
+          Promise.all(operaciones)
+            .then(() => {
+              this.router.navigate(['/campania', this.idCampania, 'jornadas']);
+            })
+            .catch((error) => {
+              this.errorMensaje = error.error?.error || 'Error al guardar cambios de zonas.';
+            });
+        },
+        error: (error) => {
+          this.errorMensaje = error.error?.error || 'Error al cargar jornada.';
+        }
+      });
+    }
   }

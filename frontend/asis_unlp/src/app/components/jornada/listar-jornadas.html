@@ -12,6 +12,7 @@
         <td>{{ jornada.fechaInicio }}</td>
         <td>{{ jornada.fechaFin }}</td>
         <td>
+          <button (click)="onAdministrarZonas.emit(jornada.id)"> AdministrarZonas</button>
           <button (click)="onEdit.emit(jornada.id)"> Editar</button>
           <button (click)="onDelete.emit(jornada.id)"> Borrar</button>
         </td>

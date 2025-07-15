@@ -1,0 +1,34 @@
+
+<div class="zona-panel">
+  <div class="zona-list">
+    <h3>Seleccione las zonas que le pertenecen a la jornada</h3>
+    <ul>
+      <li *ngFor="let zona of zonas">
+        <label>
+          <input
+            type="checkbox"
+            [(ngModel)]="zona.seleccionada"
+            [attr.name]="'zona_' + zona.id"
+          />
+          {{ zona.nombre }}
+        </label>
+      </li>
+    </ul>
+  </div>
+
+  <div class="zona-list">
+    <h3>Zonas de la jornada</h3>
+    <ul>
+      <li *ngFor="let zona of zonasSeleccionadas()">
+        {{ zona.nombre }}
+      </li>
+      <li *ngIf="zonasSeleccionadas().length === 0">
+        <td colspan="6">No hay zonas en la jornada.</td>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div style="margin-top: 20px;">
+  <button (click)="guardar()">Guardar Zonas</button>
+</div>

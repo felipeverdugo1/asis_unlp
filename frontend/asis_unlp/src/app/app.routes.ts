@@ -3,7 +3,7 @@ import { ListaUsuariosPage, FormUsuarioPage } from './pages/usuarios/usuario.pag
 import { ListaBarriosPage, FormBarrioPage } from './pages/barrios/barrio.pages';
 import { ListarRolesPage, FormRolPage } from './pages/roles/rol.pages';
 import { ListarCampaniaPage, FormCampaniaPage } from './pages/campania/campania.pages';
-import { ListarJornadaPage, FormJornadaPage } from './pages/jornada/jornada.pages';
+import { ListarJornadaPage, FormJornadaPage, AdministrarZonasPage } from './pages/jornada/jornada.pages';
 import { ListarOrgaSocialPage , FormOrgaSocialPage } from './pages/orgaSocial/orgaSocial.pages';
 import { ListarEncuestadorPage , FormEncuestadorPage } from './pages/encuestador/encuestador.pages';
 // import { ListaBarriosPage, FormZonaPage } from './pages/filtro/filtro.pages';
@@ -63,7 +63,8 @@ export const routes: Routes = [
         children: [
           { path: '', component: ListarJornadaPage },
           { path: 'nuevo', component: FormJornadaPage },
-          { path: 'editar/:idJornada', component: FormJornadaPage }
+          { path: 'editar/:idJornada', component: FormJornadaPage },
+          { path: 'administrarZonas/:idJornada', component: AdministrarZonasPage }
         ]
       }
     ]
