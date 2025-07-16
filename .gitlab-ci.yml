@@ -42,4 +42,4 @@ deploy1:
     - main
   script:
     - echo "Deploy del nuevo contenedor con los cambios"
-    - docker run --network javaproyec_jyaa-network -p 8085:8085 -l "traefik.enable=true" -l "traefik.http.routers.grupo5.rule=Host(\`grupo5.jyaa-ci.linti.unlp.edu.ar\`)" -l "traefik.http.routers.grupo5.entrypoints=websecure" -l "traefik.http.routers.grupo5.tls.certresolver=le" -l "traefik.http.services.grupo5.loadbalancer.server.port=8080" -d --name grupo5 grupo5-docker
+    - docker run --network javaproyec_jyaa-network -p 8085:8080 -l "traefik.enable=true" -l "traefik.http.routers.grupo5.rule=Host(\`grupo5.jyaa-ci.linti.unlp.edu.ar\`)" -l "traefik.http.routers.grupo5.entrypoints=websecure" -l "traefik.http.routers.grupo5.tls.certresolver=le" -l "traefik.http.services.grupo5.loadbalancer.server.port=8080" -d --name grupo5 grupo5-docker
