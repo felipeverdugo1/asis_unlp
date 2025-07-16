@@ -29,6 +29,17 @@ import io.swagger.v3.oas.annotations.servers.ServerVariable;
                                         description = "Version del path base"
                                 )
                         }
+                ),
+                @Server(
+                        description = "Servidor De La Catedra LINTI",
+                        url = "https://grupo5.jyaa-ci.linti.unlp.edu.ar/rest/",
+                        variables = {
+                                @ServerVariable(
+                                        name = "basePath",
+                                        defaultValue = "v1",
+                                        description = "Version del path base"
+                                )
+                        }
                 )
         }
 )
