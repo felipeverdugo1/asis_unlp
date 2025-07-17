@@ -17,6 +17,7 @@
         <class>model.Pregunta</class>
         <class>model.Encuestador</class>
         <class>model.OrganizacionSocial</class>
+        <class>model.PedidoReporte</class>
 
 
         <properties>
