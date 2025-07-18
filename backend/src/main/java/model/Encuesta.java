@@ -23,14 +23,21 @@ public class Encuesta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private String uuid;
+
     @Column( nullable = false)
     private LocalDate fecha;
 
-    @Column( nullable = false, unique = true)
-    private String nombreUnico;
+    @Column( nullable = false)
+    private String nombreArchivo;
+
+    @Column( nullable = false)
+    private String coordenadas;
+
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "encuesta", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "encuesta", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pregunta> preguntas = new ArrayList<>();
 
     @JsonBackReference
