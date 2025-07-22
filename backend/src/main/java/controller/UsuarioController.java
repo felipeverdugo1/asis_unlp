@@ -22,6 +22,7 @@ import service.GenericService;
 import service.GenericServiceImpl;
 import service.UsuarioService;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -160,6 +161,16 @@ public class UsuarioController {
     public Response quitarRol(@PathParam("id") Long id, @PathParam("rol_id") Long rol_id) {
         Usuario usuario = usuarioService.quitarRol(id, rol_id);
         return Response.status(Response.Status.CREATED).entity(usuario).build();
+    }
+
+    @GET
+    @Path("/rol/{rol_nombre}")
+    @Operation(description = "Este endpoint permite obtener todos los usuarios con un rol en especifico",
+            parameters = { @Parameter(name = "nombre rol", required = true)})
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUsuariosConRol(@PathParam("rol_nombre") String nombreRol) {
+        List<Usuario> usuarios = usuarioService.getUsuariosByRolName(nombreRol);
+        return Response.status(Response.Status.OK).entity(usuarios).build();
     }
 }
 

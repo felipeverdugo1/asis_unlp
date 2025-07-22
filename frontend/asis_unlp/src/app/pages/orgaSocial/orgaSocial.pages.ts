@@ -125,7 +125,7 @@ export class ListarOrgaSocialPage implements OnInit {
 
     // Cargar usuarios
     this.errorMensaje = null;
-    this.usuarioService.getUsuarios().subscribe({
+    this.usuarioService.getUsuariosWithRole('referente').subscribe({
       next: (usuarios) => this.usuarios = usuarios,
       error: (err) => this.errorMensaje = err.error?.error || 'Error inesperado al cargar los usuarios.'
     });
