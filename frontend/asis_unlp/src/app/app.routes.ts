@@ -6,6 +6,8 @@ import { ListarCampaniaPage, FormCampaniaPage } from './pages/campania/campania.
 import { ListarJornadaPage, FormJornadaPage, AdministrarZonasPage } from './pages/jornada/jornada.pages';
 import { ListarOrgaSocialPage , FormOrgaSocialPage } from './pages/orgaSocial/orgaSocial.pages';
 import { ListarEncuestadorPage , FormEncuestadorPage } from './pages/encuestador/encuestador.pages';
+import { FiltroPage } from './pages/filtro/filtro.pages';
+import { ReportePage } from './pages/reporte/reporte.pages';
 // import { ListaBarriosPage, FormZonaPage } from './pages/filtro/filtro.pages';
 import { FormZonaPage, ListarZonaPage } from './pages/zonas/zona.pages';
 import { Home } from './components/home/home';
@@ -85,6 +87,14 @@ export const routes: Routes = [
       { path: '', component: ListarOrgaSocialPage },
       { path: 'nueva', component: FormOrgaSocialPage },
       { path: 'editar/:id', component: FormOrgaSocialPage }
+    ]
+  },
+  {
+    path: 'filtro',
+    data: { title: 'Generar Reportes' },
+    children: [
+      { path: '', component: FiltroPage, data: { title: 'Filtrar Reporte' } },
+      { path: 'resultado', component: ReportePage, data: { title: 'Reporte Generado' } }
     ]
   }
 ];

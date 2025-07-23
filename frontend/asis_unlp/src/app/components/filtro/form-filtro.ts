@@ -1,30 +1,101 @@
-// import { Component, Input, Output, EventEmitter } from '@angular/core';
-// import { Barrio, BarrioForm } from '../../models/barrio.model';
-// import { NgModel, FormsModule } from '@angular/forms';
-// import { CommonModule } from '@angular/common';
-// import { Zona,  } from '../../models/zona.model';
-// @Component({
-//   standalone: true,
-//   selector: 'form-zona',
-//   imports: [CommonModule, FormsModule],
-//   templateUrl: './form-zona.html',
-//   styleUrls: ['../../../styles.css']
-// })
-// export class FormZona {
-//   @Input() barrios: Barrio[] = [];
-//   @Input() zona: Zona = {id: 0, nombre: '', geolocalizacion: '' , barrio_id : 0};
-//   @Output() onSubmit = new EventEmitter<Zona>();
-// }
+import { Component, inject, Output, EventEmitter } from "@angular/core";
+import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { BarriosService } from "../../services/barrios.service";
+import { CommonModule } from "@angular/common";
 
-// @Component({
-//   standalone: true,
-//   selector: 'form-zona',
-//   imports: [CommonModule, FormsModule],
-//   templateUrl: './form-zona.html',
-//   styleUrls: ['../../../styles.css']
-// })
-// export class FormActualizarZona {
-//   @Input() barrios: Barrio[] = [];
-//   @Input() zona: Zona = { id: 0 , nombre: '', geolocalizacion: '' , barrio_id : 0};
-//   @Output() onSubmit = new EventEmitter<Zona>();
-// }
+
+@Component({
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
+  selector: 'app-filtro-reporte',
+  template: `
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <h2>Filtrar Reporte</h2>
+
+      <label>Edad mínima:</label>
+      <input type="number" formControlName="edadMin" />
+
+      <label>Edad máxima:</label>
+      <input type="number" formControlName="edadMax" />
+
+      <label>Género:</label>
+      <div *ngFor="let g of generos">
+        <input type="checkbox" [value]="g" (change)="toggleGenero(g, $event)" /> {{ g }}
+      </div>
+
+      <label>Barrio:</label>
+      <select formControlName="barrio">
+        <option [value]="null">-- Ignorar --</option>
+        <option *ngFor="let b of barrios | async" [value]="b.id">{{ b.nombre }}</option>
+      </select>
+      
+      <label>Acceso a Salud:</label>
+      <select formControlName="acceso_salud">
+        <option [ngValue]="null">Ignorar</option>
+        <option [ngValue]="true">Sí</option>
+        <option [ngValue]="false">No</option>
+      </select>
+
+      <label>Acceso a Agua:</label>
+      <select formControlName="acceso_agua">
+        <option [ngValue]="null">Ignorar</option>
+        <option [ngValue]="true">Sí</option>
+        <option [ngValue]="false">No</option>
+      </select>
+
+      <label>Material de vivienda:</label>
+      <div *ngFor="let m of materiales">
+        <input type="checkbox" [value]="m" (change)="toggleMaterial(m, $event)" /> {{ m }}
+      </div>
+
+      <button type="submit">Generar Reporte</button>
+    </form>
+  `
+})
+export class FiltroReporteComponent {
+  private fb = inject(FormBuilder);
+  private barriosService = inject(BarriosService);
+
+  @Output() generarReporte = new EventEmitter<any>();
+
+  form: FormGroup = this.fb.group({
+    edadMin: [null],
+    edadMax: [null],
+    barrio: [null],
+    acceso_salud: [null],
+    acceso_agua: [null],
+  });
+
+  generos: string[] = ['mujer cis', 'mujer trans-travesti', 'varón cis', 'varon trans-masculinidad trans', 'no binarie', 'otra identidad-ninguna de las anteriores'];
+  generoSeleccionado: string[] = [];
+
+  materiales: string[] = ['ladrillo', 'madera', 'chapa', 'mixto', 'otros'];
+  materialSeleccionado: string[] = [];
+
+  barrios = this.barriosService.getBarrios();
+
+  toggleGenero(genero: string, e: any) {
+    if (e.target.checked) this.generoSeleccionado.push(genero);
+    else this.generoSeleccionado = this.generoSeleccionado.filter(g => g !== genero);
+  }
+
+  toggleMaterial(material: string, e: any) {
+    if (e.target.checked) this.materialSeleccionado.push(material);
+    else this.materialSeleccionado = this.materialSeleccionado.filter(m => m !== material);
+  }
+
+  onSubmit() {
+    console.log("HOLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+    const raw = this.form.value;
+    const filtro: any = {};
+
+    if (raw.edadMin != null && raw.edadMax != null) filtro.edad = [raw.edadMin, raw.edadMax];
+    if (this.generoSeleccionado.length) filtro.genero = this.generoSeleccionado;
+    if (raw.barrio != null) filtro.barrio = raw.barrio;
+    if (raw.acceso_salud) filtro.acceso_salud = true;
+    if (raw.acceso_agua) filtro.acceso_agua = true;
+    if (this.materialSeleccionado.length) filtro.material_vivienda = this.materialSeleccionado;
+
+    this.generarReporte.emit(filtro);
+  }
+}
