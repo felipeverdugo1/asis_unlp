@@ -10,8 +10,6 @@ import lombok.Data;
 public class FiltroDTO {
 
     private String nombre;
-    @NotBlank(message = "Geolocalizacion es obligatoria")
     private String criterios;
-    @NotNull(message = "El id del barrio es obligatorio")
     private Long propietario_id;
 }
