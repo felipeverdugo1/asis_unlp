@@ -1,18 +1,26 @@
 
 <form #campaniaForm="ngForm" (ngSubmit)="campaniaForm.valid && onSubmit.emit(campania)">
-  <label>Nombre:</label>
-  <input [(ngModel)]="campania.nombre" name="nombre" required />
-  <label>Fecha Inicio:</label>
-  <input type="date" [(ngModel)]="campania.fechaInicio" name="fechaInicio" required />
-  <label>Fecha Fin:</label>
-  <input type="date" [(ngModel)]="campania.fechaFin" name="fechaFin" required />
+  <div class="form-group">
+    <label class="form-label">Nombre:</label>
+    <input class="form-input" [(ngModel)]="campania.nombre" name="nombre" required />
+  </div>
+  <div class="form-group">
+    <label class="form-label">Fecha Inicio:</label>
+    <input class="form-input" type="date" [(ngModel)]="campania.fechaInicio" name="fechaInicio" required />
+  </div>
+  <div class="form-group">
+    <label class="form-label">Fecha Fin:</label>
+    <input class="form-input" type="date" [(ngModel)]="campania.fechaFin" name="fechaFin" required />
+  </div>
 
-  <label>Barrio:</label>
-  <select [(ngModel)]="campania.barrio_id" name="barrio_id" required>
-    <option *ngFor="let barrio of barrios" [value]="barrio.id">
-      {{ barrio.nombre }}
-    </option>
-  </select>
+  <div class="form-group">
+    <label class="form-label">Barrio:</label>
+    <select class="form-dropdown" [(ngModel)]="campania.barrio_id" name="barrio_id" required>
+      <option *ngFor="let barrio of barrios" [value]="barrio.id">
+        {{ barrio.nombre }}
+      </option>
+    </select>
+  </div>
 
-  <button type="submit" [disabled]="!campaniaForm.valid">Guardar</button>
+  <button class="btn btn-create" type="submit" [disabled]="!campaniaForm.valid">Guardar</button>
 </form>

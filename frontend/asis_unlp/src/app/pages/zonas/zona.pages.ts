@@ -16,30 +16,25 @@ import { FormZona } from '../../components/zona/form-zona';
   standalone: true,
   imports: [CommonModule, RouterModule, ListarZonas],
   template: `
-    <h2>Zonas</h2>
-    
+  <div class="page-container">
+    <div class="page-header">
+      <h1 class="page-title">Zonas</h1>
+      <button [routerLink]="['nueva']" class="btn btn-create">Agregar Zona</button>
+    </div>
+
     <div *ngIf="errorMensaje" class="error-box">
       {{ errorMensaje }}
     </div>
     
-    <listar-zonas 
-      [zonas]="(zonas$ | async) ?? []"
-      (onEdit)="editarZona($event)"
-      (onDelete)="borrarZona($event)">
-    </listar-zonas>
-    <button [routerLink]="['nueva']" class="btn-add">Nueva Zona</button>
-  `,
-  styles: [`
-    .btn-add {
-      margin-bottom: 20px;
-      padding: 8px 16px;
-      background: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-  `]
+    <div class="content-container">
+      <listar-zonas 
+        [zonas]="(zonas$ | async) ?? []"
+        (onEdit)="editarZona($event)"
+        (onDelete)="borrarZona($event)">
+      </listar-zonas>
+    </div>
+  </div>
+  `
 })
 export class ListarZonaPage implements OnInit {
   zonas$!: Observable<Zona[]>;
@@ -81,7 +76,10 @@ export class ListarZonaPage implements OnInit {
     standalone: true,
     imports: [CommonModule, FormsModule,FormZona],
     template: `
-    <h2>{{ esEdicion ? 'Editar Zona' + zona.nombre + ' de Barrio' + idBarrio : 'Nueva Zona para Barrio ' + idBarrio }}</h2>
+    <div class="form-container">
+      <div class="title">
+        <h1>{{ esEdicion ? 'Editar Zona ' + zona.nombre + ' de Barrio' + idBarrio : 'Nueva Zona para Barrio ' + idBarrio }}</h1>
+      </div>
     
     <div *ngIf="errorMensaje" class="error-box">
       {{ errorMensaje }}
@@ -97,6 +95,7 @@ export class ListarZonaPage implements OnInit {
     <ng-template #cargando>
       <p>Cargando zona...</p>
     </ng-template>
+    </div>
   `
   })
 

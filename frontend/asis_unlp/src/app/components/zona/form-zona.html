@@ -1,9 +1,13 @@
 <form #zonaForm="ngForm" (ngSubmit)="zonaForm.valid && onSubmit.emit(zona)">
-  <label>Nombre:</label>
-  <input [(ngModel)]="zona.nombre" name="nombre" required />
+  <div class="form-group">
+    <label class="form-label">Nombre:</label>
+    <input class="form-input" [(ngModel)]="zona.nombre" name="nombre" required />
+  </div>
 
-  <label>Geolocalización:</label>
-  <input [(ngModel)]="zona.geolocalizacion" name="geolocalizacion" required />
+  <div class="form-group">
+    <label class="form-label">Geolocalización:</label>
+    <input class="form-input" [(ngModel)]="zona.geolocalizacion" name="geolocalizacion" required />
+  </div>
 
-  <button type="submit" [disabled]="!zonaForm.valid">Guardar</button>
+  <button class="btn btn-create" type="submit" [disabled]="!zonaForm.valid">Guardar</button>
 </form>

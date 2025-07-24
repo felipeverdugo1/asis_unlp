@@ -16,33 +16,26 @@ import { ZonaService } from '../../services/zonas.service'
   standalone: true,
   imports: [CommonModule, RouterModule, ListarJornadas],
   template: `
-    <h2>Jornadas de Campaña {{ idCampania }}</h2>
+    <div class="page-container">
+      <div class="page-header">
+        <h1>Jornadas de Campaña {{ idCampania }}</h1>
+        <button [routerLink]="['nuevo']" class="btn btn-create">Agregar Jornada</button>
+      </div>
 
-    <div *ngIf="errorMensaje" class="error-box">
-      {{ errorMensaje }}
+      <div *ngIf="errorMensaje" class="error-box">
+        {{ errorMensaje }}
+      </div>
+
+      <div class="content-container">
+        <listar-jornadas
+          [jornadas]="(jornadas$ | async) ?? []"
+          (onAdministrarZonas)="administrarZonas($event)"
+          (onEdit)="editarJornada($event)"
+          (onDelete)="borrarJornada($event)">
+        </listar-jornadas>
+      </div>
     </div>
-
-    <listar-jornadas
-      [jornadas]="(jornadas$ | async) ?? []"
-      (onAdministrarZonas)="administrarZonas($event)"
-      (onEdit)="editarJornada($event)"
-      (onDelete)="borrarJornada($event)">
-    </listar-jornadas>
-    <button [routerLink]="['nuevo']" class="btn-add">
-        Nueva Jornada
-    </button>
-  `,
-  styles: [`
-    .btn-add {
-      margin-bottom: 20px;
-      padding: 8px 16px;
-      background: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-  `]
+  `
 })
 export class ListarJornadaPage implements OnInit {
   jornadas$!: Observable<Jornada[]>;
@@ -92,21 +85,25 @@ export class ListarJornadaPage implements OnInit {
     standalone: true,
     imports: [CommonModule, FormsModule, FormJornada],
     template: `
-    <h2>{{ esEdicion ? 'Editar Jornada ' + jornada.id + ' de Campaña' + idCampania : 'Nueva jornada para Campaña ' + idCampania }}</h2>
+    <div class="form-container">
+      <div class="title">
+        <h2>{{ esEdicion ? 'Editar Jornada ' + jornada.id + ' de Campaña' + idCampania : 'Nueva jornada para Campaña ' + idCampania }}</h2>
+      </div>
 
-    <div *ngIf="errorMensaje" class="error-box">
-      {{ errorMensaje }}
+      <div *ngIf="errorMensaje" class="error-box">
+        {{ errorMensaje }}
+      </div>
+
+      <ng-container *ngIf="!loading; else cargando">
+        <form-jornada
+          [jornada]="jornada"
+        (onSubmit)="guardarJornada($event)">
+        </form-jornada>
+      </ng-container>
+      <ng-template #cargando>
+        <p>Cargando campaña...</p>
+      </ng-template>
     </div>
-
-    <ng-container *ngIf="!loading; else cargando">
-      <form-jornada
-        [jornada]="jornada"
-      (onSubmit)="guardarJornada($event)">
-      </form-jornada>
-    </ng-container>
-    <ng-template #cargando>
-      <p>Cargando campaña...</p>
-    </ng-template>
   `
   })
 
@@ -178,7 +175,10 @@ export class ListarJornadaPage implements OnInit {
     standalone: true,
     imports: [CommonModule, FormAdministrarZonas],
     template: `
-      <h2>Administrar Zonas de la Jornada</h2>
+    <div class="form-container">
+      <div class="title">
+        <h2>Administrar Zonas de la Jornada</h2>
+      </div>
   
       <div *ngIf="errorMensaje" class="error-box">
         {{ errorMensaje }}
@@ -188,6 +188,7 @@ export class ListarJornadaPage implements OnInit {
         [zonas]="(zonasDisponibles$ | async) ?? []"
         (onSubmit)="guardarZonasDesdeForm($event)">
       </form-administrar-zonas>
+    </div>
     `,
   })
   export class AdministrarZonasPage implements OnInit {

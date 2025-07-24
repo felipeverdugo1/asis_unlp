@@ -8,49 +8,8 @@ import { CommonModule } from "@angular/common";
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   selector: 'app-filtro-reporte',
-  template: `
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <h2>Filtrar Reporte</h2>
-
-      <label>Edad mínima:</label>
-      <input type="number" formControlName="edadMin" />
-
-      <label>Edad máxima:</label>
-      <input type="number" formControlName="edadMax" />
-
-      <label>Género:</label>
-      <div *ngFor="let g of generos">
-        <input type="checkbox" [value]="g" (change)="toggleGenero(g, $event)" /> {{ g }}
-      </div>
-
-      <label>Barrio:</label>
-      <select formControlName="barrio">
-        <option [value]="null">-- Ignorar --</option>
-        <option *ngFor="let b of barrios | async" [value]="b.id">{{ b.nombre }}</option>
-      </select>
-      
-      <label>Acceso a Salud:</label>
-      <select formControlName="acceso_salud">
-        <option [ngValue]="null">Ignorar</option>
-        <option [ngValue]="true">Sí</option>
-        <option [ngValue]="false">No</option>
-      </select>
-
-      <label>Acceso a Agua:</label>
-      <select formControlName="acceso_agua">
-        <option [ngValue]="null">Ignorar</option>
-        <option [ngValue]="true">Sí</option>
-        <option [ngValue]="false">No</option>
-      </select>
-
-      <label>Material de vivienda:</label>
-      <div *ngFor="let m of materiales">
-        <input type="checkbox" [value]="m" (change)="toggleMaterial(m, $event)" /> {{ m }}
-      </div>
-
-      <button type="submit">Generar Reporte</button>
-    </form>
-  `
+  templateUrl: './form-filtro.html',
+  styleUrls: ['../../../styles.css'],
 })
 export class FiltroReporteComponent {
   private fb = inject(FormBuilder);

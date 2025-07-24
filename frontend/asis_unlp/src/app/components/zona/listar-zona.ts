@@ -8,6 +8,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
   selector: 'listar-zonas',
   imports: [CommonModule,RouterModule],
   templateUrl: './zona.html',
+  styleUrls: ['../../../styles.css']
 })
 export class ListarZonas {
   @Input() zonas: Zona[] = [];

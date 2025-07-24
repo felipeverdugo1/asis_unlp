@@ -18,30 +18,25 @@ import { Usuario } from '../../models/usuario.model';
   standalone: true,
   imports: [CommonModule, RouterModule, ListarOrgaSocial],
   template: `
-    <h2>Organizaciones Sociales</h2>
+    <div class="page-container">
+      <div class="page-header">
+        <h1 class="page-title">Organizaciones Sociales</h1>
+        <button (click)="nuevaOrgaSocial()" class="btn btn-create">Agregar Organización Social</button>
+      </div>
 
-    <div *ngIf="errorMensaje" class="error-box">
-      {{ errorMensaje }}
+      <div *ngIf="errorMensaje" class="error-box">
+        {{ errorMensaje }}
+      </div>
+      
+      <div class="content-container">
+        <listar-orgaSociales 
+          [orgaSociales]="(orgaSociales$ | async) ?? []"
+          (onEdit)="editarOrgaSocial($event)"
+          (onDelete)="borrarOrgaSocial($event)">
+        </listar-orgaSociales>
+      </div>
     </div>
-
-    <listar-orgaSociales 
-      [orgaSociales]="(orgaSociales$ | async) ?? []"
-      (onEdit)="editarOrgaSocial($event)"
-      (onDelete)="borrarOrgaSocial($event)">
-    </listar-orgaSociales>
-    <button (click)="nuevaOrgaSocial()" class="btn-add">Agregar Organizacion Social</button>
-  `,
-  styles: [`
-    .btn-add {
-      margin-bottom: 20px;
-      padding: 8px 16px;
-      background: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-  `]
+  `
 })
 export class ListarOrgaSocialPage implements OnInit {
   orgaSociales$!: Observable<OrgaSocial[]>;

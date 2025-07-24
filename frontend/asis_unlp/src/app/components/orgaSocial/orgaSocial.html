@@ -1,26 +1,26 @@
-<table class="table">
-    <thead>
+<div class="table-container">
+  <table class="table">
+    <thead class="table-thead">
       <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Domicilio</th>
-        <th>actividadPrincipal</th>
-        <th>Acciones</th>
+        <th class="table-th">Nombre</th>
+        <th class="table-th">Domicilio</th>
+        <th class="table-th">Act. Principal</th>
+        <th class="table-th"></th>
       </tr>
     </thead>
-    <tbody>
+    <tbody class="table-tbody">
       <tr *ngFor="let orgaSocial of orgaSociales">
-        <td>{{ orgaSocial.id }}</td>
-        <td>{{ orgaSocial.nombre }}</td>
-        <td>{{ orgaSocial.domicilio }}</td>
-        <td>{{ orgaSocial.actividadPrincipal }}</td>
-        <td>
-          <button (click)="onEdit.emit(orgaSocial.id)"> Editar</button>
-          <button (click)="onDelete.emit(orgaSocial.id)"> Borrar</button>
+        <td class="table-td">{{ orgaSocial.nombre }}</td>
+        <td class="table-td">{{ orgaSocial.domicilio }}</td>
+        <td class="table-td">{{ orgaSocial.actividadPrincipal }}</td>
+        <td class="table-td">
+          <button class="btn btn-func" (click)="onEdit.emit(orgaSocial.id)"> Editar</button>
+          <button class="btn btn-delete" (click)="onDelete.emit(orgaSocial.id)"> Borrar</button>
         </td>
       </tr>
       <tr *ngIf="orgaSociales.length === 0">
-        <td colspan="6">No hay orgaSociales cargadas.</td>
+        <td class="table-td" colspan="6">No hay organizaciones sociales cargadas.</td>
       </tr>
     </tbody>
   </table>
+</div>

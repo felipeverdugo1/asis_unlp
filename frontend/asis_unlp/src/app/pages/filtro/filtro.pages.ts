@@ -7,9 +7,15 @@ import { FiltroReporteComponent } from '../../components/filtro/form-filtro';
   standalone: true,
   imports: [FiltroReporteComponent],
   template: `
-      <app-filtro-reporte 
-        (generarReporte)="onGenerarReporte($event)">
-      </app-filtro-reporte>
+  <div class="form-container">
+    <div class="title">
+      <h1>Generacion de Filtro para Reporte</h1>
+    </div>
+    
+    <app-filtro-reporte 
+      (generarReporte)="onGenerarReporte($event)">
+    </app-filtro-reporte>
+  </div>
   `
 })
 export class FiltroPage {
