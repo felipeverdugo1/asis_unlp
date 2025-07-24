@@ -1,0 +1,31 @@
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { ReporteService } from '../../services/reporte.service';
+import { FiltroReporteComponent } from '../../components/filtro/form-filtro';
+
+@Component({
+  standalone: true,
+  imports: [FiltroReporteComponent],
+  template: `
+  <div class="form-container">
+    <div class="title">
+      <h1>Generacion de Filtro para Reporte</h1>
+    </div>
+    
+    <app-filtro-reporte 
+      (generarReporte)="onGenerarReporte($event)">
+    </app-filtro-reporte>
+  </div>
+  `
+})
+export class FiltroPage {
+  constructor(
+    private router: Router,
+    private reporteService: ReporteService
+  ) {}
+
+  onGenerarReporte(filtro: any) {
+    this.reporteService.setFiltroActual(filtro);
+    this.router.navigate(['/filtro/resultado']);
+  }
+}

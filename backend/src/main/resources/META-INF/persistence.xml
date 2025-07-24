@@ -1,0 +1,38 @@
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             version="3.0"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
+
+    <persistence-unit name="asis_unlp" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+        <class>model.Usuario</class>
+        <class>model.Campaña</class>
+        <class>model.Barrio</class>
+        <class>model.Reporte</class>
+        <class> model.Jornada</class>
+        <class> model.Zona</class>
+        <class> model.FiltroPersonalizado</class>
+        <class>model.Encuesta</class>
+        <class>model.Pregunta</class>
+        <class>model.Encuestador</class>
+        <class>model.OrganizacionSocial</class>
+        <class>model.PedidoReporte</class>
+        <class>model.GuiaPregunta</class>
+
+        <properties>
+            <!-- Configuración de conexión -->
+            <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://mysql.java.linti.unlp.edu.ar:3306/jyaa2025_bd5?useSSL=false&amp;allowPublicKeyRetrieval=true"/>
+            <property name="jakarta.persistence.jdbc.user" value="jyaa2025_usr5"/>
+            <property name="jakarta.persistence.jdbc.password" value="jyaa2025_pwd5"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <!-- Mostrar SQL -->
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+
+
+        </properties>
+    </persistence-unit>
+
+</persistence>

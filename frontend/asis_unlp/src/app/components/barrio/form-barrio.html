@@ -1,0 +1,16 @@
+  <form #barrioForm="ngForm" (ngSubmit)="barrioForm.valid && onSubmit.emit(barrio)">
+    <div class="form-group">
+      <label class="form-label" for="nombre">Nombre del barrio:</label>
+      <input class="form-input" id="nombre" name="nombre" [(ngModel)]="barrio.nombre" required>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="informacion">Información del barrio:</label>
+      <input class="form-input" id="informacion" name="informacion" [(ngModel)]="barrio.informacion" required>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="geolocalizacion">Geolocalización del barrio:</label>
+      <input class="form-input" id="geolocalizacion" name="geolocalizacion" [(ngModel)]="barrio.geolocalizacion" required>
+    </div>
+
+    <button class="btn btn-create" type="submit" [disabled]="!barrioForm.valid">Guardar</button>
+  </form>

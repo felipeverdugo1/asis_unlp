@@ -1,0 +1,38 @@
+<form #orgaSocialForm="ngForm" (ngSubmit)="orgaSocialForm.valid && onSubmit.emit(orgaSocial)">
+  <div class="form-group">
+    <label class="form-label">Nombre:</label>
+    <input class="form-input" [(ngModel)]="orgaSocial.nombre" name="nombre" required />
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">Domicilio:</label>
+    <input class="form-input" [(ngModel)]="orgaSocial.domicilio" name="domicilio" required />
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">Actividad Principal:</label>
+    <input class="form-input" [(ngModel)]="orgaSocial.actividadPrincipal" name="actividadPrincipal" required />
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">Barrio:</label>
+    <select class="form-dropdown" [(ngModel)]="orgaSocial.barrio_id" name="barrio_id" required>
+      <option [ngValue]="null" disabled>-- Seleccionar barrio --</option>
+      <option *ngFor="let barrio of barrios" [ngValue]="barrio.id">
+        {{ barrio.nombre }}
+      </option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">Referente:</label>
+    <select class="form-dropdown" [(ngModel)]="orgaSocial.referente_id" name="referente_id" required>
+      <option [ngValue]="null" disabled>-- Seleccionar Referente --</option>
+      <option *ngFor="let usuario of usuarios" [ngValue]="usuario.id">
+        {{ usuario.nombreUsuario }}
+      </option>
+    </select>
+  </div>
+
+  <button class="btn btn-create" type="submit" [disabled]="!orgaSocialForm.valid">Guardar</button>
+</form>

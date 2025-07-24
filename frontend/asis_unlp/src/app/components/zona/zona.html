@@ -1,0 +1,24 @@
+<div class="table-container">
+<table class="table">
+    <thead class="table-thead">
+      <tr>
+        <th class="table-th">Nombre</th>
+        <th class="table-th">Geolocalizacion</th>
+        <th class="table-th"></th>
+      </tr>
+    </thead>
+    <tbody class="table-tbody">
+      <tr *ngFor="let zona of zonas">
+        <td class="table-td">{{ zona.nombre }}</td>
+        <td class="table-td">{{ zona.geolocalizacion }}</td>
+        <td class="table-td">
+          <button class="btn btn-func" (click)="onEdit.emit(zona.id)"> Editar</button>
+          <button class="btn btn-delete" (click)="onDelete.emit(zona.id)"> Borrar</button>
+        </td>
+      </tr>
+      <tr *ngIf="zonas.length === 0">
+        <td class="table-td" colspan="6">No hay zonas cargadas.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
