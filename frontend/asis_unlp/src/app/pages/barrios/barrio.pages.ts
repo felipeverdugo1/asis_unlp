@@ -12,31 +12,26 @@ import { Observable } from 'rxjs';
   standalone :true,
   imports : [CommonModule,RouterModule,ListarBarrios],
   template: `
-    <h2>Barrios</h2>
+    <div class="page-container">
+      <div class="page-header">
+        <h1 class="page-title">Barrios</h1>
+        <button (click)="nuevoBarrio()" class="btn btn-create">Agregar Barrio</button>
+      </div>
 
-    <div *ngIf="errorMensaje" class="error-box">
-      {{ errorMensaje }}
+      <div *ngIf="errorMensaje" class="error-box">
+        {{ errorMensaje }}
+      </div>
+
+      <div class="content-container">
+        <listar-barrios
+          [barrios]="(barrios$ | async) ?? []"
+          (onEdit)="editarBarrio($event)"
+          (onDelete)="borrarBarrio($event)">
+        </listar-barrios>
+      </div>
+    
     </div>
-
-    <listar-barrios
-      [barrios]="(barrios$ | async) ?? []"
-      (onEdit)="editarBarrio($event)"
-      (onDelete)="borrarBarrio($event)">
-    </listar-barrios>
-    <button (click)="nuevoBarrio()" class="btn-add"> Agregar Barrio</button>
-
-  `,
-  styles: [`
-    .btn-add {
-      margin-bottom: 20px;
-      padding: 8px 16px;
-      background: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-  `]
+  `
 })
 export class ListaBarriosPage implements OnInit {
   barrios$!: Observable<Barrio[]>;
@@ -80,8 +75,11 @@ export class ListaBarriosPage implements OnInit {
   standalone: true,
   imports: [CommonModule, FormsModule, FormBarrio],
   template: `
-    <h2>{{ esEdicion ? 'Editar Barrio' : 'Nuevo Barrio' }}</h2>
-
+  <div class="form-container">
+    <div class="title">
+      <h1>{{ esEdicion ? 'Editar Barrio' : 'Nuevo Barrio' }}</h1>
+    </div>
+    
     <div *ngIf="errorMensaje" class="error-box">
       {{ errorMensaje }}
     </div>
@@ -92,6 +90,7 @@ export class ListaBarriosPage implements OnInit {
     <ng-template #cargando>
       <p>Cargando barrio...</p>
     </ng-template>
+  </div>
   `
 })
 export class FormBarrioPage implements OnInit {

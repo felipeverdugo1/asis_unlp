@@ -12,31 +12,25 @@ import { Observable } from 'rxjs';
   standalone :true,
   imports : [CommonModule,RouterModule,ListarUsuarios],
   template: `
-    <h2>Usuarios</h2>
+  <div class="page-container">
+    <div class="page-header">
+      <h1 class="page-title">Usuarios</h1>
+      <button (click)="nuevoUsuario()" class="btn btn-create"> Agregar Usuario</button>
+    </div>
 
     <div *ngIf="errorMensaje" class="error-box">
       {{ errorMensaje }}
     </div>
 
-    <listar-usuarios 
-    [usuarios]="(usuarios$ | async) ?? []"
-      (onEdit)="editarUsuario($event)"
-      (onDelete)="borrarUsuario($event)">
-    </listar-usuarios>
-    <button (click)="nuevoUsuario()" class="btn-add"> Agregar Usuario</button>
-
-  `,
-  styles: [`
-    .btn-add {
-      margin-bottom: 20px;
-      padding: 8px 16px;
-      background: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-  `]
+    <div class="content-container">
+      <listar-usuarios 
+      [usuarios]="(usuarios$ | async) ?? []"
+        (onEdit)="editarUsuario($event)"
+        (onDelete)="borrarUsuario($event)">
+      </listar-usuarios>
+    </div>
+  </div>
+  `
 })
 export class ListaUsuariosPage implements OnInit {
   usuarios$!: Observable<Usuario[]>;
@@ -80,8 +74,11 @@ export class ListaUsuariosPage implements OnInit {
   standalone: true, 
   imports: [FormsModule, CommonModule, FormUsuario], 
   template: `
-    <h2>{{ esEdicion ? 'Editar usuario' : 'Nuevo usuario' }}</h2>
-
+  <div class="form-container">
+    <div class="title">
+      <h2>{{ esEdicion ? 'Editar usuario' : 'Nuevo usuario' }}</h2>
+    </div>
+    
     <div *ngIf="errorMensaje" class="error-box">
       {{ errorMensaje }}
     </div>
@@ -92,6 +89,7 @@ export class ListaUsuariosPage implements OnInit {
     <ng-template #cargando>
       <p>Cargando usuario...</p>
     </ng-template>
+  </div>
   `,
 })
 export class FormUsuarioPage {

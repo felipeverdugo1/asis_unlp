@@ -1,26 +1,27 @@
-<table class="table">
-    <thead>
+<div class="table-container">
+  <table class="table">
+    <thead class="table-thead">
       <tr>
-        <th>Nombre</th>
-        <th>Información</th>
-        <th>Geolocalizacion</th>
+        <th class="table-th">Nombre</th>
+        <th class="table-th">Información</th>
+        <th class="table-th">Geolocalizacion</th>
+        <th class="table-th"></th>
       </tr>
     </thead>
-    <tbody>
+    <tbody class="table-tbody">
       <tr *ngFor="let barrio of barrios">
-        <td>{{ barrio.nombre }}</td>
-        <td>{{ barrio.informacion }}</td>
-        <td>{{ barrio.geolocalizacion }}</td>
-        <td>
-          <button (click)="onEdit.emit(barrio.id)"> Editar</button>
-          <button (click)="onDelete.emit(barrio.id)"> Borrar</button>
-          <button [routerLink]="['/barrio', barrio.id, 'zonas']">
-            Ver Zonas
-          </button>
+        <td class="table-td">{{ barrio.nombre }}</td>
+        <td class="table-td">{{ barrio.informacion }}</td>
+        <td class="table-td">{{ barrio.geolocalizacion }}</td>
+        <td class="table-td">
+          <button (click)="onEdit.emit(barrio.id)" class="btn btn-func"> Editar</button>
+          <button (click)="onDelete.emit(barrio.id)" class="btn btn-delete"> Borrar</button>
+          <button [routerLink]="['/barrio', barrio.id, 'zonas']" class="btn btn-nav">Ver Zonas</button>
         </td>
       </tr>
       <tr *ngIf="barrios.length === 0">
-        <td colspan="6">No hay barrios cargados.</td>
+        <td class="table-td" colspan="6">No hay barrios cargados.</td>
       </tr>
     </tbody>
   </table>
+</div>

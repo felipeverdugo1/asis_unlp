@@ -6,6 +6,7 @@ import { Router } from "@angular/router";
 import { ReporteService } from "../../services/reporte.service";
 import { ReporteResultadoComponent } from "../../components/reporte/reporte-resultado";
 
+/*Hay que aplicarle estilos a esto.*/
 @Component({
   standalone: true,
   imports: [CommonModule, ReporteResultadoComponent, AsyncPipe],

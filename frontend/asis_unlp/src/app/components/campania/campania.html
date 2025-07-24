@@ -1,26 +1,29 @@
-<table class="table">
-    <thead>
+<div class="table-container">
+  <table class="table">
+    <thead class="table-thead">
       <tr>
-        <th>Nombre</th>
-        <th>Fecha Inicio</th>
-        <th>Fecha Fin</th>
+        <th class="table-th">Nombre</th>
+        <th class="table-th">Fecha Inicio</th>
+        <th class="table-th">Fecha Fin</th>
+        <th class="table-th"></th>
       </tr>
     </thead>
-    <tbody>
+    <tbody class="table-tbody">
       <tr *ngFor="let campania of campanias">
-        <td>{{ campania.nombre }}</td>
-        <td>{{ campania.fechaInicio }}</td>
-        <td>{{ campania.fechaFin }}</td>
-        <td>
-          <button (click)="onEdit.emit(campania.id)"> Editar</button>
-          <button (click)="onDelete.emit(campania.id)"> Borrar</button>
-          <button [routerLink]="['/campania', campania.id, 'jornadas']">
+        <td class="table-td">{{ campania.nombre }}</td>
+        <td class="table-td">{{ campania.fechaInicio }}</td>
+        <td class="table-td">{{ campania.fechaFin }}</td>
+        <td class="table-td">
+          <button (click)="onEdit.emit(campania.id)" class="btn btn-func"> Editar</button>
+          <button (click)="onDelete.emit(campania.id)" class="btn btn-delete"> Borrar</button>
+          <button [routerLink]="['/campania', campania.id, 'jornadas']" class="btn btn-nav">
             Ver Jornadas
           </button>
         </td>
       </tr>
       <tr *ngIf="campanias.length === 0">
-        <td colspan="6">No hay campañas cargadas.</td>
+        <td class="table-td" colspan="6">No hay campañas cargadas.</td>
       </tr>
     </tbody>
   </table>
+</div>

@@ -8,7 +8,7 @@ import { RouterModule } from '@angular/router';
   selector: 'listar-roles',
   imports : [CommonModule,RouterModule],
   templateUrl: './listar-rol.html',
-  styleUrls: ['../component-style.css']
+  styleUrls: ['../../../styles.css']
 })
 export class ListarRoles {
   @Input() roles: Rol[] = [];

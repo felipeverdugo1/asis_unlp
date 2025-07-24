@@ -12,31 +12,25 @@ import { Observable } from 'rxjs';
   standalone :true,
   imports : [CommonModule,RouterModule,ListarRoles],
   template: `
-    <h2>Roles</h2>
+  <div class="page-container">
+    <div class="page-header">
+      <h1 class="page-title">Roles</h1>
+      <button (click)="nuevoRol()" class="btn btn-create"> Agregar Rol</button>
+    </div>
 
     <div *ngIf="errorMensaje" class="error-box">
       {{ errorMensaje }}
     </div>
 
-    <listar-roles 
-    [roles]="(roles$ | async) ?? []"
-      (onEdit)="editarRol($event)"
-      (onDelete)="borrarRol($event)">
-    </listar-roles>
-    <button (click)="nuevoRol()" class="btn-add"> Agregar Rol</button>
-
-  `,
-  styles: [`
-    .btn-add {
-      margin-bottom: 20px;
-      padding: 8px 16px;
-      background: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-  `]
+    <div class="content-container">
+      <listar-roles 
+      [roles]="(roles$ | async) ?? []"
+        (onEdit)="editarRol($event)"
+        (onDelete)="borrarRol($event)">
+      </listar-roles>
+    </div>
+  </div>
+  `
 })
 export class ListarRolesPage implements OnInit {
   roles$!: Observable<Rol[]>;

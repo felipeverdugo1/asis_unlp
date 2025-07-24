@@ -14,13 +14,37 @@
     cursor: pointer;
   }
 
-  .error-box {
-    background: #ffe6e6;
-    color: #d8000c;
-    padding: 10px;
-    border-radius: 4px;
-    margin-bottom: 15px;
-  }
+.page-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.page-title {
+  color: #004030;
+  margin: 0;
+}
+
+.content-container {
+  width: 100%;
+}
+
+.error-box {
+  padding: 15px;
+  background-color: #FFEBEE;
+  border-left: 4px solid #FF6363;
+  color: #D32F2F;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
 
 /* ESTILOS DE LO QUE MUESTRA app.html EL CUERPO DE LA APP*/
 .main {
@@ -74,4 +98,458 @@ ESTILO DEL HEADER Y LA NAVEGACION
 
 .breadcrumb-separator {
   color: #999;
+}
+
+/* Estilos base de la aplicación */
+body {
+  background-color: #F8F4E8; /* Fondo blanco hueso más claro que #DCD0A8 */
+  color: #333;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 20px;
+}
+
+/* ============ ESTILOS PARA FORMULARIOS ============ */
+.form-container {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  margin-bottom: 30px;
+  transition: box-shadow 0.3s ease;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.form-container:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.form-title {
+  color: #004030; /* Verde oscuro para títulos */
+  font-size: 1.5rem;
+  font-weight: 600; /* Negrita para títulos */
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #E0E0E0;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  display: block;
+  color: #004030; /* Verde oscuro para labels */
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.form-input {
+  width: calc(100% - 30px);
+  padding: 10px 15px;
+  border: 1px solid #D1D1D1;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  box-sizing: border-box;
+}
+
+.form-input:focus {
+  border-color: #4A9782; /* Verde principal para foco */
+  box-shadow: 0 0 0 3px rgba(74, 151, 130, 0.2);
+  outline: none;
+}
+
+.form-dropdown {
+  width: calc(100% - 30px);
+  padding: 10px 15px;
+  border: 1px solid #D1D1D1;
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: white;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.form-dropdown:focus {
+  border-color: #4A9782;
+  outline: none;
+}
+
+.checkbox-group {
+  margin-top: 10px;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.checkbox-item input {
+  margin-right: 10px;
+}
+
+/* ============ ESTILOS PARA TABLAS ============= */
+.table-container {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-thead {
+  background-color: #004030; /* Verde oscuro para cabecera */
+  color: #DCD0A8; /* Texto claro para cabecera */
+}
+
+.table-th {
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+}
+
+.table-tbody tr {
+  border-bottom: 1px solid #F0F0F0;
+  transition: background-color 0.2s ease;
+}
+
+.table-tbody tr:last-child {
+  border-bottom: none;
+}
+
+.table-tbody tr:hover {
+  background-color: #F8F8F8;
+}
+
+.table-td {
+  padding: 12px 15px;
+}
+
+/* ============ ESTILOS PARA TARJETAS/MENÚS ============ */
+.menu-section {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.menu-title {
+  color: #004030; /* Verde oscuro para títulos */
+  font-size: 1.3rem;
+  font-weight: 600; /* Negrita para títulos */
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #E0E0E0;
+}
+
+.menu-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* ============ ESTILOS PARA BOTONES ============ */
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+/* Botón de navegación */
+.btn-nav {
+  background-color: #354c46; /* Verde principal */
+  color: white;
+}
+
+.btn-nav:hover {
+  background-color: #3a7a68;
+}
+
+/* Botón de funcionalidad */
+.btn-func {
+  background-color: #4A9782; /* Verde principal */
+  color: white;
+}
+
+.btn-func:hover {
+  background-color: #3a7a68;
+}
+
+/* Botón de creación */
+.btn-create {
+  background-color: #81E7AF; /* Verde claro */
+  color: #004030; /* Texto oscuro para contraste */
+}
+
+.btn-create:hover {
+  background-color: #6dcc99;
+}
+
+/* Botón de eliminación */
+.btn-delete {
+  background-color: #FF6363; /* Rojo */
+  color: white;
+}
+
+.btn-delete:hover {
+  background-color: #e05555;
+}
+
+/* Botón secundario/alternativo */
+.btn-secondary {
+  background-color: #F0F0F0;
+  color: #333;
+}
+
+.btn-secondary:hover {
+  background-color: #E0E0E0;
+}
+
+/* Iconos en botones */
+.btn i {
+  margin-right: 8px;
+}
+
+/* ============ ESTILOS ADICIONALES ============ */
+/* Espaciado general */
+.padding-sm {
+  padding: 10px;
+}
+
+.padding-md {
+  padding: 20px;
+}
+
+.padding-lg {
+  padding: 30px;
+}
+
+.margin-bottom-sm {
+  margin-bottom: 10px;
+}
+
+.margin-bottom-md {
+  margin-bottom: 20px;
+}
+
+.margin-bottom-lg {
+  margin-bottom: 30px;
+}
+
+/* Sombras para elementos flotantes */
+.shadow-sm {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.shadow-md {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.shadow-lg {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Efecto de hover para tarjetas */
+.hover-effect {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-effect:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* ============ ESTILOS PARA LISTAS ============ */
+
+/* Listas básicas (ul/ol) */
+.list-container {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.list-title {
+  color: #004030; /* Verde oscuro para títulos */
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #E0E0E0;
+}
+
+/* Lista no ordenada (ul) */
+.list-ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.list-ul li {
+  padding: 12px 15px;
+  border-bottom: 1px solid #F0F0F0;
+  transition: background-color 0.2s ease;
+}
+
+.list-ul li:last-child {
+  border-bottom: none;
+}
+
+.list-ul li:hover {
+  background-color: #F8F8F8;
+}
+
+/* Lista ordenada (ol) */
+.list-ol {
+  padding-left: 20px;
+  color: #004030; /* Verde oscuro para números */
+}
+
+.list-ol li {
+  padding: 8px 0;
+  margin-left: 15px;
+}
+
+/* Lista de elementos interactivos */
+.list-interactive {
+  list-style-type: none;
+  padding: 0;
+}
+
+.list-interactive li {
+  padding: 12px 15px;
+  margin-bottom: 8px;
+  background-color: #F8F8F8;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.list-interactive li:hover {
+  background-color: #E8F5E9; /* Fondo verde muy claro al hover */
+  transform: translateX(5px);
+}
+
+.list-interactive .list-item-icon {
+  color: #4A9782; /* Verde principal para iconos */
+  margin-right: 10px;
+}
+
+.list-interactive .list-item-badge {
+  background-color: #004030; /* Verde oscuro */
+  color: #DCD0A8; /* Texto claro */
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+}
+
+/* Lista en tarjeta (card list) */
+.card-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 15px;
+  padding: 0;
+  list-style: none;
+}
+
+.card-list-item {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  transition: all 0.3s ease;
+}
+
+.card-list-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ============ SELECT MULTIPLE (LISTA DE SELECCIÓN) ============ */
+.form-multiselect {
+  width: 100%;
+  min-height: 120px; /* Altura mínima */
+  max-height: 200px; /* Altura máxima con scroll */
+  padding: 8px;
+  border: 1px solid #D1D1D1;
+  border-radius: 6px;
+  background-color: white;
+  overflow-y: auto; /* Scroll vertical si hay muchas opciones */
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s ease;
+}
+
+.form-multiselect:focus {
+  border-color: #4A9782;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(74, 151, 130, 0.2), 
+              inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.form-multiselect option {
+  padding: 8px 12px;
+  border-bottom: 1px solid #F0F0F0;
+  transition: background-color 0.2s ease;
+}
+
+.form-multiselect option:hover {
+  background-color: #E8F5E9 !important; /* Fondo verde claro al hover */
+  cursor: pointer;
+}
+
+.form-multiselect option:checked {
+  background-color: #4A9782; /* Verde principal para seleccionados */
+  color: white;
+}
+
+/* Contenedor para mejor agrupación */
+.multiselect-container {
+  margin-bottom: 20px;
+}
+
+.multiselect-container label {
+  display: block;
+  color: #004030;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+/* Estilo para indicar selección múltiple */
+.multiselect-hint {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 5px;
+  font-style: italic;
 }
