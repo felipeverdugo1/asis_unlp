@@ -1,5 +1,6 @@
 package service;
 
+import auth.annotation.RequiereRol;
 import dao.GenericDAO;
 import exceptions.EntidadNoEncontradaException;
 
@@ -22,6 +23,7 @@ public abstract class GenericServiceImpl<T, ID> implements GenericService<T, ID>
     }
 
     @Override
+    @RequiereRol("ADMIN")
     public Optional<T> buscarPorId(ID id) {
         return genericDAO.buscarPorId(id);
     }

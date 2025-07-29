@@ -2,6 +2,8 @@ package exceptions;
 
 import jakarta.ws.rs.core.Response;
 
+import java.io.IOException;
+
 public class ApiException extends RuntimeException {
     private final Response.Status status;
 

@@ -4,6 +4,7 @@
         <th>ID</th>
         <th>Nombre</th>
         <th>Email</th>
+        <th>Habilitado</th>
         <th>Acciones</th>
       </tr>
     </thead>
@@ -12,9 +13,14 @@
         <td>{{ usuario.id }}</td>
         <td>{{ usuario.nombreUsuario }}</td>
         <td>{{ usuario.email }}</td>
+        <td>{{ usuario.habilitado ? 'Habilitado' : 'Deshabilitado' }}</td>
         <td>
           <button (click)="onEdit.emit(usuario.id)"> Editar</button>
           <button (click)="onDelete.emit(usuario.id)"> Borrar</button>
+          <button (click)="toggleHabilitado.emit({ id: usuario.id!, habilitado: usuario.habilitado })">
+            {{ usuario.habilitado ? 'Deshabilitar' : 'Habilitar' }}
+          </button>
+          <button (click)="editarRoles.emit(usuario.id)">Editar roles</button>
         </td>
       </tr>
       <tr *ngIf="usuarios.length === 0">

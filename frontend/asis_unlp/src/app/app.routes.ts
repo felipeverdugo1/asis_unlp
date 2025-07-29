@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { ListaUsuariosPage, FormUsuarioPage } from './pages/usuarios/usuario.pages';
+import { ListaUsuariosPage, FormUsuarioPage, UsuarioRolesPage } from './pages/usuarios/usuario.pages';
 import { ListaBarriosPage, FormBarrioPage } from './pages/barrios/barrio.pages';
 import { ListarRolesPage, FormRolPage } from './pages/roles/rol.pages';
 import { ListarCampaniaPage, FormCampaniaPage } from './pages/campania/campania.pages';
@@ -9,18 +9,21 @@ import { ListarEncuestadorPage , FormEncuestadorPage } from './pages/encuestador
 // import { ListaBarriosPage, FormZonaPage } from './pages/filtro/filtro.pages';
 import { FormZonaPage, ListarZonaPage } from './pages/zonas/zona.pages';
 import { Home } from './components/home/home';
+import { Login } from './components/login/login';
 
 
 
 export const routes: Routes = [
   { path: '', component: Home }, 
+  { path: 'login', component: Login }, 
   { 
     path: 'usuario', 
     data: { title: 'Usuarios' },
     children: [
       { path: '', component: ListaUsuariosPage },
       { path: 'nuevo', component: FormUsuarioPage },
-      { path: 'editar/:id', component: FormUsuarioPage }
+      { path: 'editar/:id', component: FormUsuarioPage },
+      { path: 'roles/:id', component: UsuarioRolesPage }
     ]
   },
   {

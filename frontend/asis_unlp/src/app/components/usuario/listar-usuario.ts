@@ -14,5 +14,6 @@ export class ListarUsuarios {
   @Input() usuarios: Usuario[] = [];
   @Output() onEdit = new EventEmitter<number>();
   @Output() onDelete = new EventEmitter<number>();
-
+  @Output() toggleHabilitado = new EventEmitter<{ id: number, habilitado: boolean }>();
+  @Output() editarRoles = new EventEmitter<number>();
 }

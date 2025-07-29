@@ -6,6 +6,7 @@ import dao.UsuarioDAO;
 import exceptions.EntidadExistenteException;
 import exceptions.EntidadNoEncontradaException;
 import exceptions.FaltanArgumentosException;
+import exceptions.UnauthorizedException;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import model.Rol;
@@ -192,6 +193,18 @@ public class UsuarioService extends GenericServiceImpl<Usuario, Long> {
         } else {
             throw new EntidadNoEncontradaException("No existe el rol.");
         }
+    }
+
+    public Usuario validarCredencialesLogin(String email, String clave) {
+        Optional<Usuario> usu = usuarioDAO.buscarPorCampo("email", email);
+        if( usu.isEmpty() ) {
+            throw new EntidadNoEncontradaException("No existe usuario con ese email.");
+        }
+        if ( !usu.get().getPassword().equals(clave) ) {
+            throw new UnauthorizedException("La clave no es correcta.");
+        }
+
+        return usu.get();
     }
 
 }

@@ -22,16 +22,17 @@
     
     <label for="especialidad">
         Especialidad
-        <input id="especialidad" name="especialidad" [(ngModel)]="usuario.especialidad" required>
+        <input id="especialidad" name="especialidad" [(ngModel)]="usuario.especialidad">
     </label>
-
-    <label for="roles">Roles:</label>
-        <select id="roles" name="roles_id" [(ngModel)]="usuario.roles_id" multiple>
-        <option *ngFor="let rol of roles" [value]="rol.id">
-            {{ rol.nombre }}
-        </option>
-    </select>
     
+    <div *ngIf="!esEdicion">
+        <label for="roles">Roles:</label>
+            <select id="roles" name="roles_id" [(ngModel)]="usuario.roles_id" multiple>
+            <option *ngFor="let rol of roles" [value]="rol.id">
+                {{ rol.nombre }}
+            </option>
+        </select>
+    </div>
 
     <button type="submit" [disabled]="!usuarioForm.valid">Guardar</button> 
     <button type="button" (click)="goBack()">Atras</button>

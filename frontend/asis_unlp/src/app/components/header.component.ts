@@ -7,10 +7,11 @@ import { Router, RouterModule, ActivatedRoute } from '@angular/router';
   selector: 'app-header',
   imports: [CommonModule, RouterModule],
   template: `
-    <header class="header-container">
-      <button class="header-home-btn" (click)="goHome()">Inicio</button>
+    <header class="header-container" style="display: flex; justify-content: space-between; align-items: center;">
+      <div style="display: flex; align-items: center;">
+        <button class="header-home-btn" (click)="goHome()">Inicio</button>
 
-        <nav class="header-breadcrumb">
+        <nav class="header-breadcrumb" style="margin-left: 1rem;">
           <ng-container *ngFor="let crumb of breadcrumbs; let last = last">
             <ng-container *ngIf="!last">
               <a [routerLink]="crumb.url" class="header-breadcrumb-link">{{ crumb.label }}</a>
@@ -21,7 +22,11 @@ import { Router, RouterModule, ActivatedRoute } from '@angular/router';
             </ng-container>
           </ng-container>
         </nav>
+      </div>
 
+      <button class="header-home-btn" (click)="handleLoginLogout()">
+        {{ isLoggedIn ? 'Cerrar sesión' : 'Login' }}
+      </button>
     </header>
   `
 })
@@ -30,15 +35,28 @@ export class HeaderComponent {
   private route = inject(ActivatedRoute);
 
   breadcrumbs: { label: string, url?: string }[] = [];
+  isLoggedIn = false;
 
   constructor() {
     this.router.events.subscribe(() => {
       this.buildBreadcrumbs();
+      this.checkLoginStatus();
     });
   }
 
   goHome() {
     this.router.navigate(['/']);
+  }
+
+  checkLoginStatus() {
+    this.isLoggedIn = !!localStorage.getItem('authToken');
+  }
+
+  handleLoginLogout() {
+    if (this.isLoggedIn) {
+      localStorage.removeItem('authToken');
+    }
+    this.router.navigate(['/login']);
   }
 
   buildBreadcrumbs() {
