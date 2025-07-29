@@ -1,4 +1,7 @@
-<div class="home-container">
+
+<!-- If para rol de admin -->
+<div *ngIf="rolAdmin()">
+  <div class="home-container">
     <h1>Administración del Sistema</h1>
   
       <div class="menu-grid">
@@ -49,5 +52,24 @@
         </div>
       </div>
 
+    </div>
+  </div>
+  <hr>
+</div>
+
+  <div class="home-container">
+    <h1>Home Page</h1>
+    <div class="menu-grid">
+      <div class="menu-section">
+        <h2>Bienvenido al sistema de gestión ASIS UNLP</h2>
+      </div>
+      <div class="">
+        <h2>Conozcanos</h2>
+        <ul>
+          <li><a href="https://www.unlp.edu.ar/">Universidad Nacional de La Plata</a></li>
+          <li><a href="https://www.asis.unlp.edu.ar/">Sitio Oficial ASIS UNLP</a></li>
+          <li><a href="https://www.unlp.edu.ar/">Otro enlace</a></li>
+        </ul>
+      </div>
     </div>
   </div>

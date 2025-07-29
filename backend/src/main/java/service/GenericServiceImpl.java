@@ -23,7 +23,7 @@ public abstract class GenericServiceImpl<T, ID> implements GenericService<T, ID>
     }
 
     @Override
-    @RequiereRol("ADMIN")
+    @RequiereRol("admin")
     public Optional<T> buscarPorId(ID id) {
         return genericDAO.buscarPorId(id);
     }

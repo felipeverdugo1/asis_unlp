@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   standalone: true,
@@ -33,6 +34,7 @@ import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 export class HeaderComponent {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private authService = inject(AuthService);
 
   breadcrumbs: { label: string, url?: string }[] = [];
   isLoggedIn = false;
@@ -49,12 +51,12 @@ export class HeaderComponent {
   }
 
   checkLoginStatus() {
-    this.isLoggedIn = !!localStorage.getItem('authToken');
+    this.isLoggedIn = this.authService.loggedIn();
   }
 
   handleLoginLogout() {
     if (this.isLoggedIn) {
-      localStorage.removeItem('authToken');
+      this.authService.cerrarSesion();
     }
     this.router.navigate(['/login']);
   }

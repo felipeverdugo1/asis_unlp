@@ -34,7 +34,7 @@ public class BarrioController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Este endpoint nos permite obtener todos los barrios registrados.")
-    @RequiereRol("ADMIN")
+    @RequiereRol("admin")
     public Response get() {
         return Response.ok(barrioService.listarTodos()).build();
     }
@@ -44,7 +44,7 @@ public class BarrioController {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Este endpoint nos permite obtener el barrio a partir de un id",
             parameters = @Parameter(name = "barrio id"))
-    @RequiereRol("ADMIN")
+    @RequiereRol("admin")
     public Response get(@PathParam("id") Long id) {
         Optional<Barrio> objeto = barrioService.buscarPorId(id);
         if (objeto.isPresent()) {
@@ -85,7 +85,7 @@ public class BarrioController {
                 @ApiResponse(responseCode = "500", description = "Error interno.")
         }
     )
-    @RequiereRol("ADMIN")
+    @RequiereRol("admin")
     public Response post(BarrioDTO barrioDTO) {
         Barrio barrio = barrioService.crear(barrioDTO);
         return Response.status(Response.Status.CREATED).entity(barrio).build();
@@ -96,7 +96,7 @@ public class BarrioController {
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @RequiereRol("ADMIN")
+    @RequiereRol("adminadmin")
     @Operation(description = "Este endpoint nos permite actualizar el barrio a partir de un id",
             parameters = @Parameter(name = "barrio id"),
             requestBody = @RequestBody(description = "un nuevo barrio en formato JSON",
@@ -131,7 +131,7 @@ public class BarrioController {
     @DELETE
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    @RequiereRol("ADMIN")
+    @RequiereRol("admin")
     @Operation(description = "Este endpoint nos permite eliminar el barrio a partir de un id",
             parameters = @Parameter(name = "barrio id"))
     public Response delete(@PathParam("id") Long id) {
