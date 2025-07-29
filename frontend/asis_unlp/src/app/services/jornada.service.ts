@@ -37,4 +37,14 @@ export class JornadaService {
     return this.http.get<Jornada[]>(`${this.apiUrl}/campania/${idCampania}`);
   }
 
+
+  agregarZona(jornadaId: number, zonaId: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/agregarZona/${jornadaId}/${zonaId}`, {});
+  }
+
+  quitarZona(jornadaId: number, zonaId: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/quitarZona/${jornadaId}/${zonaId}`,{});
+  }
+
+
 }

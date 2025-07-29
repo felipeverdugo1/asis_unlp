@@ -1,17 +1,57 @@
-<form #zonaForm="ngForm" (ngSubmit)="zonaForm.valid && onSubmit.emit(zona)">
-  <label>Nombre:</label>
-  <input [(ngModel)]="zona.nombre" name="nombre" required />
+<form [formGroup]="form" (ngSubmit)="onSubmit()">    
+    <div class="form-group">
+      <label class="form-label">Edad mínima:</label>
+      <input class="form-input" type="number" formControlName="edadMin" />
+    </div>
 
-  <label>Geolocalización:</label>
-  <input [(ngModel)]="zona.geolocalizacion" name="geolocalizacion" required />
+    <div class="form-group">
+      <label class="form-label">Edad máxima:</label>
+      <input class="form-input" type="number" formControlName="edadMax" />
+    </div>
 
-  <label>Barrio:</label>
-  <select [(ngModel)]="zona.barrio_id" name="barrio_id" required>
-    <option [ngValue]="null" disabled>-- Seleccionar barrio --</option>
-    <option *ngFor="let barrio of barrios" [ngValue]="barrio.id">
-      {{ barrio.nombre }}
-    </option>
-  </select>
+    <div class="form-group">
+      <label class="form-label">Género:</label>
+      <div class="checkbox-group" *ngFor="let g of generos">
+        <div class="checkbox-item">
+            <input type="checkbox" [value]="g" (change)="toggleGenero(g, $event)" />
+            <label>{{ g }}</label>
+        </div>
+      </div>
+    </div>
 
-  <button type="submit" [disabled]="!zonaForm.valid">Guardar</button>
-</form>
+    <div class="form-group">
+      <label class="form-label">Barrio:</label>
+      <select class="form-dropdown" formControlName="barrio">
+        <option [value]="null">- Ignorar -</option>
+        <option *ngFor="let b of barrios | async" [value]="b.id">{{ b.nombre }}</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Acceso a Salud:</label>
+      <select class="form-dropdown" formControlName="acceso_salud">
+        <option [ngValue]="null">- Ignorar -</option>
+        <option [ngValue]="true">Sí</option>
+        <option [ngValue]="false">No</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Acceso a Agua:</label>
+      <select class="form-dropdown" formControlName="acceso_agua">
+        <option [ngValue]="null">- Ignorar -</option>
+        <option [ngValue]="true">Sí</option>
+        <option [ngValue]="false">No</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Material de vivienda:</label>
+      <div class="checkbox-group" *ngFor="let m of materiales">
+        <input type="checkbox" [value]="m" (change)="toggleMaterial(m, $event)" /> 
+        <label>{{ m }}</label>
+      </div>
+    </div>
+
+      <button class="btn btn-create" type="submit">Generar Reporte</button>
+    </form>

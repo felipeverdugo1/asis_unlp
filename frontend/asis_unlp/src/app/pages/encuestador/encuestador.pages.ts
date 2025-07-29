@@ -16,30 +16,24 @@ import { FormEncuestador } from '../../components/encuestador/form-encuestador';
   standalone: true,
   imports: [CommonModule, RouterModule, ListarEncuestadores],
   template: `
-    <h2>Encuestadores</h2>
+  <div class="page-container">
+    <div class="page-header">
+      <h1 class="page-title">Encuestadores</h1>
+      <button (click)="nuevoEncuestador()" class="btn btn-create">Agregar Encuestador</button>
+    </div>
 
     <div *ngIf="errorMensaje" class="error-box">
       {{ errorMensaje }}
     </div>
-
+    <div class="content-container">
     <listar-encuestadores 
       [encuestadores]="(encuestadores$ | async) ?? []"
       (onEdit)="editarEncuestador($event)"
       (onDelete)="borrarEncuestador($event)">
     </listar-encuestadores>
-    <button (click)="nuevoEncuestador()" class="btn-add">Agregar encuestador</button>
-  `,
-  styles: [`
-    .btn-add {
-      margin-bottom: 20px;
-      padding: 8px 16px;
-      background: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-  `]
+    </div>
+  </div>
+  `
 })
 export class ListarEncuestadorPage implements OnInit {
   encuestadores$!: Observable<Encuestador[]>;
@@ -82,21 +76,25 @@ export class ListarEncuestadorPage implements OnInit {
     standalone: true,
     imports: [CommonModule, FormsModule,FormEncuestador],
     template: `
-    <h2>{{ esEdicion ? 'Editar encuestador' : 'Nueva encuestador' }}</h2>
+    <div class="form-container">
+      <div class="title">
+        <h1>{{ esEdicion ? 'Editar encuestador' : 'Nueva encuestador' }}</h1>
+      </div>
     
-    <div *ngIf="errorMensaje" class="error-box">
-      {{ errorMensaje }}
-    </div>
+      <div *ngIf="errorMensaje" class="error-box">
+        {{ errorMensaje }}
+      </div>
 
-    <ng-container *ngIf="!loading; else cargando">
-      <form-encuestador 
-      [encuestador]="encuestador" 
-      (onSubmit)="guardarEncuestador($event)">
-      </form-encuestador>
-    </ng-container>
-    <ng-template #cargando>
-      <p>Cargando encuestador...</p>
-    </ng-template>
+      <ng-container *ngIf="!loading; else cargando">
+          <form-encuestador 
+          [encuestador]="encuestador" 
+          (onSubmit)="guardarEncuestador($event)">
+          </form-encuestador>
+      </ng-container>
+      <ng-template #cargando>
+        <p>Cargando encuestador...</p>
+      </ng-template>
+    </div>
   `
   })
 

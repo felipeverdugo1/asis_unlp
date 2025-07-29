@@ -1,5 +1,6 @@
 package controller;
 
+import controller.dto.CargaEncuestasDTO;
 import controller.dto.ReporteDTO;
 import controller.dto.ZonaDTO;
 import dao.GenericDAOImpl;
@@ -23,6 +24,7 @@ import service.GenericService;
 import service.GenericServiceImpl;
 import service.ReporteService;
 
+import java.io.InputStream;
 import java.util.Optional;
 
 
@@ -72,14 +74,14 @@ public class ReporteController {
                                     name = "Reporte",
                                     summary = "reporte de prueba",
                                     value = """
-                            {
-                               "fechaCreacion": "2025-04-24",
-                               "nombreUnico": "/path/al/reporte.pdf",
-                               "descripcion": "Reporte de niños con diabetes",
-                               "creadoPor_id": "1",
-                               "campaña_id": "2"
-                            }
-                            """
+                                            {
+                                               "fechaCreacion": "2025-04-24",
+                                               "nombreUnico": "/path/al/reporte.pdf",
+                                               "descripcion": "Reporte de niños con diabetes",
+                                               "creadoPor_id": "1",
+                                               "campaña_id": "2"
+                                            }
+                                            """
                             )}
                     )
             ), responses = {
@@ -110,15 +112,15 @@ public class ReporteController {
                                     name = "Reporte",
                                     summary = "reporte de prueba",
                                     value = """
-                            {
-                               "fechaCreacion": "2025-04-24",
-                               "nombreUnico": "/path/al/reporte.pdf",
-                               "descripcion": "Reporte de niños con diabetes",
-                               "creadoPor_id": "1",
-                               "campaña_id": "2",
-                               "compartidoCon_id": "3" (opcional cuando se comparte)
-                            }
-                            """
+                                            {
+                                               "fechaCreacion": "2025-04-24",
+                                               "nombreUnico": "/path/al/reporte.pdf",
+                                               "descripcion": "Reporte de niños con diabetes",
+                                               "creadoPor_id": "1",
+                                               "campaña_id": "2",
+                                               "compartidoCon_id": "3" (opcional cuando se comparte)
+                                            }
+                                            """
                             )}
                     )
             ))
@@ -141,8 +143,8 @@ public class ReporteController {
     @PUT
     @Path("/agregarUsuarioCompartido/{id}/{usuario_id}")
     @Operation(description = "Este endpoint permite compartir un reporte a un usuario",
-            parameters = { @Parameter(name = "reporte id", required = true),
-                    @Parameter(name = "usuario id", required = true) })
+            parameters = {@Parameter(name = "reporte id", required = true),
+                    @Parameter(name = "usuario id", required = true)})
     @Produces(MediaType.APPLICATION_JSON)
     public Response agregar(@PathParam("id") Long id, @PathParam("usuario_id") Long compartidoCon_id) {
         Reporte reporte = service.agregarUsuarioCompartido(id, compartidoCon_id);
@@ -152,13 +154,15 @@ public class ReporteController {
     @PUT
     @Path("/quitarUsuarioCompartido/{id}/{usuario_id}")
     @Operation(description = "Este endpoint desvincula un usuario de un reporte",
-            parameters = { @Parameter(name = "reporte id", required = true),
-                    @Parameter(name = "usuario id", required = true) })
+            parameters = {@Parameter(name = "reporte id", required = true),
+                    @Parameter(name = "usuario id", required = true)})
     @Produces(MediaType.APPLICATION_JSON)
     public Response quitarUsuarioCompartido(@PathParam("id") Long id, @PathParam("usuario_id") Long compartidoCon_id) {
         Reporte reporte = service.quitarUsuarioCompartido(id, compartidoCon_id);
         return Response.status(Response.Status.CREATED).entity(reporte).build();
     }
+
+
 
 
 }

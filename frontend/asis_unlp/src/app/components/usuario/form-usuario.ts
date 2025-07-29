@@ -10,7 +10,7 @@ import { RolesService } from "../../services/roles.service"
   selector: 'form-usuario',
   imports: [CommonModule, FormsModule],
   templateUrl: './form-usuario.html',
-  styleUrls: ['../component-style.css']
+  styleUrls: ['../../../styles.css']
 })
 export class FormUsuario implements OnInit {
   @Input() usuario: Usuario = { 

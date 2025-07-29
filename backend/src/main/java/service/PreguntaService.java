@@ -30,57 +30,57 @@ public class PreguntaService extends GenericServiceImpl<Pregunta, Long> {
         super(null);
     }
 
-    public Pregunta crear(PreguntaDTO dto) {
-        if (dto.getEncuesta_id() == null || dto.getPregunta() == null || dto.getTipo() == null || dto.getRespuesta() == null) {
-            throw new FaltanArgumentosException("el tipo es obligatorio , la pregunta es obligatoria , la respuesta es obligatoria y la encuesta es obligatoria");
-        }
-
-        Pregunta nuevaPregunta = new Pregunta();
-
-        encuestaDAO.buscarPorId(dto.getEncuesta_id()).ifPresentOrElse(
-                nuevaPregunta::setEncuesta,
-                () -> { throw new EntidadNoEncontradaException("La encuesta no existe"); }
-        );
-
-        nuevaPregunta.setPregunta(dto.getPregunta());
-        nuevaPregunta.setTipo(dto.getTipo());
-        nuevaPregunta.setRespuesta(dto.getRespuesta());
-
-        preguntaDAO.crear(nuevaPregunta);
-        return nuevaPregunta;
-    }
-
-    public Pregunta actualizar(Long id, PreguntaDTO dto) {
-        Optional<Pregunta> preguntaOpt = preguntaDAO.buscarPorId(id);
-        if (preguntaOpt.isEmpty()) {
-            throw new EntidadNoEncontradaException("La pregunta no existe");
-        }
-
-        Pregunta pregunta = preguntaOpt.get();
-
-        if (dto.getPregunta() != null) {
-            pregunta.setPregunta(dto.getPregunta());
-        }
-
-        if (dto.getTipo() != null) {
-            pregunta.setTipo(dto.getTipo());
-        }
-
-        if (dto.getRespuesta() != null) {
-            pregunta.setRespuesta(dto.getRespuesta());
-        }
-
-
-        if (dto.getEncuesta_id() != null) {
-            encuestaDAO.buscarPorId(dto.getEncuesta_id()).ifPresentOrElse(
-                    pregunta::setEncuesta,
-                    () -> { throw new EntidadNoEncontradaException("La encuesta no existe"); }
-            );
-        }
-
-        preguntaDAO.actualizar(pregunta);
-        return pregunta;
-    }
+//    public Pregunta crear(PreguntaDTO dto) {
+//        if (dto.getEncuesta_id() == null || dto.getPregunta() == null || dto.getTipo() == null || dto.getRespuesta() == null) {
+//            throw new FaltanArgumentosException("el tipo es obligatorio , la pregunta es obligatoria , la respuesta es obligatoria y la encuesta es obligatoria");
+//        }
+//
+//        Pregunta nuevaPregunta = new Pregunta();
+//
+//        encuestaDAO.buscarPorId(dto.getEncuesta_id()).ifPresentOrElse(
+//                nuevaPregunta::setEncuesta,
+//                () -> { throw new EntidadNoEncontradaException("La encuesta no existe"); }
+//        );
+//
+//        nuevaPregunta.setPregunta(dto.getPregunta());
+//        nuevaPregunta.setTipo(dto.getTipo());
+//        nuevaPregunta.setRespuesta(dto.getRespuesta());
+//
+//        preguntaDAO.crear(nuevaPregunta);
+//        return nuevaPregunta;
+//    }
+//
+//    public Pregunta actualizar(Long id, PreguntaDTO dto) {
+//        Optional<Pregunta> preguntaOpt = preguntaDAO.buscarPorId(id);
+//        if (preguntaOpt.isEmpty()) {
+//            throw new EntidadNoEncontradaException("La pregunta no existe");
+//        }
+//
+//        Pregunta pregunta = preguntaOpt.get();
+//
+//        if (dto.getPregunta() != null) {
+//            pregunta.setPregunta(dto.getPregunta());
+//        }
+//
+//        if (dto.getTipo() != null) {
+//            pregunta.setTipo(dto.getTipo());
+//        }
+//
+//        if (dto.getRespuesta() != null) {
+//            pregunta.setRespuesta(dto.getRespuesta());
+//        }
+//
+//
+//        if (dto.getEncuesta_id() != null) {
+//            encuestaDAO.buscarPorId(dto.getEncuesta_id()).ifPresentOrElse(
+//                    pregunta::setEncuesta,
+//                    () -> { throw new EntidadNoEncontradaException("La encuesta no existe"); }
+//            );
+//        }
+//
+//        preguntaDAO.actualizar(pregunta);
+//        return pregunta;
+//    }
 
     public void eliminar(Long id) {
         preguntaDAO.buscarPorId(id).ifPresentOrElse(

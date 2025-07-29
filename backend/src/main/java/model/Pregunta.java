@@ -18,10 +18,13 @@ public class Pregunta {
     private Long id;
 
     @Column(nullable = false)
-    private String tipo;
+    private String pregunta;
 
     @Column(nullable = false)
-    private String pregunta;
+    private String uuid_padre;
+
+    @Column()
+    private Boolean esPersonal;
 
     @Column(nullable = false)
     private String respuesta;

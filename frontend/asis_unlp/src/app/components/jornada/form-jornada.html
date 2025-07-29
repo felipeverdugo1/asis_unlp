@@ -1,8 +1,12 @@
 
 <form #jornadaForm="ngForm" (ngSubmit)="jornadaForm.valid && onSubmit.emit(jornada)">
-  <label for="fechaInicio">Fecha Inicio:</label>
-  <input id="fechaInicio" type="date" name="fechaInicio" [(ngModel)]="jornada.fechaInicio" required>
-  <label for="fechaFin">Fecha Fin:</label>
-  <input id="fechaFin" type="date" name="fechaFin" [(ngModel)]="jornada.fechaFin" required>
-  <button type="submit" [disabled]="!jornadaForm.valid">Guardar</button>
+  <div class="form-group">
+    <label class="form-label" for="fechaInicio">Fecha Inicio:</label>
+    <input class="form-input" id="fechaInicio" type="date" name="fechaInicio" [(ngModel)]="jornada.fechaInicio" required>
+  </div>
+  <div class="form-group">
+    <label class="form-label" for="fechaFin">Fecha Fin:</label>
+    <input class="form-input" id="fechaFin" type="date" name="fechaFin" [(ngModel)]="jornada.fechaFin" required>
+  </div>
+  <button class="btn btn-create" type="submit" [disabled]="!jornadaForm.valid">Guardar</button>
 </form>

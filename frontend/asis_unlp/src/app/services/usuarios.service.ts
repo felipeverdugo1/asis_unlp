@@ -17,6 +17,10 @@ export class UsuariosService {
     return this.http.get<Usuario[]>(this.apiUrl);
   }
 
+  getUsuariosWithRole(role: string): Observable<Usuario[]> {
+    return this.http.get<Usuario[]>(`${this.apiUrl}/rol/${role}`);
+  }
+
   deleteUsuario(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }

@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
   selector: 'form-rol',
   imports: [CommonModule, FormsModule],
   templateUrl: './form-rol.html',
-  styleUrls: ['../component-style.css']
+  styleUrls: ['../../../styles.css']
 })
 export class FormRol {
   @Input() rol: Rol = { nombre: '' };

@@ -1,39 +1,47 @@
 
-<form #usuarioForm="ngForm" style="display: flex; flex-direction: column; gap: 10px; max-width: 500px;" (ngSubmit)="usuarioForm.valid && onSubmit.emit(usuario)">
-    <label for="nombreUsuario">
-        Nombre del usuario:
-        <input id="nombreUsuario" name="nombreUsuario" [(ngModel)]="usuario.nombreUsuario" required>
-    </label>
-
-    <label for="email">
-        Email:
-        <input id="email" name="email" [(ngModel)]="usuario.email" required>
-    </label>
-
-    <label for="password">
-        Password:
-        <input id="password" name="password" [(ngModel)]="usuario.password" required>
-    </label>
-
-    <label>
-        Habilitado
-        <input type="checkbox" name="habilitado" [(ngModel)]="usuario.habilitado">    
-    </label>
-    
-    <label for="especialidad">
-        Especialidad
-        <input id="especialidad" name="especialidad" [(ngModel)]="usuario.especialidad">
-    </label>
-    
-    <div *ngIf="!esEdicion">
-        <label for="roles">Roles:</label>
-            <select id="roles" name="roles_id" [(ngModel)]="usuario.roles_id" multiple>
-            <option *ngFor="let rol of roles" [value]="rol.id">
-                {{ rol.nombre }}
-            </option>
-        </select>
+<form #usuarioForm="ngForm" (ngSubmit)="usuarioForm.valid && onSubmit.emit(usuario)">
+    <div class="form-group">
+        <label class="form-label" for="nombreUsuario">Nombre del usuario:</label>
+        <input class="form-input" id="nombreUsuario" name="nombreUsuario" [(ngModel)]="usuario.nombreUsuario" required>
     </div>
 
-    <button type="submit" [disabled]="!usuarioForm.valid">Guardar</button> 
-    <button type="button" (click)="goBack()">Atras</button>
+    <div class="form-group">
+        <label class="form-label" for="email">Email:</label>
+        <input class="form-input" id="email" name="email" [(ngModel)]="usuario.email" required>
+    </div>
+
+    <div class="form-group">
+        <label class="form-label" for="password">Password:</label>
+        <input class="form-input" id="password" name="password" [(ngModel)]="usuario.password" required>
+    </div>
+
+    <div class="form-group">
+        <div class="checkbox-group">
+        <label>Habilitado: </label>
+        <input class="form-checkbox" type="checkbox" name="habilitado" [(ngModel)]="usuario.habilitado">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="form-label" for="especialidad">Especialidad: </label>
+        <input class="form-input" id="especialidad" name="especialidad" [(ngModel)]="usuario.especialidad" required>
+    </div>
+
+    <div *ngIf="!esEdicion">
+    <div class="form-group">
+        <div class="multiselect-container">
+            <label class="form-label" for="roles">Roles:</label>
+            <select class="form-multiselect" id="roles" name="roles_id" [(ngModel)]="usuario.roles_id" multiple>
+                <option *ngFor="let rol of roles" [value]="rol.id">
+                    {{ rol.nombre }}
+                </option>
+            </select>
+            <div class="multiselect-hint">Para seleccionar varios roles mantenga presionada la tecla Ctrl (Windows) o Command (Mac).</div>
+        </div>
+    </div>
+    </div>
+    
+
+    <button class="btn btn-create" type="submit" [disabled]="!usuarioForm.valid">Guardar</button> 
+    <button class="btn btn-nav" type="button" (click)="goBack()">Atras</button>
 </form>

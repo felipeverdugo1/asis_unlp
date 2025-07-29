@@ -1,23 +1,27 @@
-<table class="table">
-    <thead>
+<div class="table-container">
+  <table class="table">
+    <thead class="table-thead">
       <tr>
-        <th>ID</th>
-        <th>Fecha Inicio</th>
-        <th>Fecha Fin</th>
+        <th class="table-th">ID</th>
+        <th class="table-th">Fecha Inicio</th>
+        <th class="table-th">Fecha Fin</th>
+        <th class="table-th"></th>
       </tr>
     </thead>
-    <tbody>
+    <tbody class="table-tbody">
       <tr *ngFor="let jornada of jornadas">
-        <td>{{ jornada.id }}</td>
-        <td>{{ jornada.fechaInicio }}</td>
-        <td>{{ jornada.fechaFin }}</td>
-        <td>
-          <button (click)="onEdit.emit(jornada.id)"> Editar</button>
-          <button (click)="onDelete.emit(jornada.id)"> Borrar</button>
+        <td class="table-td">{{ jornada.id }}</td>
+        <td class="table-td">{{ jornada.fechaInicio }}</td>
+        <td class="table-td">{{ jornada.fechaFin }}</td>
+        <td class="table-td">
+          <button class="btn btn-nav" (click)="onAdministrarZonas.emit(jornada.id)"> Administrar Zonas</button>
+          <button class="btn btn-func" (click)="onEdit.emit(jornada.id)"> Editar</button>
+          <button class="btn btn-delete" (click)="onDelete.emit(jornada.id)"> Borrar</button>
         </td>
       </tr>
       <tr *ngIf="jornadas.length === 0">
-        <td colspan="6">No hay jornadas cargadas.</td>
+        <td class="table-td" colspan="6">No hay jornadas cargadas.</td>
       </tr>
     </tbody>
   </table>
+</div>

@@ -1,10 +1,10 @@
 
-<form #rolForm="ngForm" style="display: flex; flex-direction: column; gap: 10px; max-width: 500px;" (ngSubmit)="rolForm.valid && onSubmit.emit(rol)">
-    <label for="nombre">
-        Nombre del rol:
-        <input id="nombre" name="nombre" [(ngModel)]="rol.nombre" required>
-    </label>   
+<form #rolForm="ngForm" (ngSubmit)="rolForm.valid && onSubmit.emit(rol)">
+    <div class="form-group">
+        <label class="form-label" for="nombre">Nombre del rol:</label>   
+        <input class="form-input" id="nombre" name="nombre" [(ngModel)]="rol.nombre" required>
+    </div>
 
-    <button type="submit" [disabled]="!rolForm.valid">Guardar</button> 
-    <button type="button" (click)="goBack()">Atras</button>
+    <button class="btn btn-create" type="submit" [disabled]="!rolForm.valid">Guardar</button> 
+    <button class="btn btn-nav" type="button" (click)="goBack()">Atras</button>
 </form>

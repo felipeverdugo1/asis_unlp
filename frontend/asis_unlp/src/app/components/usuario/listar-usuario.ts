@@ -8,7 +8,7 @@ import { RouterModule } from '@angular/router';
   selector: 'listar-usuarios',
   imports : [CommonModule,RouterModule],
   templateUrl: './listar-usuario.html',
-  styleUrls: ['../component-style.css']
+  styleUrls: ['../../../styles.css']
 })
 export class ListarUsuarios {
   @Input() usuarios: Usuario[] = [];

@@ -207,4 +207,13 @@ public class UsuarioService extends GenericServiceImpl<Usuario, Long> {
         return usu.get();
     }
 
+    public List<Usuario> getUsuariosByRolName(String nombre) {
+        Optional<Rol> rol_t = rolDAO.buscarPorCampo("nombre", nombre);
+        if (rol_t.isPresent()) {
+            return usuarioDAO.getAllUsuariosByRol(rol_t.get());
+        } else {
+            throw new EntidadNoEncontradaException("No existe el rol " + nombre + ".");
+        }
+    }
+
 }

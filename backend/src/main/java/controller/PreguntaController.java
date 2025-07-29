@@ -54,63 +54,63 @@ public class PreguntaController {
     }
 
 
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Este endpoint nos permite crear una pregunta.",
-            requestBody = @RequestBody(description = "una nueva pregunta en formato JSON",
-                    required = true,
-                    content = @Content(
-                            mediaType = "application/json",
-                            examples = {@ExampleObject(
-                                    name = "Pregunta",
-                                    summary = "Pregunta",
-                                    value = """
-                            {
-                               "tipo": "salud",
-                               "pregunta": "¿Toma medicacion?",
-                               "respuesta": "Si",
-                               "encuesta_id": "1"
-                            }
-                            """
-                            )}
-                    )
-            ))
-    public Response post(PreguntaDTO dto) {
-        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con barrioService
-        Pregunta Pregunta = service.crear(dto);
-        return Response.status(Response.Status.CREATED).entity(Pregunta).build();
-    }
-
-
-    @PUT
-    @Path("{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Operation(description = "Este endpoint nos permite actualizar una pregunta.",
-            parameters = @Parameter(name = "pregunta id"),
-            requestBody = @RequestBody(description = "una pregunta en formato JSON",
-                    required = true,
-                    content = @Content(
-                            mediaType = "application/json",
-                            examples = {@ExampleObject(
-                                    name = "Pregunta",
-                                    summary = "Pregunta",
-                                    value = """
-                            {
-                               "tipo": "salud",
-                               "pregunta": "¿Toma medicacion?",
-                               "respuesta": "Si",
-                               "encuesta_id": "1"
-                            }
-                            """
-                            )}
-                    )
-            ))
-    public Response put(@PathParam("id") Long id, PreguntaDTO dto) {
-        Pregunta pregunta = service.actualizar(id, dto);
-        return Response.ok().build();
-    }
+//    @POST
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Operation(description = "Este endpoint nos permite crear una pregunta.",
+//            requestBody = @RequestBody(description = "una nueva pregunta en formato JSON",
+//                    required = true,
+//                    content = @Content(
+//                            mediaType = "application/json",
+//                            examples = {@ExampleObject(
+//                                    name = "Pregunta",
+//                                    summary = "Pregunta",
+//                                    value = """
+//                            {
+//                               "tipo": "salud",
+//                               "pregunta": "¿Toma medicacion?",
+//                               "respuesta": "Si",
+//                               "encuesta_id": "1"
+//                            }
+//                            """
+//                            )}
+//                    )
+//            ))
+//    public Response post(PreguntaDTO dto) {
+//        //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con barrioService
+//        Pregunta Pregunta = service.crear(dto);
+//        return Response.status(Response.Status.CREATED).entity(Pregunta).build();
+//    }
+//
+//
+//    @PUT
+//    @Path("{id}")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Operation(description = "Este endpoint nos permite actualizar una pregunta.",
+//            parameters = @Parameter(name = "pregunta id"),
+//            requestBody = @RequestBody(description = "una pregunta en formato JSON",
+//                    required = true,
+//                    content = @Content(
+//                            mediaType = "application/json",
+//                            examples = {@ExampleObject(
+//                                    name = "Pregunta",
+//                                    summary = "Pregunta",
+//                                    value = """
+//                            {
+//                               "tipo": "salud",
+//                               "pregunta": "¿Toma medicacion?",
+//                               "respuesta": "Si",
+//                               "encuesta_id": "1"
+//                            }
+//                            """
+//                            )}
+//                    )
+//            ))
+//    public Response put(@PathParam("id") Long id, PreguntaDTO dto) {
+//        Pregunta pregunta = service.actualizar(id, dto);
+//        return Response.ok().build();
+//    }
 
 
     @DELETE

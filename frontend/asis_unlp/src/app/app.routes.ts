@@ -3,9 +3,11 @@ import { ListaUsuariosPage, FormUsuarioPage, UsuarioRolesPage } from './pages/us
 import { ListaBarriosPage, FormBarrioPage } from './pages/barrios/barrio.pages';
 import { ListarRolesPage, FormRolPage } from './pages/roles/rol.pages';
 import { ListarCampaniaPage, FormCampaniaPage } from './pages/campania/campania.pages';
-import { ListarJornadaPage, FormJornadaPage } from './pages/jornada/jornada.pages';
+import { ListarJornadaPage, FormJornadaPage, AdministrarZonasPage } from './pages/jornada/jornada.pages';
 import { ListarOrgaSocialPage , FormOrgaSocialPage } from './pages/orgaSocial/orgaSocial.pages';
 import { ListarEncuestadorPage , FormEncuestadorPage } from './pages/encuestador/encuestador.pages';
+import { FiltroPage } from './pages/filtro/filtro.pages';
+import { ReportePage } from './pages/reporte/reporte.pages';
 // import { ListaBarriosPage, FormZonaPage } from './pages/filtro/filtro.pages';
 import { FormZonaPage, ListarZonaPage } from './pages/zonas/zona.pages';
 import { Home } from './components/home/home';
@@ -67,7 +69,8 @@ export const routes: Routes = [
         children: [
           { path: '', component: ListarJornadaPage, canActivate: [AuthGuard, AdminGuard] },
           { path: 'nuevo', component: FormJornadaPage, canActivate: [AuthGuard, AdminGuard] },
-          { path: 'editar/:idJornada', component: FormJornadaPage, canActivate: [AuthGuard, AdminGuard] }
+          { path: 'editar/:idJornada', component: FormJornadaPage, canActivate: [AuthGuard, AdminGuard] },
+          { path: 'administrarZonas/:idJornada', component: AdministrarZonasPage, canActivate: [AuthGuard, AdminGuard] }
         ]
       }
     ]
@@ -88,6 +91,14 @@ export const routes: Routes = [
       { path: '', component: ListarOrgaSocialPage, canActivate: [AuthGuard, AdminGuard] },
       { path: 'nueva', component: FormOrgaSocialPage, canActivate: [AuthGuard, AdminGuard] },
       { path: 'editar/:id', component: FormOrgaSocialPage, canActivate: [AuthGuard, AdminGuard] }
+    ]
+  },
+  {
+    path: 'filtro',
+    data: { title: 'Generar Reportes' },
+    children: [// TODO agregar guard de personal de salud
+      { path: '', component: FiltroPage, data: { title: 'Filtrar Reporte' }, canActivate: [AuthGuard] },
+      { path: 'resultado', component: ReportePage, data: { title: 'Reporte Generado' }, canActivate: [AuthGuard] }
     ]
   }
 ];

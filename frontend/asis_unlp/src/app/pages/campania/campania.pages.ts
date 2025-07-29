@@ -16,30 +16,26 @@ import { log } from 'console';
   standalone: true,
   imports: [CommonModule, RouterModule, ListarCampanias],
   template: `
-    <h2>Campaña</h2>
 
-    <div *ngIf="errorMensaje" class="error-box">
-      {{ errorMensaje }}
+    <div class="page-container">
+      <div class="page-header">
+        <h1 class="page-title">Campañas</h1>
+        <button (click)="nuevaCampania()" class="btn btn-create">Agregar campaña</button>
+      </div>
+
+      <div *ngIf="errorMensaje" class="error-box">
+        {{ errorMensaje }}
+      </div>
+
+      <div class="content-container">
+        <listar-campanias 
+          [campanias]="(campanias$ | async) ?? []"
+          (onEdit)="editarCampania($event)"
+          (onDelete)="borrarCampania($event)">
+        </listar-campanias>
+      </div>
     </div>
-
-    <listar-campanias 
-      [campanias]="(campanias$ | async) ?? []"
-      (onEdit)="editarCampania($event)"
-      (onDelete)="borrarCampania($event)">
-    </listar-campanias>
-    <button (click)="nuevaCampania()" class="btn-add">Agregar campaña</button>
-  `,
-  styles: [`
-    .btn-add {
-      margin-bottom: 20px;
-      padding: 8px 16px;
-      background: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-  `]
+  `
 })
 export class ListarCampaniaPage implements OnInit {
   campanias$!: Observable<Campania[]>;
@@ -82,22 +78,26 @@ export class ListarCampaniaPage implements OnInit {
     standalone: true,
     imports: [CommonModule, FormsModule, FormCampania],
     template: `
-    <h2>{{ esEdicion ? 'Editar campaña' : 'Nueva campaña' }}</h2>
+    <div class="form-container">
+      <div class="title">
+        <h1>{{ esEdicion ? 'Editar campaña' : 'Nueva campaña' }}</h1>
+      </div>
 
-    <div *ngIf="errorMensaje" class="error-box">
-      {{ errorMensaje }}
+      <div *ngIf="errorMensaje" class="error-box">
+        {{ errorMensaje }}
+      </div>
+
+      <ng-container *ngIf="!loading; else cargando">
+        <form-campania
+          [barrios]="barrios"
+          [campania]="campania"
+        (onSubmit)="guardarCampania($event)">
+        </form-campania>
+      </ng-container>
+      <ng-template #cargando>
+        <p>Cargando campaña...</p>
+      </ng-template>
     </div>
-
-    <ng-container *ngIf="!loading; else cargando">
-      <form-campania
-        [barrios]="barrios"
-        [campania]="campania"
-      (onSubmit)="guardarCampania($event)">
-      </form-campania>
-    </ng-container>
-    <ng-template #cargando>
-      <p>Cargando campaña...</p>
-    </ng-template>
   `
   })
 

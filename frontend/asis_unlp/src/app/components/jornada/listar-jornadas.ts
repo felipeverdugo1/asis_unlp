@@ -12,6 +12,7 @@ import { RouterModule } from '@angular/router';
 })
 export class ListarJornadas {
   @Input() jornadas: Jornada[] = [];
+  @Output() onAdministrarZonas = new EventEmitter<number>();
   @Output() onEdit = new EventEmitter<number>();
   @Output() onDelete = new EventEmitter<number>();
 }
