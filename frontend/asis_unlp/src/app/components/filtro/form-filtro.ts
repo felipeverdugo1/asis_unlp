@@ -44,7 +44,6 @@ export class FiltroReporteComponent {
   }
 
   onSubmit() {
-    console.log("HOLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
     const raw = this.form.value;
     const filtro: any = {};
 

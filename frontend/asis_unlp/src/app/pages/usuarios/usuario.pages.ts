@@ -169,29 +169,36 @@ export class FormUsuarioPage {
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
-    <h2>Editar roles de {{ nombreUsuario }}</h2>
+   <div class="page-container">
+    <div class="page-header">
+      <h1 class="page-title">Editar roles de {{ nombreUsuario }}</h1>
+    </div>
 
     <div *ngIf="errorMensaje" class="error-box">
       {{ errorMensaje }}
     </div>
 
     <ng-container *ngIf="!loading; else cargandoBlock">
-      <div class="contenedor-roles">
-        <div class="rol-box">
-          <h3>Roles asignados</h3>
-          <ul>
-            <li *ngFor="let rol of rolesAsignados">
-                <button (click)="quitarRol(rol.id!)" class="btn-accion quitar">Quitar</button>  
+      <div class="form-container">
+        <div class="form-group">
+          <div class="form-label">
+            <h3>Roles asignados</h3>
+          </div>
+          <ul class="list-ul">
+            <li class="list-item" *ngFor="let rol of rolesAsignados">
+                <button (click)="quitarRol(rol.id!)" class="btn btn-delete">Quitar</button>  
                 {{ rol.nombre }}            
             </li>
           </ul>
         </div>
         
-        <div class="rol-box">
-          <h3>Roles no asignados</h3>
-          <ul>
-            <li *ngFor="let rol of rolesNoAsignados">
-              <button (click)="asignarRol(rol.id!)" class="btn-accion asignar">Asignar</button>
+        <div class="form-group">
+          <div class="form-label">
+            <h3>Roles no asignados</h3>
+          </div>
+          <ul class="list-ul">
+            <li class="list-item" *ngFor="let rol of rolesNoAsignados">
+              <button (click)="asignarRol(rol.id!)" class="btn btn-create">Asignar</button>
               {{ rol.nombre }}
             </li>
           </ul>
@@ -203,20 +210,10 @@ export class FormUsuarioPage {
       <p>Cargando datos...</p>
       {{loading}}
     </ng-template>
+  </div>
+    
   `,
-  styles: [`
-    .contenedor-roles {
-      display: flex;
-      gap: 2rem;
-      margin-top: 1rem;
-    }
-    .rol-box {
-      flex: 1;
-      border: 1px solid #ccc;
-      padding: 1rem;
-      border-radius: 8px;
-    }
-  `]
+  styleUrls: ['../../../styles.css']
 })
 export class UsuarioRolesPage implements OnInit {
   nombreUsuario = '';

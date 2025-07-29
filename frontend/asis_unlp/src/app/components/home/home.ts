@@ -8,20 +8,8 @@ import { AuthService } from '../../services/auth.service';
   selector: 'app-home',
   imports: [CommonModule,RouterModule],
   templateUrl: './home.html',
-  styleUrl: './home.css'
+  styleUrls: ['../../../styles.css']
 })
 export class Home {
   constructor(public auth: AuthService) {}
-
-  rolAdmin(): boolean {
-    return this.auth.tieneRol('admin');
-  }
-
-  rolSalud(): boolean {
-    return this.auth.tieneRol('salud');
-  }
-
-  rolReferente(): boolean {
-    return this.auth.tieneRol('referente');
-  }
 }

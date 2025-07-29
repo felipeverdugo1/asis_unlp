@@ -35,7 +35,6 @@ export class AuthService {
     
     try {
       const decoded: any = jwtDecode(token);
-      console.log(decoded);
       return decoded.roles || []; // Extrae los roles del token
     } catch {
       return [];
@@ -48,5 +47,17 @@ export class AuthService {
 
   loggedIn(): boolean {
     return !!this.obtenerToken();
+  }
+
+  rolAdmin(): boolean {
+    return this.tieneRol('admin');
+  }
+
+  rolSalud(): boolean {
+    return this.tieneRol('personal_salud') || this.rolAdmin();
+  }
+
+  rolReferente(): boolean { 
+    return this.tieneRol('referente') || this.rolAdmin();
   }
 }

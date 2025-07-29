@@ -1,10 +1,14 @@
 
-<!-- If para rol de admin -->
-<div *ngIf="rolAdmin()">
-  <div class="home-container">
-    <h1>Administración del Sistema</h1>
+
+
+<!-- If para ver si esta logeado -->
+<ng-container *ngIf="auth.loggedIn()">
+<div class="home-container">
+  <h1>Administración del Sistema</h1>
   
-      <div class="menu-grid">
+  <div class="menu-grid">
+    <ng-container *ngIf="auth.rolAdmin()">
+
         <!-- Sección Usuarios -->
         <div class="menu-section hover-effect">
           <h2>Usuarios</h2>
@@ -13,56 +17,69 @@
           </div>
         </div>
     
-      <!-- Sección Campañas -->
-      <div class="menu-section hover-effect">
-        <h2>Campañas / Jornadas</h2>
-        <div class="menu-buttons">
-          <button class="btn btn-nav" routerLink="/campania">Ver</button>
+        <!-- Sección Campañas -->
+        <div class="menu-section hover-effect">
+          <h2>Campañas / Jornadas</h2>
+          <div class="menu-buttons">
+            <button class="btn btn-nav" routerLink="/campania">Ver</button>
+          </div>
         </div>
-      </div>
 
-      <div class="menu-section hover-effect">
-        <h2>Org. Sociales</h2>
-        <div class="menu-buttons">
-          <button class="btn btn-nav" routerLink="/organizacionSocial">Ver</button>
+        <!-- Sección Organizaciones Sociales -->
+        <div class="menu-section hover-effect">
+          <h2>Org. Sociales</h2>
+          <div class="menu-buttons">
+            <button class="btn btn-nav" routerLink="/organizacionSocial">Ver</button>
+          </div>
         </div>
-      </div>
 
+        <!-- Sección Encuestadores -->
+        <div class="menu-section hover-effect">
+          <h2>Encuestadores</h2>
+          <div class="menu-buttons">
+            <button class="btn btn-nav" routerLink="/encuestador">Ver</button>
+          </div>
+        </div>      
 
-      <div class="menu-section hover-effect">
-        <h2>Encuestadores</h2>
-        <div class="menu-buttons">
-          <button class="btn btn-nav" routerLink="/encuestador">Ver</button>
+        <!-- Sección Roles -->
+        <div class="menu-section hover-effect">
+          <h2>Roles</h2>
+          <div class="menu-buttons">
+            <button class="btn btn-nav" routerLink="/rol">Ver</button>
+          </div>
         </div>
-      </div>      
-
-      <!-- Sección Roles -->
-      <div class="menu-section hover-effect">
-        <h2>Roles</h2>
-        <div class="menu-buttons">
-          <button class="btn btn-nav" routerLink="/rol">Ver</button>
+      
+        <!-- Sección Barrios -->
+        <div class="menu-section hover-effect">
+          <h2>Barrios / Zonas</h2>
+          <div class="menu-buttons">
+            <button class="btn btn-nav" routerLink="/barrio">Ver</button>
+          </div>
         </div>
-      </div>
-  
-      <!-- Sección Barrios -->
-      <div class="menu-section hover-effect">
-        <h2>Barrios / Zonas</h2>
-        <div class="menu-buttons">
-          <button class="btn btn-nav" routerLink="/barrio">Ver</button>
-        </div>
-      </div>
 
+    </ng-container>
+    <!-- Fin del if para rol de admin -->
+    
+    
+    <!-- Seccion personal de Salud y Admin-->
+    <ng-container *ngIf="auth.rolSalud()">
+
+
+      <!-- Sección Generar Reporte -->
       <div class="menu-section hover-effect">
         <h2>Generación de Reportes</h2>
         <div class="menu-buttons">
           <button class="btn btn-nav" routerLink="/filtro">Generar Reporte</button>
         </div>
       </div>
-
-    </div>
+      
+    </ng-container>
+    <!-- Fin del if para rol de salud -->
+  
   </div>
-  <hr>
 </div>
+
+</ng-container>
 
   <div class="home-container">
     <h1>Home Page</h1>

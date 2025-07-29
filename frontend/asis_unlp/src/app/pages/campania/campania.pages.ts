@@ -142,7 +142,6 @@ export class ListarCampaniaPage implements OnInit {
 
 
     guardarCampania(campania: Campania) {
-      console.log(campania);
       const req = this.esEdicion
         ? this.campaniaService.updateCampania(campania)
         : this.campaniaService.createCampania(campania);

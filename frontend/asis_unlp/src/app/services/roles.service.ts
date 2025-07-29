@@ -26,7 +26,6 @@ export class RolesService {
   }
 
   updateRol(rol: Rol): Observable<Rol> {
-      console.log(rol)
       return this.http.put<Rol>(`${this.apiUrl}/${rol.id}`, rol);
   }
   

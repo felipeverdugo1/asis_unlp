@@ -1,21 +1,21 @@
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { LoginDTO } from '../../models/loginDTO';
 import { Router } from '@angular/router';
-import { error } from 'console';
 
 @Component({
   selector: 'app-login',
-  imports:[CommonModule, FormsModule, HttpClientModule ],
+  imports:[CommonModule, FormsModule ],
   templateUrl: './login.html',
+  styleUrls: ['../../../styles.css']
 })
 export class Login {
   email = '';
   clave = '';
   errorMensaje = '';
+  cargando = false;
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -25,8 +25,11 @@ export class Login {
       clave: this.clave
     };
 
+    this.cargando = true;
+
     this.authService.login(credenciales).subscribe({
       next: (res) => {
+        this.cargando = true;
         this.authService.guardarToken(res.token);
         this.router.navigate(['/']); 
       },

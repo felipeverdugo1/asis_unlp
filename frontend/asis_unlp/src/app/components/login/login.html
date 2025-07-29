@@ -1,16 +1,25 @@
-<div class="login-container">
-  <h2>Login</h2>
+<div class="form-container">
+  <div class="title">
+    <h2>Login</h2>
+  </div>
   <form #loginForm="ngForm" (ngSubmit)="onSubmit()">
-    <label>Email:</label>
-    <input [(ngModel)]="email" name="email" required type="email" />
+  <ng-container *ngIf="cargando">Cargando...</ng-container>
+  <div class="login-container">
+    <div class="form-group">
+      <label class="form-label">Email:</label>
+      <input class="form-input" [(ngModel)]="email" name="email" required type="email" />
+    </div>
 
-    <label>Clave:</label>
-    <input [(ngModel)]="clave" name="clave" required type="password" />
+    <div class="form-group">
+      <label class="form-label">Clave:</label>
+      <input class="form-input" [(ngModel)]="clave" name="clave" required type="password" />
+    </div>
 
-    <button type="submit">Iniciar sesión</button>
+    <button class="btn btn-create"type="submit">Iniciar sesión</button>
 
     <div *ngIf="errorMensaje" class="error-box">
       {{ errorMensaje }}
+    </div>
     </div>
   </form>
 </div>
