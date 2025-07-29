@@ -1,5 +1,6 @@
 package service;
 
+import auth.annotation.RequiereRol;
 import controller.dto.BarrioDTO;
 import controller.dto.ZonaDTO;
 import dao.BarrioDAO;

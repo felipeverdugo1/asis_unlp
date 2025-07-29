@@ -4,6 +4,7 @@
       <tr>
         <th class="table-th">Nombre</th>
         <th class="table-th">Email</th>
+        <th class="table-th">Habilitado</th>
         <th class="table-th"></th>
       </tr>
     </thead>
@@ -11,9 +12,14 @@
       <tr *ngFor="let usuario of usuarios">
         <td class="table-td">{{ usuario.nombreUsuario }}</td>
         <td class="table-td">{{ usuario.email }}</td>
+        <td class="table-td">{{ usuario.habilitado ? 'Habilitado' : 'Deshabilitado' }}</td>
         <td class="table-td">
           <button class="btn btn-func" (click)="onEdit.emit(usuario.id)"> Editar</button>
           <button class="btn btn-delete" (click)="onDelete.emit(usuario.id)"> Borrar</button>
+          <button class="btn btn-func" (click)="toggleHabilitado.emit({ id: usuario.id!, habilitado: usuario.habilitado })">
+            {{ usuario.habilitado ? 'Deshabilitar' : 'Habilitar' }}
+          </button>
+          <button class="btn btn-func" (click)="editarRoles.emit(usuario.id)">Editar roles</button>
         </td>
       </tr>
       <tr *ngIf="usuarios.length === 0">
