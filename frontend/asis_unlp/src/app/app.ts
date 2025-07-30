@@ -8,7 +8,7 @@ import { HeaderComponent } from './components/home/header.component';
   selector: 'app-root',
   imports: [RouterOutlet,CommonModule, HeaderComponent],
   templateUrl: './app.html',
-  styles: ['../../../styles.css']
+  styleUrls: ['../styles.css']
 })
 export class App {
   protected title = 'asis_unlp';
