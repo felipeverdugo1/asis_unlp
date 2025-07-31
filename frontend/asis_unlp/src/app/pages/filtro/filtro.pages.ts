@@ -2,6 +2,9 @@ import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ReporteService } from '../../services/reporte.service';
 import { FiltroReporteComponent } from '../../components/filtro/form-filtro';
+import { FiltroService } from '../../services/filtro.service';
+import { AuthService } from '../../services/auth.service';
+import { Filtro } from '../../models/filtro.model';
 
 @Component({
   standalone: true,

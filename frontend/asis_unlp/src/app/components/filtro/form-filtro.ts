@@ -4,6 +4,9 @@ import { BarriosService } from "../../services/barrios.service";
 import { CommonModule } from "@angular/common";
 import { ReporteService } from "../../services/reporte.service";
 import { ConstantPool } from "@angular/compiler";
+import { FiltroService } from "../../services/filtro.service";
+import { AuthService } from "../../services/auth.service";
+import { Filtro } from "../../models/filtro.model";
 
 
 @Component({
@@ -17,6 +20,9 @@ export class FiltroReporteComponent implements OnInit {
   private fb = inject(FormBuilder);
   private barriosService = inject(BarriosService);
   private reporteService = inject(ReporteService);
+  private filtroService = inject(FiltroService);
+  private auth = inject(AuthService);
+  guardando: boolean = false;
 
   @Output() generarReporte = new EventEmitter<any>();
   @Input() filtroActual: any;
@@ -99,6 +105,38 @@ export class FiltroReporteComponent implements OnInit {
   }
 
   guardarFiltro() {
-    console.log("TODO - Guardar filtro en la db.")
+    if (this.guardando) return;
+    this.guardando = true;
+    
+    const filtroData = this.buildFiltroData();
+    
+    this.filtroService.createFiltro(filtroData).subscribe({
+      next: () => {
+        this.guardando = false;
+        alert('Filtro guardado correctamente');
+      },
+      error: (err) => {
+        this.guardando = false;
+        console.error('Error guardando filtro:', err);
+      }
+    });
+  }
+
+  private buildFiltroData(): Filtro {
+    const raw = this.form.value;
+    const criterios = {
+      edad: raw.edadMin && raw.edadMax ? [raw.edadMin, raw.edadMax] : null,
+      genero: this.generoSeleccionado,
+      barrio: raw.barrio,
+      acceso_salud: raw.acceso_salud,
+      acceso_agua: raw.acceso_agua,
+      material_vivienda: this.materialSeleccionado
+    };
+
+    return {
+      nombre: `Filtro_${new Date().toISOString().split('T')[0]}`,
+      criterios: JSON.stringify(criterios),
+      propietario_id: this.auth.getUsuarioId() || 0 
+    };
   }
 }

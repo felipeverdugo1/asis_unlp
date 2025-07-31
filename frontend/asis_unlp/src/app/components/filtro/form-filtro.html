@@ -54,5 +54,7 @@
     </div>
 
       <button class="btn btn-create" type="submit">Generar Reporte</button>
-      <button class="btn btn-func" type="button" (click)="guardarFiltro()">Guardar Filtro</button>
+      <button type="button" class="btn btn-func" (click)="guardarFiltro()" [disabled]="guardando">
+        {{ guardando ? 'Guardando...' : 'Guardar Filtro' }}
+      </button>
     </form>
