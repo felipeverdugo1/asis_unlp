@@ -32,4 +32,8 @@ export class FiltroService {
         return this.http.post<Filtro>(this.apiUrl, filtro);
     }
 
+    getFiltroById(id: number): Observable<Filtro> {
+      return this.http.get<Filtro>(`${this.apiUrl}/${id}`);
+    }
+
 }

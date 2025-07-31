@@ -1,7 +1,7 @@
 import { Component, inject, Output, EventEmitter, OnInit, Input } from "@angular/core";
 import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { BarriosService } from "../../services/barrios.service";
-import { CommonModule } from "@angular/common";
+import { CommonModule, formatDate } from "@angular/common";
 import { ReporteService } from "../../services/reporte.service";
 import { ConstantPool } from "@angular/compiler";
 import { FiltroService } from "../../services/filtro.service";
@@ -132,9 +132,11 @@ export class FiltroReporteComponent implements OnInit {
       acceso_agua: raw.acceso_agua,
       material_vivienda: this.materialSeleccionado
     };
+    const now = new Date();
+    const fechaHora = formatDate(now, 'yyyy-MM-dd_HH-mm-ss', 'en-US');
 
     return {
-      nombre: `Filtro_${new Date().toISOString().split('T')[0]}`,
+      nombre: `Filtro_${fechaHora}`,
       criterios: JSON.stringify(criterios),
       propietario_id: this.auth.getUsuarioId() || 0 
     };
