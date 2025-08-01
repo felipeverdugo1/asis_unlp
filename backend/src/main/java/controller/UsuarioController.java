@@ -1,25 +1,22 @@
 package controller;
 
+import controller.dto.LoginDTO;
 import controller.dto.UsuarioDTO;
-import dao.GenericDAO;
-import dao.GenericDAOImpl;
 import exceptions.EntidadNoEncontradaException;
+import exceptions.UnauthorizedException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import model.Token;
 import model.Usuario;
-import service.GenericService;
-import service.GenericServiceImpl;
+import auth.service.TokenServices;
 import service.UsuarioService;
 
 import java.util.List;
@@ -35,6 +32,17 @@ public class UsuarioController {
 
     @Inject
     UsuarioService usuarioService;
+    @Inject
+    TokenServices tokenServices;
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/login")
+    public Response loginUsuario(@RequestBody LoginDTO loginDTO) {
+        Usuario usuario = usuarioService.validarCredencialesLogin(loginDTO.getEmail(), loginDTO.getClave());
+        String token = tokenServices.generateToken(usuario.getId(), usuario.getRoles());
+        return Response.ok(new Token(usuario.getId(), token)).build();
+    }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

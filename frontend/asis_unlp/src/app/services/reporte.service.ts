@@ -18,7 +18,7 @@ export class ReporteService {
   getFiltroActual() {
     return this.filtroActual.value;
   }
-
+  
   generarReporte(filtro: any): Observable<any> {
     //////////////// 
     //////////////

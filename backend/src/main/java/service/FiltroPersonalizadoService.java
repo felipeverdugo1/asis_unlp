@@ -1,5 +1,6 @@
 package service;
 
+import controller.ReporteController;
 import controller.dto.FiltroDTO;
 import dao.*;
 import exceptions.EntidadExistenteException;
@@ -9,6 +10,8 @@ import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import model.FiltroPersonalizado;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RequestScoped
@@ -97,5 +100,9 @@ public class FiltroPersonalizadoService extends GenericServiceImpl<FiltroPersona
                 filtroPersonalizadoDAO::eliminar,
                 () -> { throw new EntidadNoEncontradaException("El filtro no existe"); }
         );
+    }
+
+    public List<FiltroPersonalizado> getFiltrosByUserId(Long user_id) {
+        return (filtroPersonalizadoDAO.buscarFiltrosPorUsuarioId(user_id));
     }
 }

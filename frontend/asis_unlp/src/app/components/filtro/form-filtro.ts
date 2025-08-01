@@ -1,29 +1,78 @@
-import { Component, inject, Output, EventEmitter } from "@angular/core";
+import { Component, inject, Output, EventEmitter, OnInit, Input } from "@angular/core";
 import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { BarriosService } from "../../services/barrios.service";
-import { CommonModule } from "@angular/common";
+import { CommonModule, formatDate } from "@angular/common";
+import { ReporteService } from "../../services/reporte.service";
+import { ConstantPool } from "@angular/compiler";
+import { FiltroService } from "../../services/filtro.service";
+import { AuthService } from "../../services/auth.service";
+import { Filtro } from "../../models/filtro.model";
+import { FilenameInputDialogComponent } from "./filename-input-dialog.component";
 
 
 @Component({
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FilenameInputDialogComponent],
   selector: 'app-filtro-reporte',
   templateUrl: './form-filtro.html',
   styleUrls: ['../../../styles.css'],
 })
-export class FiltroReporteComponent {
+export class FiltroReporteComponent implements OnInit {
   private fb = inject(FormBuilder);
   private barriosService = inject(BarriosService);
+  private reporteService = inject(ReporteService);
+  private filtroService = inject(FiltroService);
+  private auth = inject(AuthService);
+  guardando: boolean = false;
+  showSaveDialog: boolean = false;
 
   @Output() generarReporte = new EventEmitter<any>();
+  @Input() filtroActual: any;
+
+  ngOnInit() {
+    if (this.reporteService.getFiltroActual()) {
+      this.cargarFiltroExistente(this.reporteService.getFiltroActual());
+    }  
+  }
+
+  private cargarFiltroExistente(filtro: any) {
+    // Cargar valores simples
+    console.log(filtro.acceso_salud, filtro.acceso_agua);
+    console.log("Tipo de filtro:", typeof filtro.acceso_salud, typeof filtro.acceso_agua);
+    this.form.patchValue({
+      edadMin: filtro.edad?.[0] || null,
+      edadMax: filtro.edad?.[1] || null,
+      barrio: filtro.barrio || null,
+      acceso_salud: (typeof filtro.acceso_salud !== 'undefined') ? filtro.acceso_salud : null,
+      acceso_agua: (typeof filtro.acceso_agua !== 'undefined') ? filtro.acceso_agua : null
+    });
+
+    // Cargar arrays (géneros y materiales)
+    if (filtro.genero) {
+      this.generoSeleccionado = [...filtro.genero];
+    }
+    
+    if (filtro.material_vivienda) {
+      this.materialSeleccionado = [...filtro.material_vivienda];
+    }
+  }
 
   form: FormGroup = this.fb.group({
     edadMin: [null],
     edadMax: [null],
     barrio: [null],
     acceso_salud: [null],
-    acceso_agua: [null],
+    acceso_agua: [null]
   });
+  
+  resetForm() {
+    this.form.reset();
+    this.generoSeleccionado = [];
+    this.materialSeleccionado = [];
+    this.reporteService.setFiltroActual(null);
+    console.log('Filtro reseteado');
+  }
+
 
   generos: string[] = ['mujer cis', 'mujer trans-travesti', 'varón cis', 'varon trans-masculinidad trans', 'no binarie', 'otra identidad-ninguna de las anteriores'];
   generoSeleccionado: string[] = [];
@@ -44,17 +93,63 @@ export class FiltroReporteComponent {
   }
 
   onSubmit() {
-    console.log("HOLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
     const raw = this.form.value;
     const filtro: any = {};
 
     if (raw.edadMin != null && raw.edadMax != null) filtro.edad = [raw.edadMin, raw.edadMax];
     if (this.generoSeleccionado.length) filtro.genero = this.generoSeleccionado;
     if (raw.barrio != null) filtro.barrio = raw.barrio;
-    if (raw.acceso_salud) filtro.acceso_salud = true;
-    if (raw.acceso_agua) filtro.acceso_agua = true;
+    if (raw.acceso_salud != undefined && raw.acceso_salud != null) filtro.acceso_salud = raw.acceso_salud;
+    if (raw.acceso_agua != undefined && raw.acceso_agua != null) filtro.acceso_agua = raw.acceso_agua;
     if (this.materialSeleccionado.length) filtro.material_vivienda = this.materialSeleccionado;
 
     this.generarReporte.emit(filtro);
+  }
+
+  openSaveDialog() {
+    this.showSaveDialog = true;
+  }
+
+  onSaveWithName(name: any) {
+    if (!name || name.trim() === '') {
+      alert('El nombre del filtro no puede estar vacío');
+      return;
+    }
+    this.showSaveDialog = false;
+    this.guardando = true;
+    
+    const filtroData = this.buildFiltroData(name);
+    
+    this.filtroService.createFiltro(filtroData).subscribe({
+      next: () => {
+        this.guardando = false;
+        alert('Filtro guardado correctamente');
+      },
+      error: (err) => {
+        this.guardando = false;
+        console.error('Error guardando filtro:', err);
+        alert('Error al guardar el filtro');
+      }
+    });
+  }
+
+  private buildFiltroData(customName: string): Filtro {
+    const raw = this.form.value;
+    const criterios = {
+      edad: raw.edadMin && raw.edadMax ? [raw.edadMin, raw.edadMax] : null,
+      genero: this.generoSeleccionado,
+      barrio: raw.barrio,
+      acceso_salud: raw.acceso_salud,
+      acceso_agua: raw.acceso_agua,
+      material_vivienda: this.materialSeleccionado
+    };
+    const now = new Date();
+    const fechaHora = formatDate(now, 'yyyy-MM-dd_HH-mm-ss', 'en-US');
+
+    return {
+      nombre: `${customName}_${fechaHora}`,
+      criterios: JSON.stringify(criterios),
+      propietario_id: this.auth.getUsuarioId() || 0 
+    };
   }
 }

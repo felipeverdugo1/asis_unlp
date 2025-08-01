@@ -136,7 +136,6 @@ export class ListarJornadaPage implements OnInit {
         this.loading = true;
         this.jornadaService.getJornada(+id).subscribe({
           next: (data) => {
-            console.log('Jornada cargada:', data);
             this.jornada = data;
             this.loading = false;
           },
@@ -150,7 +149,6 @@ export class ListarJornadaPage implements OnInit {
 
 
     guardarJornada(jornada: Jornada) {
-      console.log(jornada);
       if (!this.esEdicion) {
         jornada.campaña_id = this.idCampania;
       }

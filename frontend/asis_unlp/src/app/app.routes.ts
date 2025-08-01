@@ -1,53 +1,57 @@
 import { Routes } from '@angular/router';
-import { ListaUsuariosPage, FormUsuarioPage } from './pages/usuarios/usuario.pages';
+import { ListaUsuariosPage, FormUsuarioPage, UsuarioRolesPage } from './pages/usuarios/usuario.pages';
 import { ListaBarriosPage, FormBarrioPage } from './pages/barrios/barrio.pages';
 import { ListarRolesPage, FormRolPage } from './pages/roles/rol.pages';
 import { ListarCampaniaPage, FormCampaniaPage } from './pages/campania/campania.pages';
 import { ListarJornadaPage, FormJornadaPage, AdministrarZonasPage } from './pages/jornada/jornada.pages';
 import { ListarOrgaSocialPage , FormOrgaSocialPage } from './pages/orgaSocial/orgaSocial.pages';
 import { ListarEncuestadorPage , FormEncuestadorPage } from './pages/encuestador/encuestador.pages';
-import { FiltroPage } from './pages/filtro/filtro.pages';
+import { FiltroPage, FiltrosListPage } from './pages/filtro/filtro.pages';
 import { ReportePage } from './pages/reporte/reporte.pages';
 // import { ListaBarriosPage, FormZonaPage } from './pages/filtro/filtro.pages';
 import { FormZonaPage, ListarZonaPage } from './pages/zonas/zona.pages';
 import { Home } from './components/home/home';
+import { Login } from './components/login/login';
+import { AuthGuard, AdminGuard } from './guard/auth.guard';
 
 
 
 export const routes: Routes = [
   { path: '', component: Home }, 
+  { path: 'login', component: Login },
   { 
     path: 'usuario', 
     data: { title: 'Usuarios' },
     children: [
-      { path: '', component: ListaUsuariosPage },
-      { path: 'nuevo', component: FormUsuarioPage },
-      { path: 'editar/:id', component: FormUsuarioPage }
+      { path: '', component: ListaUsuariosPage, canActivate: [AuthGuard, AdminGuard] },
+      { path: 'nuevo', component: FormUsuarioPage, canActivate: [AuthGuard, AdminGuard] },
+      { path: 'editar/:id', component: FormUsuarioPage, canActivate: [AuthGuard, AdminGuard] },
+      { path: 'roles/:id', component: UsuarioRolesPage, canActivate: [AuthGuard, AdminGuard] }
     ]
   },
   {
     path: 'rol', 
     data: { title: 'Roles' },
     children: [
-      { path: '', component: ListarRolesPage },
-      { path: 'nuevo', component: FormRolPage },
-      { path: 'editar/:id', component: FormRolPage }
+      { path: '', component: ListarRolesPage, canActivate: [AuthGuard, AdminGuard] },
+      { path: 'nuevo', component: FormRolPage, canActivate: [AuthGuard, AdminGuard] },
+      { path: 'editar/:id', component: FormRolPage, canActivate: [AuthGuard, AdminGuard] }
     ],
   },
   {
     path: 'barrio',
     data: { title: 'Barrios' },
     children: [
-      { path: '', component: ListaBarriosPage },
-      { path: 'nuevo', component: FormBarrioPage },
-      { path: 'editar/:id', component: FormBarrioPage },
+      { path: '', component: ListaBarriosPage, canActivate: [AuthGuard, AdminGuard] },
+      { path: 'nuevo', component: FormBarrioPage, canActivate: [AuthGuard, AdminGuard] },
+      { path: 'editar/:id', component: FormBarrioPage, canActivate: [AuthGuard, AdminGuard] },
       {
         path: ':idBarrio/zonas',
         data: { title: 'Zonas' },
         children: [
-          { path: '', component: ListarZonaPage },
-          { path: 'nueva', component: FormZonaPage },
-          { path: 'editar/:id', component: FormZonaPage }
+          { path: '', component: ListarZonaPage, canActivate: [AuthGuard, AdminGuard] },
+          { path: 'nueva', component: FormZonaPage, canActivate: [AuthGuard, AdminGuard] },
+          { path: 'editar/:id', component: FormZonaPage, canActivate: [AuthGuard, AdminGuard] }
         ]
       }
     ]
@@ -56,17 +60,17 @@ export const routes: Routes = [
     path: 'campania',
     data: { title: 'Campañas' },
     children: [
-      { path: '', component: ListarCampaniaPage },
-      { path: 'nueva', component: FormCampaniaPage },
-      { path: 'editar/:id', component: FormCampaniaPage },
+      { path: '', component: ListarCampaniaPage, canActivate: [AuthGuard, AdminGuard] },
+      { path: 'nueva', component: FormCampaniaPage, canActivate: [AuthGuard, AdminGuard] },
+      { path: 'editar/:id', component: FormCampaniaPage, canActivate: [AuthGuard, AdminGuard] },
       {
         path: ':idCampania/jornadas',
         data: { title: 'Jornadas' },
         children: [
-          { path: '', component: ListarJornadaPage },
-          { path: 'nuevo', component: FormJornadaPage },
-          { path: 'editar/:idJornada', component: FormJornadaPage },
-          { path: 'administrarZonas/:idJornada', component: AdministrarZonasPage }
+          { path: '', component: ListarJornadaPage, canActivate: [AuthGuard, AdminGuard] },
+          { path: 'nuevo', component: FormJornadaPage, canActivate: [AuthGuard, AdminGuard] },
+          { path: 'editar/:idJornada', component: FormJornadaPage, canActivate: [AuthGuard, AdminGuard] },
+          { path: 'administrarZonas/:idJornada', component: AdministrarZonasPage, canActivate: [AuthGuard, AdminGuard] }
         ]
       }
     ]
@@ -75,26 +79,27 @@ export const routes: Routes = [
     path: 'encuestador', 
     data: { title: 'Encuestadores' },
     children: [
-      { path: '', component: ListarEncuestadorPage },
-      { path: 'nuevo', component: FormEncuestadorPage },
-      { path: 'editar/:id', component: FormEncuestadorPage }
+      { path: '', component: ListarEncuestadorPage, canActivate: [AuthGuard, AdminGuard] },
+      { path: 'nuevo', component: FormEncuestadorPage, canActivate: [AuthGuard, AdminGuard] },
+      { path: 'editar/:id', component: FormEncuestadorPage, canActivate: [AuthGuard, AdminGuard] }
     ]
   },
   { 
     path: 'organizacionSocial', 
     data: { title: 'Org. Sociales' },
     children: [
-      { path: '', component: ListarOrgaSocialPage },
-      { path: 'nueva', component: FormOrgaSocialPage },
-      { path: 'editar/:id', component: FormOrgaSocialPage }
+      { path: '', component: ListarOrgaSocialPage, canActivate: [AuthGuard, AdminGuard] },
+      { path: 'nueva', component: FormOrgaSocialPage, canActivate: [AuthGuard, AdminGuard] },
+      { path: 'editar/:id', component: FormOrgaSocialPage, canActivate: [AuthGuard, AdminGuard] }
     ]
   },
   {
     path: 'filtro',
     data: { title: 'Generar Reportes' },
-    children: [
-      { path: '', component: FiltroPage, data: { title: 'Filtrar Reporte' } },
-      { path: 'resultado', component: ReportePage, data: { title: 'Reporte Generado' } }
+    children: [// TODO agregar guard de personal de salud
+      { path: '', component: FiltroPage, data: { title: 'Filtrar Reporte' }, canActivate: [AuthGuard] },
+      { path: 'resultado', component: ReportePage, data: { title: 'Reporte Generado' }, canActivate: [AuthGuard] },
+      { path: 'filtros', component: FiltrosListPage, data: { title: 'Filtros Guardados' }, canActivate: [AuthGuard] }
     ]
   }
 ];

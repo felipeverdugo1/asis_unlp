@@ -36,4 +36,17 @@ export class UsuariosService {
   getUsuario(id: number): Observable<Usuario> {
     return this.http.get<Usuario>(`${this.apiUrl}/${id}`);
   }
+
+  updateEstadoHabilitado(id: number, habilitado: boolean): Observable<Usuario> {
+    return this.http.put<Usuario>(`${this.apiUrl}/habilitacion/${id}/${habilitado}`, null);
+  }
+
+  agregarRol(usuarioId: number, rolId: number) {
+    return this.http.put(`${this.apiUrl}/agregarRol/${usuarioId}/${rolId}`, {});
+  }
+
+  quitarRol(usuarioId: number, rolId: number) {
+    return this.http.put(`${this.apiUrl}/quitarRol/${usuarioId}/${rolId}`, {});
+  }
+
 }

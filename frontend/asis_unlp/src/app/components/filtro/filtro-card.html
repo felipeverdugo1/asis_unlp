@@ -1,0 +1,41 @@
+<div class="filtro-card">
+  <h3>{{ filtro.nombre }}</h3>
+  <div class="filtro-details">
+    <ul class="list-ul">
+        <ng-container *ngIf="criterios.edad">
+            <li class="list-item">
+              <strong>Edad:</strong> {{ criterios.edad[0] }} - {{ criterios.edad[1] }}
+            </li>
+        </ng-container>
+        <ng-container *ngIf="criterios.genero?.length">
+          <li class="list-item">
+              <strong>Géneros:</strong> {{ criterios.genero.join(', ') }}
+          </li>
+        </ng-container>
+        <ng-container *ngIf="criterios.barrio">
+          <li class="list-item">
+              <strong>Barrio:</strong> {{ criterios.barrio }}
+          </li>
+        </ng-container>
+        <ng-container *ngIf="criterios.acceso_salud !== undefined">
+          <li class="list-item">
+              <strong>Acceso a salud:</strong> {{ criterios.acceso_salud ? 'Sí' : 'No' }}
+          </li>
+        </ng-container>
+        <ng-container *ngIf="criterios.acceso_agua !== undefined">
+          <li class="list-item">
+              <strong>Acceso a agua:</strong> {{ criterios.acceso_agua ? 'Sí' : 'No' }}
+          </li>
+        </ng-container>
+        <ng-container *ngIf="criterios.material_vivienda?.length">
+          <li class="list-item">
+              <strong>Materiales vivienda:</strong> {{ criterios.material_vivienda.join(', ') }}
+          </li>
+        </ng-container>
+    </ul>
+  </div>
+  <div class="filtro-actions">
+    <button (click)="aplicarFiltro()" class="btn btn-create">Aplicar</button>
+    <button (click)="eliminarFiltro()" class="btn btn-danger">Eliminar</button>
+  </div>
+</div>

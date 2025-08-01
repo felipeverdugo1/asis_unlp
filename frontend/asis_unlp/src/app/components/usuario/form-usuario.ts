@@ -21,6 +21,7 @@ export class FormUsuario implements OnInit {
     especialidad: "", 
     roles_id: [] 
   };
+  @Input() esEdicion = true;
   @Output() onSubmit = new EventEmitter<Usuario>();
   
   roles: Rol[] = [];

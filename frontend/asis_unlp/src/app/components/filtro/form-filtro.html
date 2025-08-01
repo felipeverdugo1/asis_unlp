@@ -13,7 +13,7 @@
       <label class="form-label">Género:</label>
       <div class="checkbox-group" *ngFor="let g of generos">
         <div class="checkbox-item">
-            <input type="checkbox" [value]="g" (change)="toggleGenero(g, $event)" />
+            <input type="checkbox" [value]="g" [checked]="generoSeleccionado.includes(g)" (change)="toggleGenero(g, $event)" />
             <label>{{ g }}</label>
         </div>
       </div>
@@ -23,7 +23,7 @@
       <label class="form-label">Barrio:</label>
       <select class="form-dropdown" formControlName="barrio">
         <option [value]="null">- Ignorar -</option>
-        <option *ngFor="let b of barrios | async" [value]="b.id">{{ b.nombre }}</option>
+        <option *ngFor="let b of barrios | async" [value]="b.id" [selected]="filtroActual?.barrio === b.id">{{ b.nombre }}</option>
       </select>
     </div>
 
@@ -48,10 +48,24 @@
     <div class="form-group">
       <label class="form-label">Material de vivienda:</label>
       <div class="checkbox-group" *ngFor="let m of materiales">
-        <input type="checkbox" [value]="m" (change)="toggleMaterial(m, $event)" /> 
+        <input type="checkbox" [value]="m" [checked]="materialSeleccionado.includes(m)" (change)="toggleMaterial(m, $event)" /> 
         <label>{{ m }}</label>
       </div>
     </div>
 
-      <button class="btn btn-create" type="submit">Generar Reporte</button>
+
+      <div class="form-actions">
+        <button class="btn btn-create" type="submit">Generar Reporte</button>
+        <button type="button" class="btn btn-func" (click)="openSaveDialog()" [disabled]="guardando">
+          {{ guardando ? 'Guardando...' : 'Guardar Filtro' }}
+        </button>
+      </div>
     </form>
+
+
+@if (showSaveDialog) {
+  <app-filename-input-dialog
+    (saved)="onSaveWithName($event)"
+    (closed)="showSaveDialog = false">
+  </app-filename-input-dialog>
+}
