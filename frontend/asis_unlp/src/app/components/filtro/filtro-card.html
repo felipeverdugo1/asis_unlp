@@ -1,0 +1,24 @@
+    <div class="filtro-card">
+      <h3>{{ filtro.nombre }}</h3>
+      <div class="filtro-details">
+        <div *ngIf="criterios.edad">
+          <strong>Edad:</strong> {{ criterios.edad[0] }} - {{ criterios.edad[1] }}
+        </div>
+        <div *ngIf="criterios.genero?.length">
+          <strong>Géneros:</strong> {{ criterios.genero.join(', ') }}
+        </div>
+        <div *ngIf="criterios.barrio">
+          <strong>Barrio:</strong> {{ criterios.barrio }}
+        </div>
+        <div *ngIf="criterios.acceso_salud !== undefined">
+          <strong>Acceso a salud:</strong> {{ criterios.acceso_salud ? 'Sí' : 'No' }}
+        </div>
+        <div *ngIf="criterios.acceso_agua !== undefined">
+          <strong>Acceso a agua:</strong> {{ criterios.acceso_agua ? 'Sí' : 'No' }}
+        </div>
+        <div *ngIf="criterios.material_vivienda?.length">
+          <strong>Materiales vivienda:</strong> {{ criterios.material_vivienda.join(', ') }}
+        </div>
+        <button (click)="aplicarFiltro(filtro.id)" class="btn btn-create">Aplicar</button>
+      </div>
+    </div>

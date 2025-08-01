@@ -1,0 +1,28 @@
+<div class="dialog-overlay" (click)="close()">
+  <div class="dialog-content" (click)="$event.stopPropagation()">
+    <h3>Guardar Filtro</h3>
+    <hr />
+
+    <div class="form-group">
+      <label class="form-label" for="filterName">Nombre del filtro (máx. {{maxLength}} caracteres):</label>
+      <input class="form-input"
+        type="text" 
+        id="filterName" 
+        [(ngModel)]="filterName" 
+        (input)="validateInput()"
+        [maxLength]="maxLength"
+        placeholder="Ej: MiFiltro">
+      <div class="char-counter">{{ filterName.length }}/{{maxLength}}</div>
+    </div>
+    
+    <div class="dialog-actions">
+      <button class="btn btn-nav" (click)="close()">Cancelar</button>
+      <button 
+        class="btn btn-create" 
+        (click)="save()"
+        [disabled]="!isValidName()">
+        Guardar
+      </button>
+    </div>
+  </div>
+</div>

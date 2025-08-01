@@ -5,10 +5,11 @@ import { FiltroReporteComponent } from '../../components/filtro/form-filtro';
 import { FiltroService } from '../../services/filtro.service';
 import { AuthService } from '../../services/auth.service';
 import { Filtro } from '../../models/filtro.model';
+import { FilenameInputDialogComponent } from '../../components/filtro/filename-input-dialog.component';
 
 @Component({
   standalone: true,
-  imports: [FiltroReporteComponent],
+  imports: [FiltroReporteComponent, FilenameInputDialogComponent],
   template: `
   <div class="page-container">
     <div class="page-header">

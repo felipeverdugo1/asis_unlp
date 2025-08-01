@@ -7,11 +7,12 @@ import { ConstantPool } from "@angular/compiler";
 import { FiltroService } from "../../services/filtro.service";
 import { AuthService } from "../../services/auth.service";
 import { Filtro } from "../../models/filtro.model";
+import { FilenameInputDialogComponent } from "./filename-input-dialog.component";
 
 
 @Component({
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FilenameInputDialogComponent],
   selector: 'app-filtro-reporte',
   templateUrl: './form-filtro.html',
   styleUrls: ['../../../styles.css'],
@@ -23,6 +24,7 @@ export class FiltroReporteComponent implements OnInit {
   private filtroService = inject(FiltroService);
   private auth = inject(AuthService);
   guardando: boolean = false;
+  showSaveDialog: boolean = false;
 
   @Output() generarReporte = new EventEmitter<any>();
   @Input() filtroActual: any;
@@ -104,11 +106,19 @@ export class FiltroReporteComponent implements OnInit {
     this.generarReporte.emit(filtro);
   }
 
-  guardarFiltro() {
-    if (this.guardando) return;
+  openSaveDialog() {
+    this.showSaveDialog = true;
+  }
+
+  onSaveWithName(name: any) {
+    if (!name || name.trim() === '') {
+      alert('El nombre del filtro no puede estar vacío');
+      return;
+    }
+    this.showSaveDialog = false;
     this.guardando = true;
     
-    const filtroData = this.buildFiltroData();
+    const filtroData = this.buildFiltroData(name);
     
     this.filtroService.createFiltro(filtroData).subscribe({
       next: () => {
@@ -118,11 +128,12 @@ export class FiltroReporteComponent implements OnInit {
       error: (err) => {
         this.guardando = false;
         console.error('Error guardando filtro:', err);
+        alert('Error al guardar el filtro');
       }
     });
   }
 
-  private buildFiltroData(): Filtro {
+  private buildFiltroData(customName: string): Filtro {
     const raw = this.form.value;
     const criterios = {
       edad: raw.edadMin && raw.edadMax ? [raw.edadMin, raw.edadMax] : null,
@@ -136,7 +147,7 @@ export class FiltroReporteComponent implements OnInit {
     const fechaHora = formatDate(now, 'yyyy-MM-dd_HH-mm-ss', 'en-US');
 
     return {
-      nombre: `Filtro_${fechaHora}`,
+      nombre: `${customName}_${fechaHora}`,
       criterios: JSON.stringify(criterios),
       propietario_id: this.auth.getUsuarioId() || 0 
     };

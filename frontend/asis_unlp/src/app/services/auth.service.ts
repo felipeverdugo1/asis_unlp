@@ -67,7 +67,7 @@ export class AuthService {
 
     try {
       const decoded: any = jwtDecode(token);
-      return decoded.sub || null;
+      return decoded.sub || null; // el id del usuario esta en sub
     } catch {
       return null;
     }
