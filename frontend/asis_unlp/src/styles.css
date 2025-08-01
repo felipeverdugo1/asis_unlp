@@ -597,8 +597,8 @@ body {
   background: #E8F5E9;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
-.filtro-details > div {
-  margin: 8px 0;
+.filtro-details {
+  margin: 10px 0;
 }
 
 .dialog-overlay {

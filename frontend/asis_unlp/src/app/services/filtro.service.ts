@@ -36,4 +36,8 @@ export class FiltroService {
       return this.http.get<Filtro>(`${this.apiUrl}/${id}`);
     }
 
+    getFiltrosByUsuario(usuarioId: number): Observable<Filtro[]> {
+        return this.http.get<Filtro[]>(`${this.apiUrl}/usuario/${usuarioId}`);
+    }
+
 }

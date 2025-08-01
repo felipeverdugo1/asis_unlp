@@ -121,4 +121,13 @@ public class FiltroPersonalizadoController {
         service.eliminar(id);
         return Response.noContent().build();
     }
+
+    @GET
+    @Path("usuario/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Este endpoint nos permite obtener los filtros de un usuario con su id",
+            parameters = @Parameter(name = "usuario id"))
+    public Response getFiltrosByUserId(@PathParam("id") Long id) {
+        return Response.ok(service.getFiltrosByUserId(id)).build();
+    }
 }
