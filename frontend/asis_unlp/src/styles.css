@@ -63,7 +63,7 @@
 }
 
 .page-title {
-  color: #004030;
+  color: black;
   margin: 0;
 }
 
@@ -177,7 +177,7 @@ body {
 
 .form-label {
   display: block;
-  color: #004030; /* Verde oscuro para labels */
+  color: #001711; /* Verde oscuro para labels */
   font-weight: 500;
   margin-bottom: 8px;
 }
@@ -586,4 +586,54 @@ body {
   color: #666;
   margin-top: 5px;
   font-style: italic;
+}
+
+
+.filtro-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 8px 0;
+  background: #E8F5E9;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.filtro-details {
+  margin: 10px 0;
+}
+
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.dialog-content {
+  background: #E8F5E9;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  max-width: 90%;
+}
+.char-counter {
+  font-size: 0.8em;
+  text-align: right;
+  color: #666;
+}
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
 }

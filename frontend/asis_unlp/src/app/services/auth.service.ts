@@ -60,4 +60,16 @@ export class AuthService {
   rolReferente(): boolean { 
     return this.tieneRol('referente') || this.rolAdmin();
   }
+
+  getUsuarioId(): number | null {
+    const token = this.obtenerToken();
+    if (!token) return null;
+
+    try {
+      const decoded: any = jwtDecode(token);
+      return decoded.sub || null; // el id del usuario esta en sub
+    } catch {
+      return null;
+    }
+  }
 }

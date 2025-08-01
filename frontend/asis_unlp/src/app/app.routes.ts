@@ -6,7 +6,7 @@ import { ListarCampaniaPage, FormCampaniaPage } from './pages/campania/campania.
 import { ListarJornadaPage, FormJornadaPage, AdministrarZonasPage } from './pages/jornada/jornada.pages';
 import { ListarOrgaSocialPage , FormOrgaSocialPage } from './pages/orgaSocial/orgaSocial.pages';
 import { ListarEncuestadorPage , FormEncuestadorPage } from './pages/encuestador/encuestador.pages';
-import { FiltroPage } from './pages/filtro/filtro.pages';
+import { FiltroPage, FiltrosListPage } from './pages/filtro/filtro.pages';
 import { ReportePage } from './pages/reporte/reporte.pages';
 // import { ListaBarriosPage, FormZonaPage } from './pages/filtro/filtro.pages';
 import { FormZonaPage, ListarZonaPage } from './pages/zonas/zona.pages';
@@ -98,7 +98,8 @@ export const routes: Routes = [
     data: { title: 'Generar Reportes' },
     children: [// TODO agregar guard de personal de salud
       { path: '', component: FiltroPage, data: { title: 'Filtrar Reporte' }, canActivate: [AuthGuard] },
-      { path: 'resultado', component: ReportePage, data: { title: 'Reporte Generado' }, canActivate: [AuthGuard] }
+      { path: 'resultado', component: ReportePage, data: { title: 'Reporte Generado' }, canActivate: [AuthGuard] },
+      { path: 'filtros', component: FiltrosListPage, data: { title: 'Filtros Guardados' }, canActivate: [AuthGuard] }
     ]
   }
 ];

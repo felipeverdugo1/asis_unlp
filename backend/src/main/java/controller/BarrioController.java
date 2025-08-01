@@ -34,7 +34,7 @@ public class BarrioController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Este endpoint nos permite obtener todos los barrios registrados.")
-    @RequiereRol("admin")
+    @RequiereRol({"admin", "personal_salud"})
     public Response get() {
         return Response.ok(barrioService.listarTodos()).build();
     }
