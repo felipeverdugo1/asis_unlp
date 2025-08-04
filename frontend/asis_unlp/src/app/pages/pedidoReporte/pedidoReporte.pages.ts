@@ -7,6 +7,9 @@ import { ListarPedidosComponent, ReporteInputPedidoComponent } from "../../compo
 import { PedidoService } from "../../services/pedido.service";
 import { Observable } from "rxjs";
 import { AuthService } from "../../services/auth.service";
+import { FormsModule } from "@angular/forms";
+import { FormPedido } from "../../components/pedidoReporte/form-pedido";
+import { PedidoReporte } from "../../models/pedido.model";
 
 @Component({
   standalone: true,
@@ -215,3 +218,70 @@ export class ListaPedidosPage implements OnInit {
   }
 }
 
+@Component({
+    standalone: true,
+    imports: [CommonModule, FormsModule, FormPedido],
+    template: `
+    <div class="form-container">
+      <div class="title">
+        <h1>Nuevo pedido de Reporte</h1>
+      </div>
+    
+    <div *ngIf="errorMensaje" class="error-box">
+      {{ errorMensaje }}
+    </div>
+
+
+    <ng-container *ngIf="!loading; else cargando">
+      <form-pedido 
+      [pedido]="pedido" 
+      (onSubmit)="crearPedido($event)">
+      </form-pedido>
+    </ng-container>
+    <ng-template #cargando>
+      <p>Cargando pedido...</p>
+    </ng-template>
+    </div>
+  `
+  })
+
+  export class FormPedidoPage implements OnInit {
+    pedido: PedidoReporte = { id: 0, nombre: '', camposPedidos: '', creadoPor_id: 0, estado: '' };
+    loading = false;
+    errorMensaje: string | null = null;
+    id: number | null = null;
+
+  
+    constructor(
+      private pedidoService: PedidoService,
+      private router: Router,
+      private authService: AuthService
+    ) {}
+  
+    ngOnInit(): void {
+      this.errorMensaje = null;
+      this.id = this.authService.getUsuarioId();
+      if (!this.id) {
+        this.router.navigate(['/login']);
+        return;
+      }
+    }
+
+    crearPedido(pedido: PedidoReporte) {
+      if (!this.id) {
+        this.router.navigate(['/login']);
+        return;
+      }
+      
+      pedido.creadoPor_id = this.id;
+      pedido.estado = 'pendiente';
+
+      this.pedidoService.crearPedido(pedido).subscribe({
+        next: () => this.router.navigate(['/pedidos']),
+        error: (err) => {
+          this.errorMensaje = err.error?.error || 'Error inesperado al guardar el pedido.';
+        }
+      });
+    }
+    
+  }

@@ -13,7 +13,7 @@ import { FormZonaPage, ListarZonaPage } from './pages/zonas/zona.pages';
 import { Home } from './components/home/home';
 import { Login } from './components/login/login';
 import { AuthGuard, AdminGuard } from './guard/auth.guard';
-import { ListaPedidosPage } from './pages/pedidoReporte/pedidoReporte.pages';
+import { ListaPedidosPage, FormPedidoPage } from './pages/pedidoReporte/pedidoReporte.pages';
 
 
 
@@ -107,7 +107,8 @@ export const routes: Routes = [
     path: 'pedidos',
     data: { title: 'Pedidos de Reportes' },
     children: [
-      { path: '', component: ListaPedidosPage, canActivate: [AuthGuard] }
+      { path: '', component: ListaPedidosPage, canActivate: [AuthGuard] },
+      { path: 'nuevo', component: FormPedidoPage, canActivate: [AuthGuard] },
     ]
   }
 ];

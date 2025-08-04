@@ -26,6 +26,10 @@ export class PedidoService {
     return this.http.put(`${this.apiUrl}/${pedidoId}/soltar`, {});
   }
 
+  crearPedido(pedido: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}`, pedido);
+  }
+
   completarPedido(pedidoId: number, reporteId: number, comentario?: string): Observable<any> {
     this.pedido.reporte_id = reporteId;
     this.pedido.asignado_a_id = pedidoId;
