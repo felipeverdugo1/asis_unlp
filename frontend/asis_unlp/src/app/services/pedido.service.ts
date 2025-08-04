@@ -2,23 +2,35 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { PedidoReporteCompletado } from '../models/pedido.model';
 
 @Injectable({ providedIn: 'root' })
 export class PedidoService {
   private apiUrl = environment.apiUrl+"pedidoReporte";
   constructor(private http: HttpClient) {}
+  pedido: PedidoReporteCompletado = {
+    asignado_a_id: 0,
+    reporte_id: 0,
+    comentario: ''
+  };
 
   getPedidos(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}`);
   }
 
   tomarPedido(pedidoId: number, usuarioId: number): Observable<any> {
-    return this.http.patch(`${this.apiUrl}/${pedidoId}/tomar`, { usuarioId });
+    return this.http.put(`${this.apiUrl}/${pedidoId}/tomar/${usuarioId}`, {});
   }
 
-  completarPedido(pedidoId: number, reporteId: number): Observable<any> {
-    // CAMBIAR
-    return this.http.patch(`${this.apiUrl}/${pedidoId}/completar`, { reporteId });
+  soltarPedido(pedidoId: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${pedidoId}/soltar`, {});
+  }
+
+  completarPedido(pedidoId: number, reporteId: number, comentario?: string): Observable<any> {
+    this.pedido.reporte_id = reporteId;
+    this.pedido.asignado_a_id = pedidoId;
+    this.pedido.comentario = comentario || '';
+    return this.http.put(`${this.apiUrl}/${pedidoId}/completar`, { ...this.pedido });
   }
 
   descargarReporte(pedidoId: number): void {
@@ -31,5 +43,9 @@ export class PedidoService {
 
   getPedidosReferente(usuarioId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/referente/${usuarioId}`);
+  }
+
+  getPedidosTomadosPorUsuario(usuarioId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/tomados/${usuarioId}`);
   }
 }

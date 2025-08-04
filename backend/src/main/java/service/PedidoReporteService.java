@@ -291,7 +291,21 @@ public class PedidoReporteService extends GenericServiceImpl<PedidoReporte, Long
             throw new EntidadNoEncontradaException("No existe un referente con ese id");
         }
         List<PedidoReporte> response = new ArrayList<>();
-        response = pedidoReporteDAO.listarPedidosPorReferente(usuario_id);
+        response = pedidoReporteDAO.listarPedidosPorCreador(usuario_id);
         return response;
     }
+
+    public List<PedidoReporte> listarPedidosByAsignado(Long usuario_id){
+        Optional<Usuario> usuario_t = usuarioDAO.buscarPorId(usuario_id);
+        // Verificar si el usuario es referente?
+        if (usuario_t.isEmpty()){
+            throw new EntidadNoEncontradaException("No existe un referente con ese id");
+        }
+        List<PedidoReporte> response = new ArrayList<>();
+        response = pedidoReporteDAO.listarPedidosTomadosPor(usuario_id);
+
+        return response;
+    }
+
+
 }

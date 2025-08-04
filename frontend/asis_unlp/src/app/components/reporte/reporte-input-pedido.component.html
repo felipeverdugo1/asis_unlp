@@ -8,9 +8,19 @@
       <select class="form-dropdown" [(ngModel)]="reporteId" name="reporteId" required>
         <option [value]="null" disabled selected>-- Seleccione un reporte --</option>
         <option *ngFor="let reporte of reportes" [value]="reporte.id">
-          {{ reporte.nombre }} ({{ reporte.fechaCreacion | date }})
+          {{ reporte.nombreUnico }} ({{ reporte.fechaCreacion | date }})
         </option>
       </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="comentario">Comentario (opcional):</label>
+      <textarea 
+        class="form-textarea" 
+        [(ngModel)]="comentario" 
+        name="comentario" 
+        placeholder="Agregue un comentario si lo desea"
+        rows="3"></textarea>
     </div>
     
     <div class="dialog-actions">

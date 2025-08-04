@@ -21,15 +21,16 @@
         </td>
         <td class="table-td">
           <ng-container *ngIf="pedido.estado === 'COMPLETADO'">
-            <button class="btn btn-create" (click)="onDownload.emit(pedido.id)">Descargar</button>
+            <button class="btn btn-create" (click)="download.emit(pedido.id)">Descargar</button>
           </ng-container>
           
           <ng-container *ngIf="auth.rolSalud() || auth.rolAdmin()">
             <ng-container *ngIf="pedido.estado === 'PENDIENTE'">
-              <button class="btn btn-func" (click)="onTake.emit(pedido.id)">Tomar</button>
+              <button class="btn btn-func" (click)="take.emit(pedido.id)">Tomar</button>
             </ng-container>
             <ng-container *ngIf="pedido.estado === 'TOMADO'">
-              <button class="btn btn-func" (click)="openCompleteDialog(pedido.id)">Completar</button>
+              <button class="btn btn-create" (click)="complete.emit(pedido.id)">Completar</button>
+              <button class="btn btn-delete" (click)="release.emit(pedido.id)">Soltar</button>
             </ng-container>
           </ng-container>
         </td>
@@ -40,10 +41,3 @@
     </tbody>
   </table>
 </div>
-
-@if (showCompleteDialog) {
-  <reporte-input-dialog-pedido
-    (saved)="onCompleteWithReporte.emit($event)"
-    (closed)="onCloseDialog.emit()">
-  </reporte-input-dialog-pedido>
-}

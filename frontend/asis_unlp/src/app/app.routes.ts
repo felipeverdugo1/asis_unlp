@@ -104,7 +104,7 @@ export const routes: Routes = [
     ]
   },
   {
-    path: 'pedido',
+    path: 'pedidos',
     data: { title: 'Pedidos de Reportes' },
     children: [
       { path: '', component: ListaPedidosPage, canActivate: [AuthGuard] }
