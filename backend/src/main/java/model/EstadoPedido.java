@@ -13,6 +13,14 @@ public enum EstadoPedido {
         return EstadoPedido.valueOf(value.toUpperCase());
     }
 
+    public static boolean contiene(String value) {
+        try {
+            EstadoPedido.fromString(value);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+    }
 }
 
 

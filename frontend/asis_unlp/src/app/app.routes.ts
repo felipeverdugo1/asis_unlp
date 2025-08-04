@@ -13,6 +13,7 @@ import { FormZonaPage, ListarZonaPage } from './pages/zonas/zona.pages';
 import { Home } from './components/home/home';
 import { Login } from './components/login/login';
 import { AuthGuard, AdminGuard } from './guard/auth.guard';
+import { ListaPedidosPage } from './pages/pedidoReporte/pedidoReporte.pages';
 
 
 
@@ -100,6 +101,13 @@ export const routes: Routes = [
       { path: '', component: FiltroPage, data: { title: 'Filtrar Reporte' }, canActivate: [AuthGuard] },
       { path: 'resultado', component: ReportePage, data: { title: 'Reporte Generado' }, canActivate: [AuthGuard] },
       { path: 'filtros', component: FiltrosListPage, data: { title: 'Filtros Guardados' }, canActivate: [AuthGuard] }
+    ]
+  },
+  {
+    path: 'pedido',
+    data: { title: 'Pedidos de Reportes' },
+    children: [
+      { path: '', component: ListaPedidosPage, canActivate: [AuthGuard] }
     ]
   }
 ];

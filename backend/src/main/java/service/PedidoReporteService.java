@@ -12,10 +12,7 @@ import jakarta.inject.Inject;
 import model.*;
 
 
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 
 @RequestScoped
@@ -280,4 +277,21 @@ public class PedidoReporteService extends GenericServiceImpl<PedidoReporte, Long
         }
     }
 
+    public List<PedidoReporte> buscarPedidosPorEstado(String estado) {
+        if (!EstadoPedido.contiene(estado)) {
+            throw new IllegalArgumentException("Estado no válido: " + estado);
+        }
+        return pedidoReporteDAO.listarPedidosPorEstado(estado);
+    }
+
+    public List<PedidoReporte> listarPedidosByReferente(Long usuario_id){
+        Optional<Usuario> usuario_t = usuarioDAO.buscarPorId(usuario_id);
+        // Verificar si el usuario es referente?
+        if (usuario_t.isEmpty()){
+            throw new EntidadNoEncontradaException("No existe un referente con ese id");
+        }
+        List<PedidoReporte> response = new ArrayList<>();
+        response = pedidoReporteDAO.listarPedidosPorReferente(usuario_id);
+        return response;
+    }
 }

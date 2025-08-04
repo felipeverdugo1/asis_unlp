@@ -162,7 +162,14 @@ public class ReporteController {
         return Response.status(Response.Status.CREATED).entity(reporte).build();
     }
 
-
+    @GET
+    @Path("/creadoPor/{usuario_id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Este endpoint nos permite obtener todos los reportes de un usuario.",
+            parameters = @Parameter(name = "usuario id"))
+    public Response getByEstado(@PathParam("usuario_id") Long user_id) {
+        return Response.ok(service.listarReportesByCreador(user_id)).build();
+    }
 
 
 }
