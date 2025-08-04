@@ -2,9 +2,12 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { BehaviorSubject, Observable } from "rxjs";
 import { tap } from "rxjs/operators";
+import { Reporte } from "../models/reporte.model";
+import { environment } from "../../environments/environment";
 
 @Injectable({ providedIn: 'root' })
 export class ReporteService {
+  private apiUrl = environment.apiUrl+"reporte";
   private filtroActual = new BehaviorSubject<any>(null);
   private reporteData = new BehaviorSubject<any>(null);
 
@@ -33,5 +36,13 @@ export class ReporteService {
 
   getReporteData() {
     return this.reporteData.asObservable();
+  }
+
+  getReportes(): Observable<Reporte[]> {
+    return this.http.get<Reporte[]>(`${this.apiUrl}`);
+  }
+
+  getReportesByUserId(userId: number): Observable<Reporte[]> {
+    return this.http.get<Reporte[]>(`${this.apiUrl}/creadoPor/${userId}`);
   }
 }

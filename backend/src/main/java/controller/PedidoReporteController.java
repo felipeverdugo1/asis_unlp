@@ -186,6 +186,33 @@ public class PedidoReporteController {
         return Response.ok().build();
     }
 
+    @GET
+    @Path("/estado/{estado}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Este endpoint nos permite obtener todos los pedidos que esten en cierto estado.",
+            parameters = @Parameter(name = "estado"))
+    public Response getByEstado(@PathParam("estado") String estado) {
+        return Response.ok(service.buscarPedidosPorEstado(estado)).build();
+    }
+
+    @GET
+    @Path("/referente/{usuario_id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Este endpoint nos permite obtener todos los pedidos creados por un usuario.",
+            parameters = @Parameter(name = "usuario id"))
+    public Response getByEstado(@PathParam("usuario_id") Long user_id) {
+        return Response.ok(service.listarPedidosByReferente(user_id)).build();
+    }
+
+    @GET
+    @Path("/tomados/{usuario_id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Este endpoint nos permite obtener todos los pedidos tomados por un usuario.",
+            parameters = @Parameter(name = "usuario id"))
+    public Response getByAsignado(@PathParam("usuario_id") Long user_id) {
+        return Response.ok(service.listarPedidosByAsignado(user_id)).build();
+    }
+
 }
 
 

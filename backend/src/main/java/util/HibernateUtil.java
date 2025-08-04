@@ -13,6 +13,23 @@ public class HibernateUtil {
 
     public HibernateUtil() {
         this.emf = Persistence.createEntityManagerFactory("asis_unlp");
+        initializeDatabase();
+    }
+
+    private void initializeDatabase() {
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            // Ejecutar consulta de prueba
+            em.createNativeQuery("SELECT 1").getResultList();
+            em.getTransaction().commit();
+            System.out.println("Base de datos inicializada correctamente");
+        } catch (Exception e) {
+            System.out.println("Error durante inicialización de BD: " + e.getMessage());
+            throw e;
+        } finally {
+            em.close();
+        }
     }
 
     @Produces

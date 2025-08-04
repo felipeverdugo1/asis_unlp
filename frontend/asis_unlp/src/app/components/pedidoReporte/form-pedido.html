@@ -1,0 +1,13 @@
+<form #pedidoForm="ngForm" (ngSubmit)="pedidoForm.valid && onSubmit.emit(pedido)">
+  <div class="form-group">
+    <label class="form-label">Nombre del pedido:</label>
+    <input class="form-input" [(ngModel)]="pedido.nombre" name="nombre" required />
+  </div>
+
+  <div class="form-group">
+    <label class="form-label">Descripción del pedido:</label>
+    <input class="form-input" [(ngModel)]="pedido.camposPedidos" name="camposPedidos" placeholder="Se solicita un reporte con..." required />
+  </div>
+
+  <button class="btn btn-create" type="submit" [disabled]="!pedidoForm.valid">Guardar</button>
+</form>

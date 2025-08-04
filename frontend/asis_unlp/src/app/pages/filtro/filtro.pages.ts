@@ -12,7 +12,7 @@ import { OnInit } from '@angular/core';
 
 @Component({
   standalone: true,
-  imports: [FiltroReporteComponent, FilenameInputDialogComponent],
+  imports: [FiltroReporteComponent],
   template: `
   <div class="page-container">
     <div class="page-header">

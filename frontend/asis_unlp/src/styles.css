@@ -637,3 +637,24 @@ body {
   gap: 10px;
   margin-top: 20px;
 }
+
+.badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: white;
+}
+
+.badge-completado {
+  background-color: #4CAF50; /* Verde */
+}
+
+.badge-pendiente {
+  background-color: #FFC107; /* Amarillo */
+}
+
+.badge-tomado {
+  background-color: #2196F3; /* Azul */
+}
