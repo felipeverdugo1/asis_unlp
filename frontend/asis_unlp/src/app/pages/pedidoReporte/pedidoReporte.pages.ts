@@ -3,7 +3,7 @@ import { CommonModule } from "@angular/common";
 import { OnInit } from "@angular/core";
 import { Router, RouterModule } from "@angular/router";
 import { ReporteService } from "../../services/reporte.service";
-import { ListarPedidosComponent, ReporteInputPedidoComponent } from "../../components/reporte/pedido-reporte";
+import { ListarPedidosComponent, ReporteInputPedidoComponent } from "../../components/pedidoReporte/pedido-reporte";
 import { PedidoService } from "../../services/pedido.service";
 import { Observable } from "rxjs";
 import { AuthService } from "../../services/auth.service";
@@ -45,7 +45,8 @@ import { PedidoReporte } from "../../models/pedido.model";
             (download)="onDownloadReporte($event)"
             (closeDialog)="closeDialog()"
             (completeWithReporte)="onCompleteWithReporte($event)"
-            (release)="onSoltar($event)">
+            (release)="onSoltar($event)"
+            (delete)="eliminarPedido($event)">
           </listar-pedidos>
         </div>
         <hr />
@@ -64,7 +65,8 @@ import { PedidoReporte } from "../../models/pedido.model";
           (download)="onDownloadReporte($event)"
           (closeDialog)="closeDialog()"
           (completeWithReporte)="onCompleteWithReporte($event)"
-          (release)="onSoltar($event)">
+          (release)="onSoltar($event)"
+          (delete)="eliminarPedido($event)">
         </listar-pedidos>
       </div>
 
@@ -215,6 +217,21 @@ export class ListaPedidosPage implements OnInit {
   closeDialog() {
     this.showCompleteDialog = false;
     this.selectedPedidoId = null;
+  }
+
+  eliminarPedido(pedidoId: number) {
+    if (confirm('¿Está seguro de que desea eliminar este pedido? Esta acción no se puede deshacer.')) {
+      this.pedidoService.eliminarPedido(pedidoId).subscribe({
+        next: () => {
+          this.cargarPedidos();
+          this.errorMensaje = null;
+        },
+        error: (err: any) => {
+          console.error('Error eliminando pedido', err);
+          this.errorMensaje = 'Error al eliminar el pedido';
+        }
+      });
+    }
   }
 }
 

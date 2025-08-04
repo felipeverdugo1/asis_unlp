@@ -52,4 +52,8 @@ export class PedidoService {
   getPedidosTomadosPorUsuario(usuarioId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/tomados/${usuarioId}`);
   }
+
+  eliminarPedido(pedidoId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${pedidoId}`);
+  }
 }

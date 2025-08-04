@@ -23,6 +23,9 @@
           <ng-container *ngIf="pedido.estado === 'COMPLETADO'">
             <button class="btn btn-create" (click)="download.emit(pedido.id)">Descargar</button>
           </ng-container>
+          <ng-container *ngIf="pedido.estado !== 'COMPLETADO' && auth.rolReferente()">
+            <button class="btn btn-delete" (click)="delete.emit(pedido.id)">Eliminar</button>
+          </ng-container>
           
           <ng-container *ngIf="auth.rolSalud() || auth.rolAdmin()">
             <ng-container *ngIf="pedido.estado === 'PENDIENTE'">

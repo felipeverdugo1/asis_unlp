@@ -58,6 +58,7 @@ export class ListarPedidosComponent {
   @Output() closeDialog = new EventEmitter<void>();
   @Output() completeWithReporte = new EventEmitter<{ reporteId: number, comentario?: string }>();
   @Output() release = new EventEmitter<number>();
+  @Output() delete = new EventEmitter<number>();
 
   constructor(public auth: AuthService) {}
 }
