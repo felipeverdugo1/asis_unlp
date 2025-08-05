@@ -1,10 +1,24 @@
+FROM node:18-slim as frontend-build
+
+WORKDIR /app
+COPY frontend/asis_unlp ./frontend/
+WORKDIR /app/frontend
+
+RUN npm install
+RUN npm run build 
+
 FROM maven as grupo5build
 
-WORKDIR /home/ejemplo
-COPY pom.xml pom.xml
+WORKDIR /home/app
+COPY backend/pom.xml pom.xml
 RUN mvn verify --fail-never
-COPY src src
+
+COPY backend/src ./src
+
+# Copio el frontend dentro del backend
+COPY --from=frontend-build /app/frontend/dist/* ./src/main/webapp/asis_unlp
+
 RUN mvn package
 
 FROM tomcat
-COPY --from=grupo5build /home/ejemplo/target/app-web-1.0-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
+COPY --from=grupo5build /home/app/target/app-web-1.0-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
