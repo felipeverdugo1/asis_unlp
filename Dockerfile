@@ -4,8 +4,7 @@ WORKDIR /app
 COPY frontend/asis_unlp ./frontend/
 WORKDIR /app/frontend
 
-RUN npm install
-RUN npx ng build --base-href asis_unlp
+RUN ng build
 
 FROM maven AS grupo5build
 
@@ -16,7 +15,7 @@ RUN mvn verify --fail-never
 COPY backend/src ./src
 
 # Copio el frontend dentro del backend
-COPY --from=frontend-build /app/frontend/dist/asis_unlp ./src/main/webapp/asis_unlp/
+COPY --from=frontend-build /app/frontend/dist/asis_unlp/browser/* ./src/main/webapp/asis_unlp/
 
 RUN mvn package
 
