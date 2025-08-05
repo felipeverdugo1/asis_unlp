@@ -5,7 +5,7 @@ COPY frontend/asis_unlp ./frontend/
 WORKDIR /app/frontend
 
 RUN npm install
-RUN npm run build
+RUN npx ng build --base-href /asis_unlp/
 
 FROM maven AS grupo5build
 
