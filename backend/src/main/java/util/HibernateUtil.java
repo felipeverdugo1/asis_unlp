@@ -12,7 +12,12 @@ public class HibernateUtil {
     private EntityManagerFactory emf;
 
     public HibernateUtil() {
-        this.emf = Persistence.createEntityManagerFactory("asis_unlp");
+        String env = System.getenv("APP_ENV");
+        if ("production".equals(env)) {
+            this.emf = Persistence.createEntityManagerFactory("asis_unlp");
+        } else {
+            this.emf = Persistence.createEntityManagerFactory("asis_unlp_localhost");
+        }
         initializeDatabase();
     }
 
