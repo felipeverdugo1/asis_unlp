@@ -1,11 +1,11 @@
-FROM node:20 AS frontend-build
+FROM node:22 AS frontend-build
 
 WORKDIR /app
 COPY frontend/asis_unlp ./frontend/
 WORKDIR /app/frontend
 
 RUN npm install
-RUN npm run build 
+RUN npm run build --base-href /asis_unlp/
 
 FROM maven AS grupo5build
 
