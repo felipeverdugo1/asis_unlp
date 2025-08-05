@@ -1,4 +1,4 @@
-FROM node:18-slim as frontend-build
+FROM node:20 AS frontend-build
 
 WORKDIR /app
 COPY frontend/asis_unlp ./frontend/
@@ -7,7 +7,7 @@ WORKDIR /app/frontend
 RUN npm install
 RUN npm run build 
 
-FROM maven as grupo5build
+FROM maven AS grupo5build
 
 WORKDIR /home/app
 COPY backend/pom.xml pom.xml
@@ -16,7 +16,7 @@ RUN mvn verify --fail-never
 COPY backend/src ./src
 
 # Copio el frontend dentro del backend
-COPY --from=frontend-build /app/frontend/dist/* ./src/main/webapp/asis_unlp
+COPY --from=frontend-build /app/frontend/dist/asis_unlp ./src/main/webapp/asis_unlp/
 
 RUN mvn package
 
