@@ -16,6 +16,8 @@ import jakarta.inject.Inject;
 import model.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RequestScoped
@@ -197,6 +199,16 @@ public class ReporteService extends GenericServiceImpl<Reporte, Long> {
         } else {
             throw new EntidadNoEncontradaException("El reporte no existe");
         }
+    }
+
+    public List<Reporte> listarReportesByCreador(Long usuario_id){
+        Optional<Usuario> usuario_t = usuarioDAO.buscarPorId(usuario_id);
+        if (usuario_t.isEmpty()){
+            throw new EntidadNoEncontradaException("No existe un usuario con ese id");
+        }
+        List<Reporte> response = new ArrayList<>();
+        response = reporteDAO.listarPedidosPorCreador(usuario_id);
+        return response;
     }
 }
 

@@ -1,0 +1,36 @@
+<div class="dialog-overlay" (click)="close()">
+  <div class="dialog-content" (click)="$event.stopPropagation()">
+    <h3>Completar Pedido</h3>
+    <hr />
+
+    <div class="form-group">
+      <label class="form-label" for="reporteId">Seleccione el reporte:</label>
+      <select class="form-dropdown" [(ngModel)]="reporteId" name="reporteId" required>
+        <option [value]="null" disabled selected>-- Seleccione un reporte --</option>
+        <option *ngFor="let reporte of reportes" [value]="reporte.id">
+          {{ reporte.nombreUnico }} ({{ reporte.fechaCreacion | date }})
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="comentario">Comentario (opcional):</label>
+      <textarea 
+        class="form-textarea" 
+        [(ngModel)]="comentario" 
+        name="comentario" 
+        placeholder="Agregue un comentario si lo desea"
+        rows="3"></textarea>
+    </div>
+    
+    <div class="dialog-actions">
+      <button class="btn btn-cancel" (click)="close()">Cancelar</button>
+      <button 
+        class="btn btn-create" 
+        (click)="save()"
+        [disabled]="!isValid()">
+        Completar
+      </button>
+    </div>
+  </div>
+</div>

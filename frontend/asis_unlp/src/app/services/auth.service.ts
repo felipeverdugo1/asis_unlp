@@ -54,11 +54,11 @@ export class AuthService {
   }
 
   rolSalud(): boolean {
-    return this.tieneRol('personal_salud') || this.rolAdmin();
+    return this.tieneRol('personal_salud');
   }
 
   rolReferente(): boolean { 
-    return this.tieneRol('referente') || this.rolAdmin();
+    return this.tieneRol('referente');
   }
 
   getUsuarioId(): number | null {
