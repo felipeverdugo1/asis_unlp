@@ -1,5 +1,6 @@
 package service;
 
+import controller.dto.RolDTO;
 import controller.dto.UsuarioDTO;
 import dao.RolDAO;
 import dao.UsuarioDAO;
@@ -24,6 +25,8 @@ public class UsuarioService extends GenericServiceImpl<Usuario, Long> {
     private UsuarioDAO usuarioDAO;
     @Inject
     private RolDAO rolDAO;
+    @Inject
+    private RolService rolService;
 
     @Inject
     public UsuarioService(UsuarioDAO usuarioDAO) {
