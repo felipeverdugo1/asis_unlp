@@ -14,7 +14,7 @@ import { Home } from './components/home/home';
 import { Login } from './components/login/login';
 import { AuthGuard, AdminGuard } from './guard/auth.guard';
 import { ListaPedidosPage, FormPedidoPage } from './pages/pedidoReporte/pedidoReporte.pages';
-
+import { CargaCsvPage, ListarEncuestaPage } from './pages/encuesta/encuesta.pages';
 
 
 export const routes: Routes = [
@@ -96,11 +96,11 @@ export const routes: Routes = [
   },
   {
     path: 'filtro',
-    data: { title: 'Generar Reportes' },
+    data: { title: 'Filtros' },
     children: [// TODO agregar guard de personal de salud
-      { path: '', component: FiltroPage, data: { title: 'Filtrar Reporte' }, canActivate: [AuthGuard] },
+      { path: 'nuevo', component: FiltroPage, data: { title: 'Generar Reporte' }, canActivate: [AuthGuard] },
       { path: 'resultado', component: ReportePage, data: { title: 'Reporte Generado' }, canActivate: [AuthGuard] },
-      { path: 'filtros', component: FiltrosListPage, data: { title: 'Filtros Guardados' }, canActivate: [AuthGuard] }
+      { path: '', component: FiltrosListPage, data: { title: 'Filtros Guardados' }, canActivate: [AuthGuard] }
     ]
   },
   {
@@ -109,6 +109,14 @@ export const routes: Routes = [
     children: [
       { path: '', component: ListaPedidosPage, canActivate: [AuthGuard] },
       { path: 'nuevo', component: FormPedidoPage, canActivate: [AuthGuard] },
+    ]
+  },
+  {
+    path: 'encuestas',
+    data: { title: 'Encuestas' },
+    children: [
+      { path: '', component: ListarEncuestaPage, canActivate: [AuthGuard, AdminGuard] },
+      { path: 'cargar-csv', component: CargaCsvPage, canActivate: [AuthGuard, AdminGuard] }
     ]
   }
 ];

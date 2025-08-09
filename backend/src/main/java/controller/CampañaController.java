@@ -130,6 +130,15 @@ public class CampañaController {
         service.eliminar(id);
         return Response.noContent().build();
     }
+
+    @GET
+    @Path("barrio/{barrio_id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Este endpoint nos permite obtener las campañas a partir de un barrio id.",
+            parameters = @Parameter(name = "barrio id"))
+    public Response getCampaniasByBarrio(@PathParam("barrio_id") Long barrio_id) {
+        return Response.ok(service.listarCampaniasByBarrio(barrio_id)).build();
+    }
 }
 
 

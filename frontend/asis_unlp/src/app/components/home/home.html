@@ -14,6 +14,7 @@
           <h2>Usuarios</h2>
           <div class="menu-buttons">
             <button class="btn btn-nav" routerLink="/usuario">Ver</button>
+            <button class="btn btn-nav" routerLink="/usuario/nuevo">Nuevo</button>
           </div>
         </div>
     
@@ -22,6 +23,7 @@
           <h2>Campañas / Jornadas</h2>
           <div class="menu-buttons">
             <button class="btn btn-nav" routerLink="/campania">Ver</button>
+            <button class="btn btn-nav" routerLink="/campania/nueva">Nueva Campaña</button>
           </div>
         </div>
 
@@ -30,6 +32,7 @@
           <h2>Org. Sociales</h2>
           <div class="menu-buttons">
             <button class="btn btn-nav" routerLink="/organizacionSocial">Ver</button>
+            <button class="btn btn-nav" routerLink="/organizacionSocial/nueva">Nueva</button>
           </div>
         </div>
 
@@ -38,6 +41,7 @@
           <h2>Encuestadores</h2>
           <div class="menu-buttons">
             <button class="btn btn-nav" routerLink="/encuestador">Ver</button>
+            <button class="btn btn-nav" routerLink="/encuestador/nuevo">Nuevo</button>
           </div>
         </div>      
 
@@ -46,6 +50,7 @@
           <h2>Roles</h2>
           <div class="menu-buttons">
             <button class="btn btn-nav" routerLink="/rol">Ver</button>
+            <button class="btn btn-nav" routerLink="/rol/nuevo">Nuevo</button>
           </div>
         </div>
       
@@ -54,6 +59,16 @@
           <h2>Barrios / Zonas</h2>
           <div class="menu-buttons">
             <button class="btn btn-nav" routerLink="/barrio">Ver</button>
+            <button class="btn btn-nav" routerLink="/barrio/nuevo">Nuevo</button>
+          </div>
+        </div>
+
+        <!-- Sección Encuestas -->
+        <div class="menu-section hover-effect">
+          <h2>Encuestas</h2>
+          <div class="menu-buttons">
+            <button class="btn btn-nav" routerLink="/encuestas">Ver</button>
+            <button class="btn btn-nav" routerLink="/encuestas/cargar-csv">Cargar CSV</button>
           </div>
         </div>
 
@@ -69,15 +84,8 @@
       <div class="menu-section hover-effect">
         <h2>Generación de Reportes</h2>
         <div class="menu-buttons">
-          <button class="btn btn-nav" routerLink="/filtro">Generar Reporte</button>
-        </div>
-      </div>
-
-      <!-- Sección Filtros Guardados -->
-      <div class="menu-section hover-effect">
-        <h2>Filtros Guardados</h2>
-        <div class="menu-buttons">
-          <button class="btn btn-nav" routerLink="/filtro/filtros">Ver Filtros</button>
+          <button class="btn btn-nav" routerLink="/filtro/nuevo">Generar Reporte</button>
+          <button class="btn btn-nav" routerLink="/filtro">Mis Filtros</button>
         </div>
       </div>
 
@@ -86,6 +94,7 @@
         <h2>Pedidos de Reportes</h2>
         <div class="menu-buttons">
           <button class="btn btn-nav" routerLink="/pedidos">Ver Pedidos</button>
+          <button class="btn btn-nav" routerLink="/pedidos/nuevo">Nuevo Pedido</button>
         </div>
       </div>
     </ng-container>

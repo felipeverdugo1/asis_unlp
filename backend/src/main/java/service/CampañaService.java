@@ -6,9 +6,13 @@ import dao.CampañaDAO;
 import exceptions.*;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
+import model.Barrio;
 import model.Campaña;
+import model.Jornada;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RequestScoped
@@ -126,4 +130,14 @@ public class CampañaService extends GenericServiceImpl<Campaña, Long> {
                 () -> { throw new EntidadNoEncontradaException("La campaña no existe"); }
         );
     }
+
+    public List<Campaña> listarCampaniasByBarrio(Long barrio_id){
+        Optional<Barrio> barrio_t = barrioDAO.buscarPorId(barrio_id);
+        if (barrio_t.isEmpty()){
+            throw new EntidadNoEncontradaException("No existe una campaña con ese id");
+        }
+        List<Campaña> response = campañaDAO.listarCampaniasByBarrio(barrio_id);
+        return response;
+    }
+
 }
