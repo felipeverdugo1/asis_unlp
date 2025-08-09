@@ -1,0 +1,106 @@
+<div class="form-container">
+  <form [formGroup]="formulario" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label class="form-label" for="encuestador_id">Encuestador:</label>
+      <ng-container *ngIf="encuestadores && encuestadores.length > 0">
+        <div class="form-dropdown-container">
+          <select id="encuestador_id" formControlName="encuestador_id" class="form-dropdown">
+            <option value="">Seleccione un encuestador</option>
+            <option *ngFor="let encuestador of encuestadores" [value]="encuestador.id">
+              {{ encuestador.nombre }}
+            </option>
+          </select>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="!encuestadores || encuestadores.length === 0">
+        <div class="empty-message">No hay encuestadores disponibles</div>
+      </ng-container>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="barrio_id">Barrio:</label>
+      <ng-container *ngIf="barrios && barrios.length > 0">
+        <div class="form-dropdown-container">
+          <select id="barrio_id" formControlName="barrio_id" class="form-dropdown">
+            <option value="">Seleccione un barrio</option>
+            <option *ngFor="let barrio of barrios" [value]="barrio.id">
+              {{ barrio.nombre }}
+            </option>
+          </select>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="!barrios || barrios.length === 0">
+        <div class="empty-message">No hay barrios disponibles</div>
+      </ng-container>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="zona_id">Zona:</label>
+      <ng-container *ngIf="zonas && zonas.length > 0">
+        <select id="zona_id" formControlName="zona_id" class="form-dropdown">
+          <option value="">Seleccione una zona</option>
+          <option *ngFor="let zona of zonas" [value]="zona.id">
+            {{ zona.nombre }}
+          </option>
+        </select>
+      </ng-container>
+      <ng-container *ngIf="!zonas || zonas.length === 0">
+        <div class="empty-message">No hay zonas disponibles</div>
+      </ng-container>
+    </div>
+
+    <div class="form-group">
+        <label class="form-label" for="campania_id">Campaña:</label>
+        <ng-container *ngIf="campanias && campanias.length > 0">
+          <select id="campania_id" formControlName="campania_id" class="form-dropdown">
+            <option value="">Seleccione una campaña</option>
+            <option *ngFor="let campania of campanias" [value]="campania.id">
+                {{ campania.nombre }}
+            </option>
+          </select>
+        </ng-container>
+        <ng-container *ngIf="!campanias || campanias.length === 0">
+            <div class="empty-message">No hay campañas disponibles</div>
+        </ng-container>
+    </div>
+
+    <div class="form-group">
+        <label class="form-label" for="jornada_id">Jornada:</label>
+        <ng-container *ngIf="jornadas && jornadas.length > 0">
+          <select id="jornada_id" formControlName="jornada_id" class="form-dropdown">
+            <option value="">Seleccione una jornada</option>
+            <option *ngFor="let jornada of jornadas" [value]="jornada.id">
+                {{ jornada.id }}
+            </option>
+          </select>
+        </ng-container>
+        <ng-container *ngIf="!jornadas || jornadas.length === 0">
+            <div class="empty-message">No hay jornadas disponibles</div>
+        </ng-container>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="generalCsv">Archivo General CSV:</label>
+      <input 
+        type="file" 
+        id="generalCsv" 
+        (change)="onFileChange($event, 'generalCsv')" 
+        accept=".csv"
+        class="form-control">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="branchesCsv">Archivo de Branches CSV:</label>
+      <input 
+        type="file" 
+        id="branchesCsv" 
+        (change)="onFileChange($event, 'branchesCsv')" 
+        accept=".csv"
+        class="form-control">
+    </div>
+
+    <button type="submit" class="btn btn-primary" [disabled]="!formulario.valid">
+      Enviar Datos
+    </button>
+  </form>
+</div>

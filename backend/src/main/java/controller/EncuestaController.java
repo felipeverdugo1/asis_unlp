@@ -20,6 +20,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import service.EncuestaService;
 
 import java.io.InputStream;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -57,41 +58,6 @@ public class EncuestaController {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
-
-
-//    @POST
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    @Produces(MediaType.APPLICATION_JSON)
-//    @Operation(description = "Este endpoint nos permite crear una encuesta, teniendo antes creados encuestador, zona y jornada.",
-//            requestBody = @RequestBody(description = "una nueva encuesta en formato JSON",
-//                    required = true,
-//                    content = @Content(
-//                            mediaType = "application/json",
-//                            examples = {@ExampleObject(
-//                                    name = "Encuesta 1",
-//                                    summary = "Encuesta 1",
-//                                    value = """
-//                                            {
-//                                               "nombreUnico": "/path/a/encuesta.xlsx",
-//                                               "fecha": "2025-06-13",
-//                                               "encuestador_id": 3,
-//                                               "zona_id": 1,
-//                                               "jornada_id": 1
-//                                            }
-//                                            """
-//                            )}
-//                    )
-//            ),
-//            responses = {
-//                    @ApiResponse(responseCode = "200", description = "Actualizacion exitosa"),
-//                    @ApiResponse(responseCode = "400", description = "Error de validacion."),
-//                    @ApiResponse(responseCode = "500", description = "Error interno.")
-//            }
-//    )
-//    public Response post(EncuestaDTO encuestaDTO) {
-//        Encuesta encuesta = service.crear(encuestaDTO);
-//        return Response.status(Response.Status.CREATED).entity(encuesta).build();
-//    }
 
 
     @PUT
@@ -154,9 +120,7 @@ public class EncuestaController {
     ) {
         // Procesar archivos directamente
         String resultado = encuestaService.cargarEncuestas(new CargaEncuestasDTO(generalCsv, branchesCsv, encuestador_id, zona_id, jornada_id));
-        return Response.ok(resultado).build();
-
-
+        return Response.ok(Map.of("mensaje", resultado)).build();
     }
 }
 

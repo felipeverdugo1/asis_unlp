@@ -33,4 +33,8 @@ export class CampaniaService {
     return this.http.post<Campania>(this.apiUrl, campaña);
   }
 
+  getCampaniasByBarrio(barrioId: number): Observable<Campania[]> {
+    return this.http.get<Campania[]>(`${this.apiUrl}/barrio/${barrioId}`);
+  }
+
 }
