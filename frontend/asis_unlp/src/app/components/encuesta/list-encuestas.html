@@ -1,0 +1,23 @@
+<div class="table-container">
+<table class="table">
+    <thead class="table-thead">
+      <tr>
+        <th class="table-th">UUID</th>
+        <th class="table-th">Fecha</th>
+        <th class="table-th"></th>
+      </tr>
+    </thead>
+    <tbody class="table-tbody">
+      <tr *ngFor="let encuesta of encuestas">
+        <td class="table-td">{{ encuesta.uuid }}</td>
+        <td class="table-td">{{ encuesta.fecha }}</td>
+        <td class="table-td">
+          <button class="btn btn-delete" (click)="onDelete.emit(encuesta.id)"> Borrar</button>
+        </td>
+      </tr>
+      <tr *ngIf="encuestas.length === 0">
+        <td class="table-td" colspan="6">No hay encuestas cargadas.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

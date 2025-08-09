@@ -96,7 +96,7 @@ public class BarrioController {
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @RequiereRol("adminadmin")
+    @RequiereRol("admin")
     @Operation(description = "Este endpoint nos permite actualizar el barrio a partir de un id",
             parameters = @Parameter(name = "barrio id"),
             requestBody = @RequestBody(description = "un nuevo barrio en formato JSON",
