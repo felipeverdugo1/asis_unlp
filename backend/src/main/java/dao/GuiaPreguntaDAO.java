@@ -4,11 +4,9 @@ import jakarta.enterprise.context.RequestScoped;
 import jakarta.transaction.Transactional;
 import model.GuiaPregunta;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.List;
+import java.util.Map;
 
 @RequestScoped
 @Transactional
@@ -26,17 +24,45 @@ public class GuiaPreguntaDAO extends GenericDAOImpl<GuiaPregunta, Long> {
         ).getResultList();
     }
 
+
+
+    private ByteArrayInputStream toByteArrayInputStream(InputStream input) throws IOException {
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        byte[] data = new byte[4096];
+        int nRead;
+        while ((nRead = input.read(data, 0, data.length)) != -1) {
+            buffer.write(data, 0, nRead);
+        }
+        buffer.flush();
+        return new ByteArrayInputStream(buffer.toByteArray());
+    }
+
+
+
+
     public void cargarDesdeArchivos(InputStream generalCsv, InputStream branchesCsv) throws IOException {
         em.getTransaction().begin();
 
-        cargarDesdeHeader(generalCsv, "general");
-        cargarDesdeHeader(branchesCsv, "branch");
+        // Convertir InputStream a ByteArrayInputStream
+        ByteArrayInputStream generalCsvBytes = toByteArrayInputStream(generalCsv);
+        ByteArrayInputStream branchesCsvBytes = toByteArrayInputStream(branchesCsv);
+
+        cargarDesdeHeader(generalCsvBytes, "general");
+        cargarDesdeHeader(branchesCsvBytes, "branch");
 
         em.getTransaction().commit();
-        em.close();
     }
 
     private void cargarDesdeHeader(InputStream inputStream, String origen) throws IOException {
+        // Mapa de campos que nos interesan con sus identificadores
+        Map<String, String> camposRelevantes = Map.of(
+                "8_3_Edad", "Edad",
+                "9_4_De_acuerdo_a_la_", "Género",
+                "20_14_Recibe_algn_pr", "Acceso a salud",
+                "38_26_Tiene_acceso_a", "Acceso a agua",
+                "37_25_Con_qu_materia", "Material de vivienda"
+        );
+
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         String headerLine = reader.readLine();
         if (headerLine == null) return;
@@ -45,31 +71,42 @@ public class GuiaPreguntaDAO extends GenericDAOImpl<GuiaPregunta, Long> {
         for (int i = 0; i < headers.length; i++) {
             String raw = headers[i].trim();
 
-            if (raw.matches("^\\d+(_\\d+)?(_.*)?")) {
-                // Guardar todo el header como row_etiqueta
+            // Verificar si el campo es uno de los que nos interesan
+            boolean esCampoRelevante = camposRelevantes.keySet().stream()
+                    .anyMatch(raw::contains);
+
+            if (esCampoRelevante) {
+                // Extraer el identificador completo (ej: "8_3_Edad")
                 String rowEtiqueta = raw;
 
-                // Generar etiqueta legible (el texto después del último guion bajo)
-                String[] partes = raw.split("_", 3);
-                String codigo = partes[0];
-                String etiquetaLegible = (partes.length == 3) ? partes[2].replace("_", " ").trim() : "sin definir";
+                // Obtener la etiqueta legible del mapa
+                String etiquetaLegible = camposRelevantes.entrySet().stream()
+                        .filter(entry -> raw.contains(entry.getKey()))
+                        .map(Map.Entry::getValue)
+                        .findFirst()
+                        .orElse("sin definir");
+
+                // Extraer el código (primer número antes del guion bajo)
+                String codigo = rowEtiqueta.split("_")[0];
 
                 // Verificar si ya existe
-                Long count = em.createQuery("SELECT COUNT(g) FROM GuiaPregunta g WHERE g.row_etiqueta = :row", Long.class)
+                Long count = em.createQuery(
+                                "SELECT COUNT(g) FROM GuiaPregunta g WHERE g.row_etiqueta = :row", Long.class)
                         .setParameter("row", rowEtiqueta)
                         .getSingleResult();
-                if (count > 0) continue;
 
-                // Crear y persistir
-                GuiaPregunta gp = new GuiaPregunta()
-                        .setRow_etiqueta(rowEtiqueta)
-                        .setCodigo(codigo)
-                        .setEtiqueta(etiquetaLegible)
-                        .setOrden(i);
+                if (count == 0) {
+                    // Crear y persistir solo los campos relevantes
+                    GuiaPregunta gp = new GuiaPregunta()
+                            .setRow_etiqueta(rowEtiqueta)
+                            .setCodigo(codigo)
+                            .setEtiqueta(etiquetaLegible);
 
-                em.persist(gp);
+                    em.persist(gp);
+                }
             }
         }
+        em.flush();
     }
 
 

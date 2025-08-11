@@ -1,6 +1,7 @@
 package controller;
 
 import controller.dto.CargaEncuestasDTO;
+import controller.dto.ObtenerDatosDTO;
 import controller.dto.ReporteDTO;
 import controller.dto.ZonaDTO;
 import dao.GenericDAOImpl;
@@ -91,11 +92,22 @@ public class ReporteController {
     }
     )
 
+
+
+
+
+
+
     public Response post(@Valid ReporteDTO dto) {
         //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con barrioService
         Reporte reporte = service.crear(dto);
         return Response.status(Response.Status.CREATED).entity(reporte).build();
     }
+
+
+
+
+
 
 
     @PUT
@@ -170,7 +182,6 @@ public class ReporteController {
     public Response getByEstado(@PathParam("usuario_id") Long user_id) {
         return Response.ok(service.listarReportesByCreador(user_id)).build();
     }
-
 
 }
 

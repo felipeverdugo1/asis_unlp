@@ -1,6 +1,7 @@
 package service;
 
 import controller.dto.CampañaDTO;
+import controller.dto.ObtenerDatosDTO;
 import controller.dto.ReporteDTO;
 import controller.dto.ZonaDTO;
 import dao.CampañaDAO;
@@ -211,6 +212,7 @@ public class ReporteService extends GenericServiceImpl<Reporte, Long> {
         return response;
     }
 }
+
 
 
 
