@@ -1,6 +1,7 @@
 package service;
 
 import controller.dto.CampañaDTO;
+import controller.dto.ObtenerDatosDTO;
 import controller.dto.ReporteDTO;
 import controller.dto.ZonaDTO;
 import dao.CampañaDAO;
@@ -16,6 +17,7 @@ import jakarta.inject.Inject;
 import model.*;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @RequestScoped
@@ -198,7 +200,10 @@ public class ReporteService extends GenericServiceImpl<Reporte, Long> {
             throw new EntidadNoEncontradaException("El reporte no existe");
         }
     }
+
+
 }
+
 
 
 

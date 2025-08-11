@@ -35,4 +35,11 @@ public class Pregunta {
     private Encuesta encuesta;
 
 
+    @Override
+    public int hashCode(){
+        return this.id.hashCode();
+    }
+
+
+
 }

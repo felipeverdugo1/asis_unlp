@@ -33,17 +33,23 @@ public class GuiaPreguntasController {
 
     @Inject
     GuiaPreguntaService service;
-    @Inject
-    private EncuestadorService encuestadorService;
 
 
-    @POST
+
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Este endpoint  permite cargar las preguntas.")
-    public Response post() throws IOException {
-        service.crear();
-        return Response.status(Response.Status.CREATED).entity(null).build();
+    @Operation(description = "Este endpoint nos permite obtener toda la guia de preguntas.")
+    public Response get() {
+        return Response.ok(service.listarTodos()).build();
     }
+
+//    @POST
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Operation(description = "Este endpoint  permite cargar las preguntas.")
+//    public Response post() throws IOException {
+//        service.crear();
+//        return Response.status(Response.Status.CREATED).entity(null).build();
+//    }
 
 
 }

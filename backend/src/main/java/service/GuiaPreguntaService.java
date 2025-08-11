@@ -4,6 +4,7 @@
 package service;
 
 
+import controller.dto.CargaEncuestasDTO;
 import controller.dto.EncuestadorDTO;
 import dao.EncuestadorDAO;
 import dao.GuiaPreguntaDAO;
@@ -39,12 +40,31 @@ public class GuiaPreguntaService extends GenericServiceImpl<GuiaPregunta, Long> 
 
 
 
-    public void crear() throws IOException {
 
-        InputStream generalCsv = getClass().getClassLoader().getResourceAsStream("csv/general.csv");
-        InputStream branchesCsv = getClass().getClassLoader().getResourceAsStream("csv/branches.csv");
 
-        guiaPreguntaDAO.cargarDesdeArchivos(generalCsv,branchesCsv);
 
-    }
+
+//    public void crear() throws IOException {
+//
+//        InputStream generalCsv = getClass().getClassLoader().getResourceAsStream("csv/general.csv");
+//        InputStream branchesCsv = getClass().getClassLoader().getResourceAsStream("csv/branches.csv");
+//
+//        System.out.println(generalCsv);
+//        System.out.println(branchesCsv);
+//        guiaPreguntaDAO.cargarDesdeArchivos(generalCsv,branchesCsv);
+//
+//    }
+
+
+//    public void crear(CargaEncuestasDTO dto) throws IOException {
+//
+//        InputStream generalCsv = dto.getGeneralCsv();
+//        InputStream branchesCsv = dto.getBranchesCsv();
+//
+//        guiaPreguntaDAO.cargarDesdeArchivos(generalCsv,branchesCsv);
+//
+//    }
+
+
+
 }

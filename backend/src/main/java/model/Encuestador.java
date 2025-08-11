@@ -1,5 +1,6 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -32,7 +33,8 @@ public class Encuestador {
     @Column(nullable = false)
     private String ocupacion;
 
-    @OneToMany(mappedBy = "encuestador")
+    @JsonManagedReference
+    @OneToMany(mappedBy = "encuestador" , fetch = FetchType.LAZY)
     private List<Encuesta> encuestas;
 
 }

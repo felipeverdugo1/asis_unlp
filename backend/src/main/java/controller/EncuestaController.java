@@ -1,7 +1,9 @@
 package controller;
 
 import controller.dto.CargaEncuestasDTO;
+import controller.dto.DatosRecolectadosDTO;
 import controller.dto.EncuestaDTO;
+import controller.dto.ObtenerDatosDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -20,6 +22,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import service.EncuestaService;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -58,6 +61,52 @@ public class EncuestaController {
         }
     }
 
+
+
+    @POST
+    @Path("/obtener-datos")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Este endpoint nos permite obtener los datos de las encuestas para realizar un reporte",
+            requestBody = @RequestBody(description = "unos campos en formato JSON",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = {@ExampleObject(
+                                    name = "ObtenerDatos",
+                                    summary = "campos de prueba",
+                                    value = """
+                                            {
+                                              "edad": [
+                                                "12",
+                                                "32"
+                                              ],
+                                              "genero": [
+                                                "varón cis"
+                                              ],
+                                              "barrio": "2",
+                                              "acceso_salud": "si",
+                                              "acceso_agua": "si",
+                                              "material_vivienda": [
+                                                "chapa"
+                                              ]
+                                            }
+                                            """
+                            )}
+                    )
+            )
+            , responses = {
+            @ApiResponse(responseCode = "200", description = "Creacion exitosa"),
+            @ApiResponse(responseCode = "400", description = "Error de validacion."),
+            @ApiResponse(responseCode = "500", description = "Error interno.")
+    }
+    )
+    public Response obtenerDatos(ObtenerDatosDTO dto) {
+        List<DatosRecolectadosDTO> resultado = service.obtenerDatos(dto);
+        return Response.ok(resultado).build();
+
+
+    }
 
 //    @POST
 //    @Consumes(MediaType.APPLICATION_JSON)
