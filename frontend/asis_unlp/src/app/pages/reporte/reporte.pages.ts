@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, ViewChild } from "@angular/core";
+import { Component, ElementRef, inject, ViewChild, ChangeDetectorRef } from "@angular/core";
 import { CommonModule, formatDate } from "@angular/common";
 import { AsyncPipe } from "@angular/common";
 import { OnInit } from "@angular/core";
@@ -16,12 +16,9 @@ import { AuthService } from "../../services/auth.service";
     <div class="page-container">
       <div class="page-header">
         <h1>Reporte Generado</h1>
-        <ng-container *ngIf="generandoPDF">
-          <p>Generando PDF, por favor espere...</p>
-        </ng-container>
-        <ng-container *ngIf="!generandoPDF">
-          <button class="btn btn-create" (click)="generarYGuardarPDF()">Guardar Reporte</button>
-        </ng-container>
+        <button class="btn btn-create" (click)="generarYGuardarPDF()" [disabled]="generandoPDF">
+            {{ generandoPDF ? 'Generando...' : 'Guardar Reporte' }}
+        </button>
       </div>
     </div>
 
@@ -43,6 +40,8 @@ export class ReportePage implements OnInit {
   generandoPDF: boolean = false;
   reporteData$ = this.reporteService.getReporteData();
 
+  constructor(private cdRef: ChangeDetectorRef) {}
+
 
   ngOnInit() {
     const filtro = this.reporteService.getFiltroActual();
@@ -56,6 +55,7 @@ export class ReportePage implements OnInit {
   }
 
   async generarYGuardarPDF() {
+    this.cdRef.detectChanges(); 
     this.generandoPDF = true;
     try {
       const user_id = this.authService.getUsuarioId();
@@ -93,17 +93,24 @@ export class ReportePage implements OnInit {
 
       this.reporteService.persistirPDF(formData).subscribe({
         next: (response) => {
-          console.log('PDF guardado en servidor', response);
           this.generandoPDF = false;
+          this.cdRef.detectChanges(); 
+          console.log('PDF guardado en servidor', response);
         },
         error: err => {
-          console.error('Error guardando PDF', err);
           this.generandoPDF = false;
+          this.cdRef.detectChanges(); 
+          console.error('Error guardando PDF', err);
+        },
+        complete: () => {
+          this.generandoPDF = false;
+          this.cdRef.detectChanges(); 
         }
       });
     
     } catch (error) {
       console.error('Error generando PDF:', error);
+      this.generandoPDF = false;
       // Aquí podrías agregar notificación al usuario
     }
   }
