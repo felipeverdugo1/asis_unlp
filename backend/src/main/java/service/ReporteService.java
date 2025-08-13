@@ -1,5 +1,7 @@
 package service;
 
+import controller.dto.CampañaDTO;
+import controller.dto.ObtenerDatosDTO;
 import controller.dto.ReporteDTO;
 import dao.CampañaDAO;
 import dao.ReporteDAO;
@@ -302,6 +304,7 @@ public class ReporteService extends GenericServiceImpl<Reporte, Long> {
         return safeName.isEmpty() ? "documento.pdf" : safeName;
     }
 }
+
 
 
 

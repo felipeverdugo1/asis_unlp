@@ -40,7 +40,7 @@ public class Jornada {
     private Campaña campaña;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "jornada", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "jornada", cascade = CascadeType.REMOVE , fetch = FetchType.EAGER)
     private List<Encuesta> encuestas = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)

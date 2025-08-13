@@ -1,5 +1,7 @@
 package controller;
 
+import controller.dto.CargaEncuestasDTO;
+import controller.dto.ObtenerDatosDTO;
 import controller.dto.ReporteDTO;
 import exceptions.EntidadNoEncontradaException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -85,11 +87,22 @@ public class ReporteController {
     }
     )
 
+
+
+
+
+
+
     public Response post(@Valid ReporteDTO dto) {
         //TODO buscar en la base por id los otros campos y agregarlos al objeto y actualizarlo con barrioService
         Reporte reporte = service.crear(dto);
         return Response.status(Response.Status.CREATED).entity(reporte).build();
     }
+
+
+
+
+
 
 
     @PUT
