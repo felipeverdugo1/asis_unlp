@@ -94,11 +94,13 @@ export class ReportePage implements OnInit {
       this.reporteService.persistirPDF(formData).subscribe({
         next: (response) => {
           console.log('PDF guardado en servidor', response);
+          this.generandoPDF = false;
         },
-        error: err => console.error('Error guardando PDF', err)
+        error: err => {
+          console.error('Error guardando PDF', err);
+          this.generandoPDF = false;
+        }
       });
-
-      this.generandoPDF = false;
     
     } catch (error) {
       console.error('Error generando PDF:', error);
