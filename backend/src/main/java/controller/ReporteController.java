@@ -172,10 +172,14 @@ public class ReporteController {
     @Operation(description = "Este endpoint permite guardar en disco un pdf pasado como base64")
     public Response persistirPDF(
             @FormDataParam("file") InputStream pdf,
-            @FormDataParam("file") String filename
+            @FormDataParam("fileName") String filename,
+            @FormDataParam("usuario_id") String usuario,
+            @FormDataParam("campania_id")  String campaña,
+            @FormDataParam("descripcion") String descripcion
     ) {
-        System.out.println("QUE PASA ACA VIEJO");
-        String response = service.persistirPDF(pdf, filename);
+        Long user_id = Long.parseLong(usuario);
+        Long campaña_id = Long.parseLong(campaña);
+        String response = service.persistirPDF(pdf, filename, user_id, campaña_id, descripcion);
         return Response.ok(Map.of("mensaje", response)).build();
     }
 

@@ -9,6 +9,7 @@ import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import model.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -79,7 +80,7 @@ public class ReporteService extends GenericServiceImpl<Reporte, Long> {
                 reporteDAO.crear(reporte_nuevo);
             }
         } else {
-            throw new FaltanArgumentosException("El reporte_id es obligatorio");
+            throw new FaltanArgumentosException("La campaña id y el user id es obligatorio");
         }
         return reporte_nuevo;
     }
@@ -219,10 +220,11 @@ public class ReporteService extends GenericServiceImpl<Reporte, Long> {
         }
 
         // 2. Si no hay variable, usar carpeta relativa (desarrollo)
+        // return "C:\\\arreglate\\\\vos\\\\que\\\\usas\\\\\windows
         return "/home/matiasc/reportesPDF/";
     }
 
-    public String persistirPDF(InputStream pdfStream, String filename) {
+    public String persistirPDF(InputStream pdfStream, String filename, Long user_id, Long campaña_id, String descr) {
         // Validaciones básicas
         if (pdfStream == null) {
             throw new IllegalArgumentException("El stream del PDF no puede ser nulo");
@@ -233,6 +235,8 @@ public class ReporteService extends GenericServiceImpl<Reporte, Long> {
 
         // Obtener el directorio de almacenamiento
         String storagePath = getStoragePath();
+
+        Path filePath;
 
         try {
             // Crear el directorio si no existe
@@ -245,34 +249,57 @@ public class ReporteService extends GenericServiceImpl<Reporte, Long> {
             String safeFilename = sanitizeFilename(filename);
 
             // Crear el path completo del archivo
-            Path filePath = directory.resolve(safeFilename);
+            filePath = directory.resolve(safeFilename).normalize();
 
             // Guardar el archivo en disco
-            System.out.println("PERSISTIMOS EL DISCO");
             Files.copy(pdfStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-
-            return "PDF guardado exitosamente en: " + filePath.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Error al guardar el PDF en disco: " + e.getMessage(), e);
+            System.out.println(e.getMessage());
+            throw new RuntimeException("Error al guardar el PDF en disco: " + e.getMessage());
         }
+
+        LocalDate fechaActual = LocalDate.now();
+        // falta pasarle id de la campaña y descripcion
+        ReporteDTO dto = new ReporteDTO(fechaActual, filePath.toString(), descr, user_id, campaña_id, null);
+        crear(dto);
+
+        return "PDF guardado exitosamente en: " + filePath.toString();
     }
 
     /**
      * Método para sanitizar el nombre de archivo y evitar path traversal
      */
     private String sanitizeFilename(String filename) {
-        // Reemplazar caracteres no permitidos
-        String safeName = filename.replaceAll("[^a-zA-Z0-9.-]", "_");
+        if (filename == null || filename.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre de archivo no puede ser nulo o vacío");
+        }
 
-        // Eliminar intentos de path traversal
-        safeName = safeName.replaceAll("\\.\\.", "");
+        // 1. Obtener solo el nombre del archivo (sin path)
+        String safeName = new File(filename.trim()).getName();
 
-        // Asegurar que termina con .pdf
+        // 2. Eliminar caracteres no permitidos (más restrictivo)
+        safeName = safeName.replaceAll("[^a-zA-Z0-9._-]", "_");
+
+        // 3. Eliminar múltiples puntos y guiones consecutivos
+        safeName = safeName.replaceAll("[._-]{2,}", "_");
+
+        // 4. Asegurar que comience y termine con caracteres válidos
+        safeName = safeName.replaceAll("^[._-]+", "").replaceAll("[._-]+$", "");
+
+        // 5. Asegurar extensión .pdf
         if (!safeName.toLowerCase().endsWith(".pdf")) {
             safeName += ".pdf";
         }
 
-        return safeName;
+        // 6. Limitar longitud máxima (255 caracteres)
+        int maxLength = 255;
+        if (safeName.length() > maxLength) {
+            int extensionLength = 4; // .pdf
+            int baseLength = maxLength - extensionLength;
+            safeName = safeName.substring(0, baseLength) + safeName.substring(safeName.length() - extensionLength);
+        }
+
+        return safeName.isEmpty() ? "documento.pdf" : safeName;
     }
 }
 

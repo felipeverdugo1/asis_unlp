@@ -57,19 +57,13 @@ export class CargaCsvPage {
     <div class="page-header">
       <h1 class="page-title">Encuestas</h1>
       <button (click)="importarEncuestas()" class="btn btn-create">Cargar Encuestas</button>
-      <!----PDF PRUEBA----->
-      <!----PDF PRUEBA----->
-      <button (click)="generarYGuardarPDF()">Generar PDF</button>
-      <!----PDF PRUEBA----->
-      <!----PDF PRUEBA----->
     </div>
 
     <div *ngIf="errorMensaje" class="error-box">
       {{ errorMensaje }}
     </div>
 
-    <!----PDF PRUEBA ---------------------VVVVVVVV------------>
-    <div class="content-container" #contenidoParaPDF>
+    <div class="content-container">
     <listar-encuestas 
       [encuestas]="(encuestas$ | async) ?? []"
       (onDelete)="borrarEncuesta($event)">
@@ -79,24 +73,12 @@ export class CargaCsvPage {
   `
 })
 export class ListarEncuestaPage implements OnInit {
-  //////////////////////
-  ////////// PDF prueba
-  @ViewChild('contenidoParaPDF', { static: false }) contenidoParaPDF!: ElementRef;
-  /////////////////////
-  /////////// PDF prueba
   encuestas$!: Observable<Encuesta[]>;
   errorMensaje: string | null = null;
 
   constructor(
     private encuestaService: EncuestaService,
-    private router: Router,
-    /////////////////////
-    /////// PDF prueba
-    private pdfService: PdfService,
-    private reporteService: ReporteService,
-    private authService: AuthService
-    //////// PDF prueba
-    /////////////////////
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -122,40 +104,4 @@ export class ListarEncuestaPage implements OnInit {
     }
   }
 
-
-  //////////////////////
-  /////////////// pDF PRUEBA
-  async generarYGuardarPDF() {
-    try {
-      const user_id = this.authService.getUsuarioId();
-      const now = new Date();
-      const fechaHora = formatDate(now, 'yyyy-MM-dd_HH-mm-ss', 'en-US');
-      const fileName = `reporte_${user_id}_${fechaHora}.pdf`;
-      const { pdfBlob, pdfBase64 } = await this.pdfService.generarPDF(
-        this.contenidoParaPDF.nativeElement,
-        fileName
-      );
-
-      // Descargar automáticamente
-      const url = window.URL.createObjectURL(pdfBlob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = fileName;
-      a.click();
-      window.URL.revokeObjectURL(url);
-
-      const formData = new FormData();
-      formData.append('file', pdfBlob, fileName);
-
-      // Guardar en el servidor (si es necesario)
-      this.reporteService.persistirPDF(fileName, pdfBase64).subscribe({
-        next: (response) => console.log('PDF guardado en servidor', response),
-        error: err => console.error('Error guardando PDF', err)
-      });
-
-    } catch (error) {
-      console.error('Error generando PDF:', error);
-    }
-  }
-  //////////////////////
 }

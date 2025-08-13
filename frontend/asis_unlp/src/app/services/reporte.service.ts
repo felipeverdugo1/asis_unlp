@@ -46,21 +46,10 @@ export class ReporteService {
     return this.http.get<Reporte[]>(`${this.apiUrl}/creadoPor/${userId}`);
   }
 
-  persistirPDF(fileName: string, base64Data: string): Observable<any> {
-    const pureBase64 = base64Data.split(',')[1] || base64Data;
-    const byteCharacters = atob(pureBase64);
-    const byteNumbers = new Array(byteCharacters.length);
-    
-    for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-    
-    const byteArray = new Uint8Array(byteNumbers);
-    const blob = new Blob([byteArray], {type: 'application/pdf'});
-    
-    const formData = new FormData();
-    formData.append('file', blob, fileName);
-    
-    return this.http.post(`${this.apiUrl}/guardarPDFenDisco`, formData);
+  persistirPDF(formData: FormData): Observable<any> {
+    return this.http.post(`${this.apiUrl}/guardarPDFenDisco`, formData, {
+      reportProgress: true,
+      responseType: 'json'
+    });
   }
 }
