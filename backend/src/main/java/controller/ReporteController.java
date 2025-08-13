@@ -3,8 +3,6 @@ package controller;
 import controller.dto.CargaEncuestasDTO;
 import controller.dto.ObtenerDatosDTO;
 import controller.dto.ReporteDTO;
-import controller.dto.ZonaDTO;
-import dao.GenericDAOImpl;
 import exceptions.EntidadNoEncontradaException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -19,15 +17,12 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import model.Reporte;
-import model.Usuario;
-import model.Zona;
-import service.GenericService;
-import service.GenericServiceImpl;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import service.ReporteService;
 
 import java.io.InputStream;
+import java.util.Map;
 import java.util.Optional;
-
 
 @Path("/reporte")
 @Tag(
@@ -182,6 +177,25 @@ public class ReporteController {
     public Response getByEstado(@PathParam("usuario_id") Long user_id) {
         return Response.ok(service.listarReportesByCreador(user_id)).build();
     }
+
+    @POST
+    @Path("/guardarPDFenDisco")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Operation(description = "Este endpoint permite guardar en disco un pdf pasado como base64")
+    public Response persistirPDF(
+            @FormDataParam("file") InputStream pdf,
+            @FormDataParam("fileName") String filename,
+            @FormDataParam("usuario_id") String usuario,
+            @FormDataParam("campania_id")  String campaña,
+            @FormDataParam("descripcion") String descripcion
+    ) {
+        Long user_id = Long.parseLong(usuario);
+        Long campaña_id = Long.parseLong(campaña);
+        String response = service.persistirPDF(pdf, filename, user_id, campaña_id, descripcion);
+        return Response.ok(Map.of("mensaje", response)).build();
+    }
+
 
 }
 
