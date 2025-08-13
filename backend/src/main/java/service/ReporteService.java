@@ -1,20 +1,20 @@
 package service;
 
-import controller.dto.CampañaDTO;
 import controller.dto.ReporteDTO;
-import controller.dto.ZonaDTO;
 import dao.CampañaDAO;
 import dao.ReporteDAO;
 import dao.UsuarioDAO;
-import exceptions.EntidadExistenteException;
-import exceptions.EntidadNoEncontradaException;
-import exceptions.FaltanArgumentosException;
-import exceptions.RangoDeFechasInvalidoException;
-import jakarta.enterprise.context.ApplicationScoped;
+import exceptions.*;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import model.*;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -209,6 +209,70 @@ public class ReporteService extends GenericServiceImpl<Reporte, Long> {
         List<Reporte> response = new ArrayList<>();
         response = reporteDAO.listarPedidosPorCreador(usuario_id);
         return response;
+    }
+
+    public String getStoragePath() {
+        // 1. Intentar leer de variable de entorno
+        String envPath = System.getenv("PDF_STORAGE_DIR");
+        if (envPath != null && !envPath.isBlank()) {
+            return envPath.endsWith("/") ? envPath : envPath + "/";
+        }
+
+        // 2. Si no hay variable, usar carpeta relativa (desarrollo)
+        return "/home/matiasc/reportesPDF/";
+    }
+
+    public String persistirPDF(InputStream pdfStream, String filename) {
+        // Validaciones básicas
+        if (pdfStream == null) {
+            throw new IllegalArgumentException("El stream del PDF no puede ser nulo");
+        }
+        if (filename == null || filename.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre de archivo no puede estar vacío");
+        }
+
+        // Obtener el directorio de almacenamiento
+        String storagePath = getStoragePath();
+
+        try {
+            // Crear el directorio si no existe
+            Path directory = Paths.get(storagePath);
+            if (!Files.exists(directory)) {
+                Files.createDirectories(directory);
+            }
+
+            // Validar que el nombre de archivo sea seguro
+            String safeFilename = sanitizeFilename(filename);
+
+            // Crear el path completo del archivo
+            Path filePath = directory.resolve(safeFilename);
+
+            // Guardar el archivo en disco
+            System.out.println("PERSISTIMOS EL DISCO");
+            Files.copy(pdfStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+
+            return "PDF guardado exitosamente en: " + filePath.toString();
+        } catch (IOException e) {
+            throw new RuntimeException("Error al guardar el PDF en disco: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Método para sanitizar el nombre de archivo y evitar path traversal
+     */
+    private String sanitizeFilename(String filename) {
+        // Reemplazar caracteres no permitidos
+        String safeName = filename.replaceAll("[^a-zA-Z0-9.-]", "_");
+
+        // Eliminar intentos de path traversal
+        safeName = safeName.replaceAll("\\.\\.", "");
+
+        // Asegurar que termina con .pdf
+        if (!safeName.toLowerCase().endsWith(".pdf")) {
+            safeName += ".pdf";
+        }
+
+        return safeName;
     }
 }
 
