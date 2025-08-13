@@ -34,8 +34,5 @@ public class GuiaPregunta {
 
 
 
-    // Otro orden a tener en cuenta, se puede sacar
-    @Column(name = "orden")
-    private Integer orden;
 
 }

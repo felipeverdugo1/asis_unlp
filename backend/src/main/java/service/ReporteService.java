@@ -1,20 +1,23 @@
 package service;
 
 import controller.dto.CampañaDTO;
+import controller.dto.ObtenerDatosDTO;
 import controller.dto.ReporteDTO;
-import controller.dto.ZonaDTO;
 import dao.CampañaDAO;
 import dao.ReporteDAO;
 import dao.UsuarioDAO;
-import exceptions.EntidadExistenteException;
-import exceptions.EntidadNoEncontradaException;
-import exceptions.FaltanArgumentosException;
-import exceptions.RangoDeFechasInvalidoException;
-import jakarta.enterprise.context.ApplicationScoped;
+import exceptions.*;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import model.*;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +82,7 @@ public class ReporteService extends GenericServiceImpl<Reporte, Long> {
                 reporteDAO.crear(reporte_nuevo);
             }
         } else {
-            throw new FaltanArgumentosException("El reporte_id es obligatorio");
+            throw new FaltanArgumentosException("La campaña id y el user id es obligatorio");
         }
         return reporte_nuevo;
     }
@@ -210,7 +213,98 @@ public class ReporteService extends GenericServiceImpl<Reporte, Long> {
         response = reporteDAO.listarPedidosPorCreador(usuario_id);
         return response;
     }
+
+    public String getStoragePath() {
+        // 1. Intentar leer de variable de entorno
+        String envPath = System.getenv("PDF_STORAGE_DIR");
+        if (envPath != null && !envPath.isBlank()) {
+            return envPath.endsWith("/") ? envPath : envPath + "/";
+        }
+
+        // 2. Si no hay variable, usar carpeta relativa (desarrollo)
+        // return "C:\\\arreglate\\\\vos\\\\que\\\\usas\\\\\windows
+        return "/home/matiasc/reportesPDF/";
+    }
+
+    public String persistirPDF(InputStream pdfStream, String filename, Long user_id, Long campaña_id, String descr) {
+        // Validaciones básicas
+        if (pdfStream == null) {
+            throw new IllegalArgumentException("El stream del PDF no puede ser nulo");
+        }
+        if (filename == null || filename.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre de archivo no puede estar vacío");
+        }
+
+        // Obtener el directorio de almacenamiento
+        String storagePath = getStoragePath();
+
+        Path filePath;
+
+        try {
+            // Crear el directorio si no existe
+            Path directory = Paths.get(storagePath);
+            if (!Files.exists(directory)) {
+                Files.createDirectories(directory);
+            }
+
+            // Validar que el nombre de archivo sea seguro
+            String safeFilename = sanitizeFilename(filename);
+
+            // Crear el path completo del archivo
+            filePath = directory.resolve(safeFilename).normalize();
+
+            // Guardar el archivo en disco
+            Files.copy(pdfStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            throw new RuntimeException("Error al guardar el PDF en disco: " + e.getMessage());
+        }
+
+        LocalDate fechaActual = LocalDate.now();
+        // falta pasarle id de la campaña y descripcion
+        ReporteDTO dto = new ReporteDTO(fechaActual, filePath.toString(), descr, user_id, campaña_id, null);
+        crear(dto);
+
+        return "PDF guardado exitosamente en: " + filePath.toString();
+    }
+
+    /**
+     * Método para sanitizar el nombre de archivo y evitar path traversal
+     */
+    private String sanitizeFilename(String filename) {
+        if (filename == null || filename.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre de archivo no puede ser nulo o vacío");
+        }
+
+        // 1. Obtener solo el nombre del archivo (sin path)
+        String safeName = new File(filename.trim()).getName();
+
+        // 2. Eliminar caracteres no permitidos (más restrictivo)
+        safeName = safeName.replaceAll("[^a-zA-Z0-9._-]", "_");
+
+        // 3. Eliminar múltiples puntos y guiones consecutivos
+        safeName = safeName.replaceAll("[._-]{2,}", "_");
+
+        // 4. Asegurar que comience y termine con caracteres válidos
+        safeName = safeName.replaceAll("^[._-]+", "").replaceAll("[._-]+$", "");
+
+        // 5. Asegurar extensión .pdf
+        if (!safeName.toLowerCase().endsWith(".pdf")) {
+            safeName += ".pdf";
+        }
+
+        // 6. Limitar longitud máxima (255 caracteres)
+        int maxLength = 255;
+        if (safeName.length() > maxLength) {
+            int extensionLength = 4; // .pdf
+            int baseLength = maxLength - extensionLength;
+            safeName = safeName.substring(0, baseLength) + safeName.substring(safeName.length() - extensionLength);
+        }
+
+        return safeName.isEmpty() ? "documento.pdf" : safeName;
+    }
 }
+
 
 
 

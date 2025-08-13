@@ -3,12 +3,14 @@ package controller.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.jvnet.hk2.annotations.Optional;
 
 import java.time.LocalDate;
 
 @Data
+@AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ReporteDTO {
 

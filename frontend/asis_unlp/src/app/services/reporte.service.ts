@@ -45,4 +45,11 @@ export class ReporteService {
   getReportesByUserId(userId: number): Observable<Reporte[]> {
     return this.http.get<Reporte[]>(`${this.apiUrl}/creadoPor/${userId}`);
   }
+
+  persistirPDF(formData: FormData): Observable<any> {
+    return this.http.post(`${this.apiUrl}/guardarPDFenDisco`, formData, {
+      reportProgress: true,
+      responseType: 'json'
+    });
+  }
 }

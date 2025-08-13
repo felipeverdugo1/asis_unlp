@@ -1,13 +1,16 @@
 package service;
 
 import controller.dto.CargaEncuestasDTO;
+import controller.dto.DatosRecolectadosDTO;
 import controller.dto.EncuestaDTO;
+import controller.dto.ObtenerDatosDTO;
 import dao.*;
 import exceptions.EntidadExistenteException;
 import exceptions.EntidadNoEncontradaException;
 import exceptions.FaltanArgumentosException;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
+import jakarta.persistence.criteria.*;
 import model.*;
 
 import java.io.*;
@@ -32,6 +35,9 @@ public class EncuestaService extends GenericServiceImpl<Encuesta, Long> {
 
     @Inject
     private EncuestadorDAO encuestadorDAO;
+
+    @Inject
+    private PreguntaDAO preguntaDAO;
     @Inject
     private JornadaDAO jornadaDAO;
     @Inject
@@ -40,10 +46,12 @@ public class EncuestaService extends GenericServiceImpl<Encuesta, Long> {
     @Inject
     private GuiaPreguntaDAO guiaPreguntaDAO;
 
+
     @Inject
     public EncuestaService(EncuestaDAO encuestaDAO) {
         super(encuestaDAO);
     }
+
 
     public EncuestaService() {
         super(null);
@@ -103,11 +111,26 @@ private Encuesta validarCampos(CargaEncuestasDTO cargaEncuestasDTO) {
     public String cargarEncuestas(CargaEncuestasDTO cargarEncuestasDTO) {
         Encuesta encuestaBase = validarCampos(cargarEncuestasDTO);
 
-        try {
-            // === Preparamos los InputStreams para remover el BOM si existe ===
-            InputStream inputStreamGeneral = prepararInputStream(cargarEncuestasDTO.getGeneralCsv());
-            InputStream inputStreamBranches = prepararInputStream(cargarEncuestasDTO.getBranchesCsv());
+        // Definir las etiquetas específicas que queremos procesar
+        Set<String> etiquetasPermitidas = Set.of(
+                "8_3_Edad",
+                "9_4_De_acuerdo_a_la_",
+                "20_14_Recibe_algn_pr",
+                "38_26_Tiene_acceso_a",
+                "37_25_Con_qu_materia"
+        );
 
+        try {
+            // === Preparamos los InputStreams ===
+            byte[] generalBytes = inputStreamToByteArray(prepararInputStream(cargarEncuestasDTO.getGeneralCsv()));
+            byte[] branchesBytes = inputStreamToByteArray(prepararInputStream(cargarEncuestasDTO.getBranchesCsv()));
+
+
+            //Cargo la guia de preguntas
+            guiaPreguntaDAO.cargarDesdeArchivos(
+                    new ByteArrayInputStream(generalBytes),
+                    new ByteArrayInputStream(branchesBytes)
+            );
             // === Definimos el formato del CSV ===
             CSVFormat format = CSVFormat.DEFAULT.builder()
                     .setHeader()
@@ -118,15 +141,15 @@ private Encuesta validarCampos(CargaEncuestasDTO cargaEncuestasDTO) {
 
             try {
                 // Lectores y parsers
-                BufferedReader readerGeneral = new BufferedReader(new InputStreamReader(inputStreamGeneral, StandardCharsets.UTF_8));
-                BufferedReader readerBranches = new BufferedReader(new InputStreamReader(inputStreamBranches, StandardCharsets.UTF_8));
+                BufferedReader readerGeneral = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(generalBytes), StandardCharsets.UTF_8));
+                BufferedReader readerBranches = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(branchesBytes), StandardCharsets.UTF_8));
 
                 CSVParser parserGeneral = format.parse(readerGeneral);
                 CSVParser parserBranches = format.parse(readerBranches);
 
-                // Cargamos guías y etiquetas válidas
-                List<String> etiquetasValidas = guiaPreguntaDAO.obtenerTodosLasRowEtiqueta();
+                // Cargamos solo las guías de las etiquetas permitidas
                 Map<String, GuiaPregunta> mapaGuiaPorEtiqueta = guiaPreguntaDAO.listarTodos().stream()
+                        .filter(g -> etiquetasPermitidas.contains(g.getRow_etiqueta()))
                         .collect(Collectors.toMap(GuiaPregunta::getRow_etiqueta, g -> g));
 
                 // Referencias a entidades relacionadas
@@ -153,56 +176,53 @@ private Encuesta validarCampos(CargaEncuestasDTO cargaEncuestasDTO) {
                             .setEncuestador(encuestador)
                             .setJornada(jornada)
                             .setZona(zona)
-                            .setNombreArchivo("archivo_importado.csv")  // Mejor usar un campo nombre real si está disponible
+                            .setNombreArchivo("archivo_importado.csv")
                             .setFecha(fecha)
                             .setUuid(uuid)
                             .setCoordenadas(coordenadas);
+                    encuestaDAO.crear(nuevaEncuesta);
 
-                    // Preguntas generales (de la casa)
-                    for (String etiquetaGeneral : recordGeneral.toMap().keySet()) {
-                        if (etiquetasValidas.contains(etiquetaGeneral)) {
-                            String etiqueta = mapaGuiaPorEtiqueta.get(etiquetaGeneral).getEtiqueta();
+                    // Preguntas generales (de la casa) - solo las etiquetas permitidas
+                    for (String etiquetaGeneral : mapaGuiaPorEtiqueta.keySet()) {
+                        if (recordGeneral.isSet(etiquetaGeneral)) {
                             String respuesta = recordGeneral.get(etiquetaGeneral);
+                            GuiaPregunta guia = mapaGuiaPorEtiqueta.get(etiquetaGeneral);
 
-                            if (etiqueta != null && respuesta != null && !respuesta.isBlank() && respuesta.length() <= 100) {
+                            if (respuesta != null && !respuesta.isBlank() && respuesta.length() <= 100) {
                                 Pregunta pregunta = new Pregunta()
-                                        .setPregunta(etiqueta)
+                                        .setPregunta(guia.getEtiqueta())
                                         .setRespuesta(respuesta)
                                         .setEsPersonal(false)
                                         .setUuid_padre(uuid)
                                         .setEncuesta(nuevaEncuesta);
-                                nuevaEncuesta.agregarPregunta(pregunta);
+                                preguntaDAO.crear(pregunta);
                             }
                         }
                     }
 
-                    // Preguntas de las personas dentro de la casa
+                    // Preguntas de las personas dentro de la casa - solo las etiquetas permitidas
                     List<CSVRecord> branchesOfHouse = branchesByOwner.getOrDefault(uuid, Collections.emptyList());
                     for (CSVRecord branch : branchesOfHouse) {
-                        for (String etiquetaBranch : branch.toMap().keySet()) {
-                            if (etiquetasValidas.contains(etiquetaBranch)) {
-                                String etiqueta = mapaGuiaPorEtiqueta.get(etiquetaBranch).getEtiqueta();
+                        for (String etiquetaBranch : mapaGuiaPorEtiqueta.keySet()) {
+                            if (branch.isSet(etiquetaBranch)) {
                                 String respuesta = branch.get(etiquetaBranch);
+                                GuiaPregunta guia = mapaGuiaPorEtiqueta.get(etiquetaBranch);
 
-                                if (etiqueta != null && respuesta != null && !respuesta.isBlank() && respuesta.length() <= 100) {
+                                if (respuesta != null && !respuesta.isBlank() && respuesta.length() <= 100) {
                                     Pregunta pregunta = new Pregunta()
-                                            .setPregunta(etiqueta)
+                                            .setPregunta(guia.getEtiqueta())
                                             .setRespuesta(respuesta)
                                             .setEsPersonal(true)
                                             .setUuid_padre(uuid)
                                             .setEncuesta(nuevaEncuesta);
-                                    nuevaEncuesta.agregarPregunta(pregunta);
+                                    preguntaDAO.crear(pregunta);
                                 }
                             }
                         }
                     }
-
-                    // Guardamos la encuesta completa
-                    encuestaDAO.crear(nuevaEncuesta);
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
                 throw new RuntimeException("Error al procesar los archivos CSV: " + e.getMessage(), e);
             }
 
@@ -210,58 +230,19 @@ private Encuesta validarCampos(CargaEncuestasDTO cargaEncuestasDTO) {
             throw new RuntimeException("Error al leer los archivos: " + e.getMessage(), e);
         }
 
-        return "Encuestas cargadas correctamente";
+        return "Encuestas cargadas correctamente con preguntas filtradas";
     }
 
 
-
-//    public Encuesta crear(EncuestaDTO encuestaDTO) {
-//
-//        //validamos campos obligatorios
-//        if (
-//                encuestaDTO.getNombreArchivo() == null ||
-//                        encuestaDTO.getFecha() == null ||
-//                        encuestaDTO.getEncuestador_id() == null ||
-//                        encuestaDTO.getJornada_id() == null ||
-//                        encuestaDTO.getZona_id() == null
-//        ) {
-//            throw new FaltanArgumentosException("Se requieren los campos nombre unico, fecha, encuestador_id, jornada_id y zona_id");
-//        }
-//
-//        Optional<Encuesta> encuesta = encuestaDAO.buscarPorCampo("nombreUnico", encuestaDTO.getNombreArchivo());
-//        // si es duplicado
-//        if ( encuesta.isPresent() ) {
-//            throw new EntidadExistenteException("Ya existe una encuesta con ese nombre unico");
-//        }
-//
-//        Optional<Encuestador> encuestador_t = encuestadorDAO.buscarPorId(encuestaDTO.getEncuestador_id());
-//        if (encuestador_t.isEmpty()) {
-//            throw new EntidadNoEncontradaException("El Encuestador no existe");
-//        }
-//
-//        Optional<Jornada> jornada_t = jornadaDAO.buscarPorId(encuestaDTO.getJornada_id());
-//        if (jornada_t.isEmpty()) {
-//            throw new EntidadNoEncontradaException("La Jornada no existe");
-//        }
-//
-//        Optional<Zona> zona_t = zonaDAO.buscarPorId(encuestaDTO.getZona_id());
-//        if (zona_t.isEmpty()) {
-//            throw new EntidadNoEncontradaException("La Zona no existe");
-//        }
-//
-//        if (jornada_t.get().getZonas().stream().noneMatch(z -> z.getId().equals(zona_t.get().getId()))) {
-//            throw new EntidadNoEncontradaException("La zona no corresponde a la jornada.");
-//        }
-//
-//        Encuesta encuesta_nueva = new Encuesta();
-//        encuesta_nueva.setNombreArchivo(encuestaDTO.getNombreArchivo());
-//        encuesta_nueva.setFecha(encuestaDTO.getFecha());
-//        encuesta_nueva.setEncuestador(encuestador_t.get());
-//        encuesta_nueva.setJornada(jornada_t.get());
-//        encuesta_nueva.setZona(zona_t.get());
-//        encuestaDAO.crear(encuesta_nueva);
-//        return encuesta_nueva;
-//    }
+    private byte[] inputStreamToByteArray(InputStream is) throws IOException {
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        byte[] data = new byte[4096];
+        int nRead;
+        while ((nRead = is.read(data, 0, data.length)) != -1) {
+            buffer.write(data, 0, nRead);
+        }
+        return buffer.toByteArray();
+    }
 
 
 
@@ -378,4 +359,153 @@ private Encuesta validarCampos(CargaEncuestasDTO cargaEncuestasDTO) {
     }
 
 
+    public List<DatosRecolectadosDTO> obtenerDatos(ObtenerDatosDTO dto) {
+
+
+        boolean tieneFiltrosVivienda = dto.getMaterial_vivienda() != null ||
+                dto.getAcceso_agua() != null;
+
+        boolean tieneFiltrosPersonales = (dto.getEdad() != null && !dto.getEdad().isEmpty()) ||
+                (dto.getGeneros() != null && !dto.getGeneros().isEmpty());
+
+        List<Encuesta> encuestas = tieneFiltrosVivienda ?
+                encuestaDAO.findByFiltrosVivienda(
+                        dto.getMaterial_vivienda(),
+                        dto.getAcceso_agua()
+                ) :
+                encuestaDAO.listarTodos();
+
+        return encuestas.stream()
+                .map(encuesta -> procesarEncuesta(
+                        encuesta,
+                        dto,
+                        tieneFiltrosVivienda,
+                        tieneFiltrosPersonales
+                ))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
+    private DatosRecolectadosDTO procesarEncuesta(Encuesta encuesta, ObtenerDatosDTO dto,
+                                                  boolean tieneFiltrosVivienda, boolean tieneFiltrosPersonales) {
+
+        // Verificar filtros de vivienda si aplican
+        if (tieneFiltrosVivienda && !encuestaDAO.cumpleFiltrosVivienda(
+                encuesta.getId(),
+                dto.getMaterial_vivienda(),
+                dto.getAcceso_agua()
+        )) {
+            return null;
+        }
+
+        // Procesar personas
+        List<Pregunta> preguntasPersonales = preguntaDAO.findByEncuesta(encuesta.getId(), true);
+        System.out.println(preguntasPersonales.size()+ " preguntas perso");
+        Map<String, List<Pregunta>> personas = agruparPorPersona(preguntasPersonales);
+        System.out.println(personas.size() + " personas");
+
+        int cantidad;
+        if (tieneFiltrosPersonales) {
+            cantidad = (int) personas.values().stream()
+                    .filter(preguntas -> cumpleFiltrosPersonales(preguntas, dto))
+                    .count();
+        } else {
+            cantidad = personas.size();
+        }
+
+        // Aplicar reglas de retorno
+        if (tieneFiltrosVivienda) {
+            return crearDTO(encuesta, cantidad);
+        } else {
+            return cantidad > 0 ? crearDTO(encuesta, cantidad) : null;
+        }
+    }
+
+    private boolean cumpleFiltrosPersonales(List<Pregunta> preguntasPersona, ObtenerDatosDTO dto) {
+        boolean cumpleEdad = dto.getEdad() == null || dto.getEdad().isEmpty() ||
+                preguntasPersona.stream()
+                        .filter(p -> p.getPregunta().contains("Edad"))
+                        .anyMatch(p -> dto.getEdad().contains(p.getRespuesta()));
+
+        boolean cumpleGenero = dto.getGeneros() == null || dto.getGeneros().isEmpty() ||
+                preguntasPersona.stream()
+                        .filter(p -> p.getPregunta().contains("Género"))
+                        .anyMatch(p -> dto.getGeneros().contains(p.getRespuesta()));
+
+        boolean cumpleAccesoSalud = dto.getAcceso_salud() == null || dto.getAcceso_salud().isEmpty() ||
+                preguntasPersona.stream()
+                        .filter(p -> p.getPregunta().contains("salud"))
+                        .anyMatch(p -> dto.getAcceso_salud().contains(p.getRespuesta()));
+
+
+        return cumpleEdad && cumpleGenero;
+    }
+
+    // Métodos auxiliares
+    private Map<String, List<Pregunta>> agruparPorPersona(List<Pregunta> preguntas) {
+        return preguntas.stream()
+                .collect(Collectors.groupingBy(Pregunta::getUuid_padre));
+    }
+
+    private DatosRecolectadosDTO crearDTO(Encuesta encuesta, int cantidad) {
+        return parsearCoordenadas(encuesta.getCoordenadas())
+                .map(coords -> new DatosRecolectadosDTO(
+                        coords.getLatitud(),
+                        coords.getLongitud(),
+                        cantidad
+                ))
+                .orElse(null);
+    }
+
+    private Optional<Coordenadas> parsearCoordenadas(String coordenadasStr) {
+        if (coordenadasStr == null || coordenadasStr.trim().isEmpty()) {
+            return Optional.empty();
+        }
+
+        // Eliminar espacios y separar por coma
+        String[] partes = coordenadasStr.trim().replace(" ", "").split(",");
+
+        if (partes.length != 2) {
+            return Optional.empty();
+        }
+
+        try {
+            double latitud = Double.parseDouble(partes[0]);
+            double longitud = Double.parseDouble(partes[1]);
+            return Optional.of(new Coordenadas(latitud, longitud));
+        } catch (NumberFormatException e) {
+            return Optional.empty();
+        }
+    }
+
+    // Clase auxiliar para coordenadas
+    private static class Coordenadas {
+        private final double latitud;
+        private final double longitud;
+
+        public Coordenadas(double latitud, double longitud) {
+            this.latitud = latitud;
+            this.longitud = longitud;
+        }
+
+        public double getLatitud() {
+            return latitud;
+        }
+
+        public double getLongitud() {
+            return longitud;
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+

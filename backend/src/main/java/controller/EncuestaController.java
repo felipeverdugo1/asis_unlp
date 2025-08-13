@@ -1,7 +1,9 @@
 package controller;
 
 import controller.dto.CargaEncuestasDTO;
+import controller.dto.DatosRecolectadosDTO;
 import controller.dto.EncuestaDTO;
+import controller.dto.ObtenerDatosDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -21,6 +23,7 @@ import service.EncuestaService;
 
 import java.io.InputStream;
 import java.util.Map;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -58,6 +61,87 @@ public class EncuestaController {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
+
+
+
+    @POST
+    @Path("/obtener-datos")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Este endpoint nos permite obtener los datos de las encuestas para realizar un reporte",
+            requestBody = @RequestBody(description = "unos campos en formato JSON",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = {@ExampleObject(
+                                    name = "ObtenerDatos",
+                                    summary = "campos de prueba",
+                                    value = """
+                                            {
+                                              "edad": [
+                                                "12",
+                                                "32"
+                                              ],
+                                              "genero": [
+                                                "varón cis"
+                                              ],
+                                              "barrio": "2",
+                                              "acceso_salud": "si",
+                                              "acceso_agua": "si",
+                                              "material_vivienda": [
+                                                "chapa"
+                                              ]
+                                            }
+                                            """
+                            )}
+                    )
+            )
+            , responses = {
+            @ApiResponse(responseCode = "200", description = "Creacion exitosa"),
+            @ApiResponse(responseCode = "400", description = "Error de validacion."),
+            @ApiResponse(responseCode = "500", description = "Error interno.")
+    }
+    )
+    public Response obtenerDatos(ObtenerDatosDTO dto) {
+        List<DatosRecolectadosDTO> resultado = service.obtenerDatos(dto);
+        return Response.ok(resultado).build();
+
+
+    }
+
+//    @POST
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Operation(description = "Este endpoint nos permite crear una encuesta, teniendo antes creados encuestador, zona y jornada.",
+//            requestBody = @RequestBody(description = "una nueva encuesta en formato JSON",
+//                    required = true,
+//                    content = @Content(
+//                            mediaType = "application/json",
+//                            examples = {@ExampleObject(
+//                                    name = "Encuesta 1",
+//                                    summary = "Encuesta 1",
+//                                    value = """
+//                                            {
+//                                               "nombreUnico": "/path/a/encuesta.xlsx",
+//                                               "fecha": "2025-06-13",
+//                                               "encuestador_id": 3,
+//                                               "zona_id": 1,
+//                                               "jornada_id": 1
+//                                            }
+//                                            """
+//                            )}
+//                    )
+//            ),
+//            responses = {
+//                    @ApiResponse(responseCode = "200", description = "Actualizacion exitosa"),
+//                    @ApiResponse(responseCode = "400", description = "Error de validacion."),
+//                    @ApiResponse(responseCode = "500", description = "Error interno.")
+//            }
+//    )
+//    public Response post(EncuestaDTO encuestaDTO) {
+//        Encuesta encuesta = service.crear(encuestaDTO);
+//        return Response.status(Response.Status.CREATED).entity(encuesta).build();
+//    }
 
 
     @PUT

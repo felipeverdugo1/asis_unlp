@@ -1,11 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { CommonModule, formatDate } from '@angular/common';
 import { CargaCsvComponent } from '../../components/encuesta/encuesta.component';
 import { Router, RouterModule } from '@angular/router';
 import { EncuestaService } from '../../services/encuesta.service';
 import { ListarEncuestas } from '../../components/encuesta/list-encuestas.component';
 import { Observable } from 'rxjs';
 import { Encuesta } from '../../models/encuesta.model';
+import { PdfService } from '../../services/pdf.service';
+import { ReporteService } from '../../services/reporte.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   standalone: true,
@@ -100,4 +103,5 @@ export class ListarEncuestaPage implements OnInit {
       });
     }
   }
+
 }
