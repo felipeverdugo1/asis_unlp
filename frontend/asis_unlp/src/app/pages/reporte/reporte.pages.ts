@@ -52,7 +52,7 @@ export class ReportePage implements OnInit {
       return;
     }
 
-    this.reporteService.generarReporte(filtro).subscribe();
+    //this.reporteService.generarReporte(filtro).subscribe();
   }
 
   async generarYGuardarPDF() {
