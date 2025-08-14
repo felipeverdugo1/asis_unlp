@@ -25,28 +25,31 @@ public class EncuestaDAO extends GenericDAOImpl<Encuesta, Long> {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Encuesta> cq = cb.createQuery(Encuesta.class);
         Root<Encuesta> e = cq.from(Encuesta.class);
-        Join<Encuesta, Pregunta> p = e.join("preguntas");
 
         List<Predicate> predicates = new ArrayList<>();
-        predicates.add(cb.equal(p.get("esPersonal"), false));
 
+        // Filtrar por materiales
         if (materiales != null && !materiales.isEmpty()) {
+            Join<Encuesta, Pregunta> pMat = e.join("preguntas", JoinType.LEFT);
             predicates.add(cb.and(
-                    cb.like(cb.lower(p.get("pregunta")), "%material%"),
-                    p.get("respuesta").in(materiales)
+                    cb.like(cb.lower(pMat.get("pregunta")), "%material%"),
+                    pMat.get("respuesta").in(materiales)
             ));
         }
 
-        if (agua != null) {
+        // Filtrar por agua
+        if (agua != null && !agua.trim().isEmpty()) {
+            Join<Encuesta, Pregunta> pAgua = e.join("preguntas", JoinType.LEFT);
             predicates.add(cb.and(
-                    cb.like(cb.lower(p.get("pregunta")), "%agua%"),
-                    cb.equal(cb.lower(p.get("respuesta")), agua.toLowerCase())
+                    cb.like(cb.lower(pAgua.get("pregunta")), "%agua%"),
+                    cb.like(cb.lower(pAgua.get("respuesta")), "%" + agua.toLowerCase() + "%")
             ));
         }
 
         cq.select(e).distinct(true).where(predicates.toArray(new Predicate[0]));
         return em.createQuery(cq).getResultList();
     }
+
 
     public boolean cumpleFiltrosVivienda(Long encuestaId, List<String> materiales, String agua) {
         CriteriaBuilder cb = em.getCriteriaBuilder();

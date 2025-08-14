@@ -5,6 +5,7 @@ import jakarta.transaction.Transactional;
 import model.GuiaPregunta;
 
 import java.io.*;
+import java.text.Normalizer;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +23,17 @@ public class GuiaPreguntaDAO extends GenericDAOImpl<GuiaPregunta, Long> {
         return  em.createQuery(
                 "SELECT g.row_etiqueta FROM GuiaPregunta g", String.class
         ).getResultList();
+    }
+
+
+
+    public String normalizarTexto(String texto) {
+        if (texto == null) return null;
+        // Quitar acentos
+        String sinAcentos = Normalizer.normalize(texto, Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "");
+        // Pasar a minúsculas y trim
+        return sinAcentos.toLowerCase().trim();
     }
 
 
@@ -56,11 +68,11 @@ public class GuiaPreguntaDAO extends GenericDAOImpl<GuiaPregunta, Long> {
     private void cargarDesdeHeader(InputStream inputStream, String origen) throws IOException {
         // Mapa de campos que nos interesan con sus identificadores
         Map<String, String> camposRelevantes = Map.of(
-                "8_3_Edad", "Edad",
-                "9_4_De_acuerdo_a_la_", "Género",
-                "20_14_Recibe_algn_pr", "Acceso a salud",
-                "38_26_Tiene_acceso_a", "Acceso a agua",
-                "37_25_Con_qu_materia", "Material de vivienda"
+                "8_3_Edad", "edad",
+                "9_4_De_acuerdo_a_la_", "genero",
+                "20_14_Recibe_algn_pr", "acceso_salud",
+                "38_26_Tiene_acceso_a", "acceso_agua",
+                "37_25_Con_qu_materia", "material_vivienda"
         );
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -100,7 +112,7 @@ public class GuiaPreguntaDAO extends GenericDAOImpl<GuiaPregunta, Long> {
                     GuiaPregunta gp = new GuiaPregunta()
                             .setRow_etiqueta(rowEtiqueta)
                             .setCodigo(codigo)
-                            .setEtiqueta(etiquetaLegible);
+                            .setEtiqueta(normalizarTexto(etiquetaLegible));
 
                     em.persist(gp);
                 }

@@ -17,14 +17,11 @@ public class Pregunta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name="persona_id")
+    private Integer personaId;
+
     @Column(nullable = false)
     private String pregunta;
-
-    @Column(nullable = false)
-    private String uuid_padre;
-
-    @Column()
-    private Boolean esPersonal;
 
     @Column(nullable = false)
     private String respuesta;

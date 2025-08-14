@@ -1,9 +1,6 @@
 package service;
 
-import controller.dto.CargaEncuestasDTO;
-import controller.dto.DatosRecolectadosDTO;
-import controller.dto.EncuestaDTO;
-import controller.dto.ObtenerDatosDTO;
+import controller.dto.*;
 import dao.*;
 import exceptions.EntidadExistenteException;
 import exceptions.EntidadNoEncontradaException;
@@ -58,41 +55,35 @@ public class EncuestaService extends GenericServiceImpl<Encuesta, Long> {
     }
 
 
+    private Encuesta validarCampos(CargaEncuestasDTO cargaEncuestasDTO) {
+        //validamos campos obligatorios
+        Encuesta encuesta = new Encuesta();
 
+        Optional<Encuestador> encuestador_t = encuestadorDAO.buscarPorId(cargaEncuestasDTO.getEncuestador_id());
+        if (encuestador_t.isEmpty()) {
+            throw new EntidadNoEncontradaException("El Encuestador no existe");
+        }
 
+        Optional<Jornada> jornada_t = jornadaDAO.buscarPorId(cargaEncuestasDTO.getJornada_id());
+        if (jornada_t.isEmpty()) {
+            throw new EntidadNoEncontradaException("La Jornada no existe");
+        }
 
+        Optional<Zona> zona_t = zonaDAO.buscarPorId(cargaEncuestasDTO.getZona_id());
+        if (zona_t.isEmpty()) {
+            throw new EntidadNoEncontradaException("La Zona no existe");
+        }
 
+        if (jornada_t.get().getZonas().stream().noneMatch(z -> z.getId().equals(zona_t.get().getId()))) {
+            throw new EntidadNoEncontradaException("La zona no corresponde a la jornada.");
+        }
 
-private Encuesta validarCampos(CargaEncuestasDTO cargaEncuestasDTO) {
-    //validamos campos obligatorios
-    Encuesta encuesta = new Encuesta();
+        encuesta.setEncuestador(encuestador_t.get());
+        encuesta.setJornada(jornada_t.get());
+        encuesta.setZona(zona_t.get());
 
-    Optional<Encuestador> encuestador_t = encuestadorDAO.buscarPorId(cargaEncuestasDTO.getEncuestador_id());
-    if (encuestador_t.isEmpty()) {
-        throw new EntidadNoEncontradaException("El Encuestador no existe");
+        return encuesta;
     }
-
-    Optional<Jornada> jornada_t = jornadaDAO.buscarPorId(cargaEncuestasDTO.getJornada_id());
-    if (jornada_t.isEmpty()) {
-        throw new EntidadNoEncontradaException("La Jornada no existe");
-    }
-
-    Optional<Zona> zona_t = zonaDAO.buscarPorId(cargaEncuestasDTO.getZona_id());
-    if (zona_t.isEmpty()) {
-        throw new EntidadNoEncontradaException("La Zona no existe");
-    }
-
-    if (jornada_t.get().getZonas().stream().noneMatch(z -> z.getId().equals(zona_t.get().getId()))) {
-        throw new EntidadNoEncontradaException("La zona no corresponde a la jornada.");
-    }
-
-    encuesta.setEncuestador(encuestador_t.get());
-    encuesta.setJornada(jornada_t.get());
-    encuesta.setZona(zona_t.get());
-
-    return encuesta;
-}
-
 
 
     private InputStream prepararInputStream(InputStream original) throws IOException {
@@ -104,8 +95,6 @@ private Encuesta validarCampos(CargaEncuestasDTO cargaEncuestasDTO) {
         }
         return pushbackStream;
     }
-
-
 
 
     public String cargarEncuestas(CargaEncuestasDTO cargarEncuestasDTO) {
@@ -190,16 +179,14 @@ private Encuesta validarCampos(CargaEncuestasDTO cargaEncuestasDTO) {
 
                             if (respuesta != null && !respuesta.isBlank() && respuesta.length() <= 100) {
                                 Pregunta pregunta = new Pregunta()
-                                        .setPregunta(guia.getEtiqueta())
-                                        .setRespuesta(respuesta)
-                                        .setEsPersonal(false)
-                                        .setUuid_padre(uuid)
+                                        .setPregunta(guiaPreguntaDAO.normalizarTexto(guia.getEtiqueta()))
+                                        .setRespuesta(guiaPreguntaDAO.normalizarTexto(respuesta))
                                         .setEncuesta(nuevaEncuesta);
                                 preguntaDAO.crear(pregunta);
                             }
                         }
                     }
-
+                    int personaId = 1;
                     // Preguntas de las personas dentro de la casa - solo las etiquetas permitidas
                     List<CSVRecord> branchesOfHouse = branchesByOwner.getOrDefault(uuid, Collections.emptyList());
                     for (CSVRecord branch : branchesOfHouse) {
@@ -210,15 +197,15 @@ private Encuesta validarCampos(CargaEncuestasDTO cargaEncuestasDTO) {
 
                                 if (respuesta != null && !respuesta.isBlank() && respuesta.length() <= 100) {
                                     Pregunta pregunta = new Pregunta()
-                                            .setPregunta(guia.getEtiqueta())
-                                            .setRespuesta(respuesta)
-                                            .setEsPersonal(true)
-                                            .setUuid_padre(uuid)
+                                            .setPregunta(guiaPreguntaDAO.normalizarTexto(guia.getEtiqueta()))
+                                            .setRespuesta(guiaPreguntaDAO.normalizarTexto(respuesta))
+                                            .setPersonaId(personaId)
                                             .setEncuesta(nuevaEncuesta);
                                     preguntaDAO.crear(pregunta);
                                 }
                             }
                         }
+                        personaId++; // paso a la siguiente persona dentro de la casa
                     }
                 }
 
@@ -243,7 +230,6 @@ private Encuesta validarCampos(CargaEncuestasDTO cargaEncuestasDTO) {
         }
         return buffer.toByteArray();
     }
-
 
 
     public Encuesta actualizar(Long encuestaId, EncuestaDTO encuestaDTO) {
@@ -366,7 +352,7 @@ private Encuesta validarCampos(CargaEncuestasDTO cargaEncuestasDTO) {
                 dto.getAcceso_agua() != null;
 
         boolean tieneFiltrosPersonales = (dto.getEdad() != null && !dto.getEdad().isEmpty()) ||
-                (dto.getGeneros() != null && !dto.getGeneros().isEmpty());
+                (dto.getGeneros() != null && !dto.getGeneros().isEmpty()) || dto.getAcceso_salud() != null;
 
         List<Encuesta> encuestas = tieneFiltrosVivienda ?
                 encuestaDAO.findByFiltrosVivienda(
@@ -375,77 +361,70 @@ private Encuesta validarCampos(CargaEncuestasDTO cargaEncuestasDTO) {
                 ) :
                 encuestaDAO.listarTodos();
 
-        return encuestas.stream()
-                .map(encuesta -> procesarEncuesta(
-                        encuesta,
-                        dto,
-                        tieneFiltrosVivienda,
-                        tieneFiltrosPersonales
-                ))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-    }
 
-    private DatosRecolectadosDTO procesarEncuesta(Encuesta encuesta, ObtenerDatosDTO dto,
-                                                  boolean tieneFiltrosVivienda, boolean tieneFiltrosPersonales) {
+        int cant;
+        List<DatosRecolectadosDTO> datosRecolectados = new ArrayList<>();
+        DatosRecolectadosDTO datosRecolectadosDTO;
 
-        // Verificar filtros de vivienda si aplican
-        if (tieneFiltrosVivienda && !encuestaDAO.cumpleFiltrosVivienda(
-                encuesta.getId(),
-                dto.getMaterial_vivienda(),
-                dto.getAcceso_agua()
-        )) {
-            return null;
+        for (Encuesta encuesta : encuestas) {
+            cant = 0;
+
+            if (tieneFiltrosPersonales) {
+                // Traigo preguntas personales de esta encuesta
+                List<PreguntaDTO> preguntas = preguntaDAO.findPreguntasPersonalesByEncuestaId(encuesta.getId());
+
+
+                // Agrupamos por persona dentro de la casa
+                Map<String, List<PreguntaDTO>> personas = preguntas.stream()
+                        .collect(Collectors.groupingBy(p -> p.getEncuesta_id() + "_" + p.getPersona_id()));
+
+
+                for (List<PreguntaDTO> preguntasPersona : personas.values()) {
+                    boolean cumple = true;
+
+                    // Filtro por edad
+                    if (dto.getEdad() != null && !dto.getEdad().isEmpty()) {
+                        cumple &= preguntasPersona.stream()
+                                .anyMatch(p -> p.getPregunta().equalsIgnoreCase("edad") &&
+                                        dto.getEdad().contains(Integer.parseInt(p.getRespuesta())));
+                    }
+
+                    // Filtro por género
+                    if (dto.getGeneros() != null && !dto.getGeneros().isEmpty()) {
+                        cumple &= preguntasPersona.stream()
+                                .anyMatch(p -> p.getPregunta().equalsIgnoreCase("genero") &&
+                                        dto.getGeneros().contains(p.getRespuesta().toLowerCase()));
+                    }
+
+                    // Filtro por acceso_salud
+                    if (dto.getAcceso_salud() != null) {
+                        cumple &= preguntasPersona.stream()
+                                .anyMatch(p -> p.getPregunta().equalsIgnoreCase("acceso_salud") &&
+                                        p.getRespuesta().equalsIgnoreCase(dto.getAcceso_salud()));
+                    }
+
+                    if (cumple) {
+                        cant++;
+                    }
+                }
+                 datosRecolectadosDTO = crearDTO(encuesta,cant);
+                if (cant > 0 && datosRecolectadosDTO !=null) {
+                    datosRecolectados.add(datosRecolectadosDTO);
+                }
+            } else {
+                datosRecolectadosDTO = crearDTO(encuesta,0);
+                if (datosRecolectadosDTO !=null) {
+                    datosRecolectados.add(datosRecolectadosDTO);
+                }
+
+            }
+
         }
-
-        // Procesar personas
-        List<Pregunta> preguntasPersonales = preguntaDAO.findByEncuesta(encuesta.getId(), true);
-        System.out.println(preguntasPersonales.size()+ " preguntas perso");
-        Map<String, List<Pregunta>> personas = agruparPorPersona(preguntasPersonales);
-        System.out.println(personas.size() + " personas");
-
-        int cantidad;
-        if (tieneFiltrosPersonales) {
-            cantidad = (int) personas.values().stream()
-                    .filter(preguntas -> cumpleFiltrosPersonales(preguntas, dto))
-                    .count();
-        } else {
-            cantidad = personas.size();
-        }
-
-        // Aplicar reglas de retorno
-        if (tieneFiltrosVivienda) {
-            return crearDTO(encuesta, cantidad);
-        } else {
-            return cantidad > 0 ? crearDTO(encuesta, cantidad) : null;
-        }
+        return datosRecolectados;
     }
 
-    private boolean cumpleFiltrosPersonales(List<Pregunta> preguntasPersona, ObtenerDatosDTO dto) {
-        boolean cumpleEdad = dto.getEdad() == null || dto.getEdad().isEmpty() ||
-                preguntasPersona.stream()
-                        .filter(p -> p.getPregunta().contains("Edad"))
-                        .anyMatch(p -> dto.getEdad().contains(p.getRespuesta()));
-
-        boolean cumpleGenero = dto.getGeneros() == null || dto.getGeneros().isEmpty() ||
-                preguntasPersona.stream()
-                        .filter(p -> p.getPregunta().contains("Género"))
-                        .anyMatch(p -> dto.getGeneros().contains(p.getRespuesta()));
-
-        boolean cumpleAccesoSalud = dto.getAcceso_salud() == null || dto.getAcceso_salud().isEmpty() ||
-                preguntasPersona.stream()
-                        .filter(p -> p.getPregunta().contains("salud"))
-                        .anyMatch(p -> dto.getAcceso_salud().contains(p.getRespuesta()));
 
 
-        return cumpleEdad && cumpleGenero;
-    }
-
-    // Métodos auxiliares
-    private Map<String, List<Pregunta>> agruparPorPersona(List<Pregunta> preguntas) {
-        return preguntas.stream()
-                .collect(Collectors.groupingBy(Pregunta::getUuid_padre));
-    }
 
     private DatosRecolectadosDTO crearDTO(Encuesta encuesta, int cantidad) {
         return parsearCoordenadas(encuesta.getCoordenadas())
