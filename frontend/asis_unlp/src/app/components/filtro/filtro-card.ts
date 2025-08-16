@@ -31,7 +31,7 @@ export class FiltroCardComponent {
 
   aplicarFiltro() {
     this.reporteService.setFiltroActual(this.criterios);
-    this.router.navigate(['/filtro']);
+    this.router.navigate(['/filtro/resultado']);
   }
 
   eliminarFiltro() {

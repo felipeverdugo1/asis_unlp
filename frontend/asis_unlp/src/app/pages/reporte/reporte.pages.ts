@@ -7,6 +7,7 @@ import { ReporteService } from "../../services/reporte.service";
 import { ReporteResultadoComponent } from "../../components/reporte/reporte-resultado";
 import { PdfService } from "../../services/pdf.service";
 import { AuthService } from "../../services/auth.service";
+import { EncuestaService } from "../../services/encuesta.service";
 
 /*Hay que aplicarle estilos a esto.*/
 @Component({
@@ -47,11 +48,11 @@ export class ReportePage implements OnInit {
     const filtro = this.reporteService.getFiltroActual();
     
     if (!filtro) {
-      this.router.navigate(['/reporte/filtro']);
+      this.router.navigate(['/filtro']);
       return;
     }
 
-    //this.reporteService.generarReporte(filtro).subscribe();
+    this.reporteService.generarReporte(filtro).subscribe();
   }
 
   async generarYGuardarPDF() {

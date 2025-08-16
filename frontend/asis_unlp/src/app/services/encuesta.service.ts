@@ -31,5 +31,19 @@ export class EncuestaService {
 
   getEncuestas(): Observable<Encuesta[]> {
       return this.http.get<Encuesta[]>(this.apiUrl);
-  }
+  } 
+  
+  obtenerDatos(filtro: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/obtener-datos`, filtro).pipe(
+      tap({
+        next: response => console.log('Datos obtenidos correctamente', response),
+        error: err => {
+          console.error('Error al obtener los datos', err);
+          console.error('Detalles del error:', err.error);
+          console.error('Estado del error:', err.status);
+        }
+      })
+    );
+}
+  
 }
