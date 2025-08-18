@@ -7,12 +7,12 @@ import { ReporteService } from "../../services/reporte.service";
 import { ReporteResultadoComponent } from "../../components/reporte/reporte-resultado";
 import { PdfService } from "../../services/pdf.service";
 import { AuthService } from "../../services/auth.service";
-import { EncuestaService } from "../../services/encuesta.service";
-
+import { FiltroCardComponent } from "../../components/filtro/filtro-card";
+import { Filtro } from '../../models/filtro.model';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, ReporteResultadoComponent, AsyncPipe],
+  imports: [CommonModule, ReporteResultadoComponent, AsyncPipe, FiltroCardComponent],
   template: `
     <div class="page-container">
       <div class="page-header">
@@ -26,6 +26,11 @@ import { EncuestaService } from "../../services/encuesta.service";
     </div>
 
     <div class="content-container" #contenidoParaPDF>
+      <hr/>
+      <app-filtro-card 
+        [filtro]="filtroActual" 
+        [mostrarBotones]="false">
+      </app-filtro-card>
       <ng-container *ngIf="reporteData$ | async as data">
         <reporte-resultado [data]="data"></reporte-resultado>
       </ng-container>
@@ -41,17 +46,25 @@ export class ReportePage implements OnInit {
   private authService = inject(AuthService);
   generandoPDF: boolean = false;
   reporteData$ = this.reporteService.getReporteData();
+  filtroActual!: Filtro;
 
   constructor(private cdRef: ChangeDetectorRef) {}
 
 
   ngOnInit() {
     const filtro = this.reporteService.getFiltroActual();
-    
+
     if (!filtro) {
       this.router.navigate(['/filtro']);
       return;
     }
+
+    this.filtroActual = {
+      id: 0,
+      nombre: 'Reporte con los siguientes filtros:',
+      criterios: JSON.stringify(filtro),
+      propietario_id: this.authService.getUsuarioId() || 0
+    };
 
     this.reporteService.generarReporte(filtro).subscribe();
   }

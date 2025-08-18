@@ -14,6 +14,7 @@ import { CommonModule } from '@angular/common';
 })
 export class FiltroCardComponent {
   @Input() filtro!: Filtro;
+  @Input() mostrarBotones: boolean = true;
   @Output() eliminar = new EventEmitter<number>();
 
   constructor(
