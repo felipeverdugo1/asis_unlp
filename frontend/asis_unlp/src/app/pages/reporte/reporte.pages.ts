@@ -9,7 +9,7 @@ import { PdfService } from "../../services/pdf.service";
 import { AuthService } from "../../services/auth.service";
 import { EncuestaService } from "../../services/encuesta.service";
 
-/*Hay que aplicarle estilos a esto.*/
+
 @Component({
   standalone: true,
   imports: [CommonModule, ReporteResultadoComponent, AsyncPipe],
@@ -20,11 +20,12 @@ import { EncuestaService } from "../../services/encuesta.service";
         <button class="btn btn-create" (click)="generarYGuardarPDF()" [disabled]="generandoPDF">
             {{ generandoPDF ? 'Generando...' : 'Guardar Reporte' }}
         </button>
+
+        <button class="btn btn-func" (click)="volverAFiltro()">Ajustar Filtros</button>
       </div>
     </div>
 
     <div class="content-container" #contenidoParaPDF>
-      <h2>MAPAS EXQUISITOS y GRAFICOS COPADOS</h2>
       <ng-container *ngIf="reporteData$ | async as data">
         <reporte-resultado [data]="data"></reporte-resultado>
       </ng-container>
@@ -114,5 +115,9 @@ export class ReportePage implements OnInit {
       this.generandoPDF = false;
       // Aquí podrías agregar notificación al usuario
     }
+  }
+
+  volverAFiltro() {
+    this.router.navigate(['/filtro/nuevo'])
   }
 }

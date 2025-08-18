@@ -13,7 +13,6 @@ import "leaflet.heat";
       <div class="map-wrapper">
         <div id="map" #mapContainer></div>
       </div>
-      <button (click)="volverAFiltro()">Ajustar Filtros</button>
     </div>
   `,
   styles: [`
@@ -106,7 +105,4 @@ export class ReporteResultadoComponent implements AfterViewInit, OnChanges {
     this.map.fitBounds(bounds, {padding: [20, 20]});
   }
 
-  volverAFiltro() {
-    this.router.navigate(['/filtro'])
-  }
 }
