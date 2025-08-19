@@ -152,6 +152,10 @@ public class EncuestaService extends GenericServiceImpl<Encuesta, Long> {
                 // Procesamos encuestas generales (una por casa)
                 for (CSVRecord recordGeneral : parserGeneral) {
                     String uuid = recordGeneral.get("ec5_uuid");
+                    // Verificación: si ya existe una encuesta con ese UUID, pero abria que agregar una condicion mas si es de la misma jornada
+                    if (encuestaDAO.existePorUuidYJornada(uuid,jornada)) {
+                        continue;
+                    }
                     String fechaStr = recordGeneral.get("created_at").substring(0, 10);
                     LocalDate fecha = LocalDate.parse(fechaStr);
                     String coordenadas = recordGeneral.get("lat_1_Presione_actualiza") + ", " +
@@ -215,6 +219,9 @@ public class EncuestaService extends GenericServiceImpl<Encuesta, Long> {
 
         return "Encuestas cargadas correctamente con preguntas filtradas";
     }
+
+
+
 
 
     private byte[] inputStreamToByteArray(InputStream is) throws IOException {
@@ -359,25 +366,23 @@ public class EncuestaService extends GenericServiceImpl<Encuesta, Long> {
 
 
         int cant;
-        int cantEncuestadas=0;
+        int total_personas = 0;
         List<DatosRecolectadosDTO> datosRecolectados = new ArrayList<>();
         DatosRecolectadosDTO datosRecolectadosDTO;
         Map<String, Integer> total_generos = new HashMap<>();
         Map<String, Integer> total_materiales = new HashMap<>();
         Map<Integer, Integer> total_edades = new HashMap<>();
-
+        int cant_entidades = 0;
+        boolean encuestaCumple;
         for (Encuesta encuesta : encuestas) {
+            encuestaCumple = false;
             cant = 0;
 
             if (tieneFiltrosPersonales) {
-                // Traigo preguntas personales de esta encuesta
                 List<PreguntaDTO> preguntas = preguntaDAO.findPreguntasPersonalesByEncuestaId(encuesta.getId());
 
-
-                // Agrupamos por persona dentro de la casa
                 Map<String, List<PreguntaDTO>> personas = preguntas.stream()
                         .collect(Collectors.groupingBy(p -> p.getEncuesta_id() + "_" + p.getPersona_id()));
-
 
                 for (List<PreguntaDTO> preguntasPersona : personas.values()) {
                     boolean cumple = true;
@@ -394,7 +399,6 @@ public class EncuestaService extends GenericServiceImpl<Encuesta, Long> {
                         boolean cumpleLocal = preguntasPersona.stream()
                                 .filter(p -> p.getPregunta().equalsIgnoreCase("genero"))
                                 .anyMatch(p -> dto.getGeneros().contains(p.getRespuesta().toLowerCase()));
-
                         cumple &= cumpleLocal;
                     }
 
@@ -407,6 +411,8 @@ public class EncuestaService extends GenericServiceImpl<Encuesta, Long> {
 
                     if (cumple) {
                         cant++;
+                        encuestaCumple = true;
+
                         preguntasPersona.stream()
                                 .filter(p -> p.getPregunta().equalsIgnoreCase("genero"))
                                 .findFirst()
@@ -414,7 +420,7 @@ public class EncuestaService extends GenericServiceImpl<Encuesta, Long> {
                                     String respuesta = p.getRespuesta().toLowerCase();
                                     total_generos.merge(respuesta, 1, Integer::sum);
                                 });
-                        // Contar edad
+
                         preguntasPersona.stream()
                                 .filter(p -> p.getPregunta().equalsIgnoreCase("edad"))
                                 .findFirst()
@@ -422,41 +428,49 @@ public class EncuestaService extends GenericServiceImpl<Encuesta, Long> {
                                     Integer edad = Integer.parseInt(p.getRespuesta());
                                     total_edades.merge(edad, 1, Integer::sum);
                                 });
-
-
-
                     }
                 }
-                 datosRecolectadosDTO = crearDTO(encuesta,cant);
-                if (cant > 0 && datosRecolectadosDTO !=null) {
+
+
+
+                datosRecolectadosDTO = crearDTO(encuesta, cant);
+                if (cant > 0 && datosRecolectadosDTO != null) {
                     datosRecolectados.add(datosRecolectadosDTO);
                 }
+
             } else {
-
-
-
-                cant= (int) preguntaDAO.countPersonasDistintasPorEncuesta(encuesta.getId());
-                datosRecolectadosDTO = crearDTO(encuesta,cant);
-                if (datosRecolectadosDTO !=null) {
+                encuestaCumple = true;
+                cant = (int) preguntaDAO.countPersonasDistintasPorEncuesta(encuesta.getId());
+                datosRecolectadosDTO = crearDTO(encuesta, cant);
+                if (datosRecolectadosDTO != null) {
                     datosRecolectados.add(datosRecolectadosDTO);
+
                 }
             }
 
-            // contar materiales de esta encuesta
-            List<PreguntaDTO> preguntasVivienda = preguntaDAO.findPreguntasViviendaByEncuestaId(encuesta.getId());
-            preguntasVivienda.stream()
-                    .filter(p -> p.getPregunta().equalsIgnoreCase("material_vivienda"))
-                    .findFirst()
-                    .ifPresent(p -> {
-                        String material = p.getRespuesta().toLowerCase();
-                        total_materiales.merge(material, 1, Integer::sum);
-                    });
+            if (encuestaCumple && dto.getMaterial_vivienda() != null && datosRecolectadosDTO !=null) {
+                List<PreguntaDTO> preguntasVivienda = preguntaDAO.findPreguntasViviendaByEncuestaId(encuesta.getId());
+                preguntasVivienda.stream()
+                        .filter(p -> p.getPregunta().equalsIgnoreCase("material_vivienda"))
+                        .findFirst()
+                        .ifPresent(p -> {
+                            String material = p.getRespuesta().toLowerCase();
+                            total_materiales.merge(material, 1, Integer::sum);
+                        });
+            }
 
-            cantEncuestadas +=cant;
+
+
+            total_personas += cant;
         }
 
-        return new DevolverDatosDTO(datosRecolectados,total_generos,total_materiales,total_edades,obtenerTotalPersonas(),cantEncuestadas);
+        return new DevolverDatosDTO(datosRecolectados,total_generos,total_materiales,total_edades,total_personas,datosRecolectados.size(),obtenerTotalPersonas(),obtenerTotalCasas());
     }
+
+    private int obtenerTotalCasas() {
+        return encuestaDAO.listarTodos().size();
+    }
+
 
     private int obtenerTotalPersonas(){
         return encuestaDAO

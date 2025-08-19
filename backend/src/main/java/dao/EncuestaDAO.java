@@ -6,6 +6,7 @@ import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import jakarta.transaction.Transactional;
 import model.Encuesta;
+import model.Jornada;
 import model.Pregunta;
 
 import java.util.ArrayList;
@@ -20,6 +21,18 @@ public class EncuestaDAO extends GenericDAOImpl<Encuesta, Long> {
     }
 
     // Si necesitás métodos específicos, acá los agregás
+
+
+    public boolean existePorUuidYJornada(String uuid, Jornada jornada) {
+        Long count = em.createQuery(
+                        "SELECT COUNT(e) FROM Encuesta e WHERE e.uuid = :uuid AND e.jornada = :jornada", Long.class)
+                .setParameter("uuid", uuid)
+                .setParameter("jornada", jornada)
+                .getSingleResult();
+        return count > 0;
+    }
+
+
 
     public List<Encuesta> findByFiltrosVivienda(List<String> materiales, String agua) {
         CriteriaBuilder cb = em.getCriteriaBuilder();

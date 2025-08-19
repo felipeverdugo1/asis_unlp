@@ -15,6 +15,7 @@ import { RouterModule } from "@angular/router";
 import { Reporte } from "../../models/reporte.model";
 import { Observable } from 'rxjs';
 import { ListarReportes } from "../../components/reporte/listar-reporte";
+import { log } from "console";
 /*Hay que aplicarle estilos a esto.*/
 
 
@@ -24,12 +25,54 @@ import { ListarReportes } from "../../components/reporte/listar-reporte";
   template: `
   <div class="page-container">
     <div class="page-header">
-      <h1 class="page-title">Reportes</h1>
-    </div>
+        <ng-container *ngIf="auth.rolReferente()">
+          <h1 class="page-title">Mis Reporte</h1>
+        </ng-container>
 
-    <div *ngIf="errorMensaje" class="error-box">
+        <ng-container *ngIf="auth.rolAdmin()">
+          <h1 class="page-title">Todos los Reportes</h1>
+        </ng-container>
+
+        <ng-container *ngIf="auth.rolSalud()">
+          <h1 class="page-title">Mis Reportes Generados</h1>
+        </ng-container>
+      </div>
+
+      <div *ngIf="errorMensaje" class="error-box">
       {{ errorMensaje }}
     </div>
+
+   
+
+  <ng-container *ngIf="auth.rolSalud()">
+    <div class="content-container">
+    <listar-reportes 
+      [reportes]="(reportesTomados$ | async) ?? []"
+      [downloading]="downloading"
+      (onEdit)="editarReporte($event)"
+      (onDelete)="borrarReporte($event)"
+      (onDownload)="descargarReporte($event)">
+    </listar-reportes>
+    </div>
+    </ng-container>
+
+
+      <ng-container *ngIf="auth.rolReferente()">
+    <div class="content-container">
+    <listar-reportes 
+      [reportes]="(reportes$ | async) ?? []"
+      [downloading]="downloading"
+      (onDelete)="borrarReporte($event)"
+      (onDownload)="descargarReporte($event)">
+    </listar-reportes>
+    </div>
+    </ng-container>
+
+
+
+
+
+      <ng-container *ngIf="auth.rolAdmin()">
     <div class="content-container">
     <listar-reportes 
       [reportes]="(reportes$ | async) ?? []"
@@ -37,21 +80,35 @@ import { ListarReportes } from "../../components/reporte/listar-reporte";
       (onEdit)="editarReporte($event)"
       (onDelete)="borrarReporte($event)"
       (onDownload)="descargarReporte($event)">
+
     </listar-reportes>
     </div>
+    </ng-container>
+
+
+
+
   </div>
   `
 })
 export class ListarReportePage implements OnInit {
- reportes$!: Observable<Reporte[]>;
+  reportes$: Observable<any[]> = new Observable();
+  reportesTomados$ : Observable<any[]> = new Observable();
+  usuarios_compartidos : any [] = [];
+  id: number | null = null;
+
   errorMensaje: string | null = null;
   downloading = false;
 
   constructor(
     private reporteService: ReporteService,
     private router: Router,
+    private authService: AuthService,
     private cdRef: ChangeDetectorRef
+
   ) {}
+
+  auth = inject(AuthService);
 
   ngOnInit(): void {
     this.cargarReportes();
@@ -59,7 +116,29 @@ export class ListarReportePage implements OnInit {
   }
 
   cargarReportes() {
-    this.reportes$ = this.reporteService.getReportes();
+    console.log(this.authService.rolSalud());
+    console.log(this.authService.rolAdmin());
+    console.log(this.authService.rolReferente());
+    
+    if (!this.authService.loggedIn()) {
+      this.router.navigate(['/login']);
+      return;
+    }
+    this.id = this.authService.getUsuarioId();
+    if (!this.id) {
+      this.errorMensaje = 'Usuario no encontrado';
+      return;
+    }
+
+    if (this.authService.rolSalud()) {
+      this.reportesTomados$ = this.reporteService.getReportesByUserId(this.id);
+      
+    }
+    else if (this.authService.rolAdmin()) {
+      this.reportes$ = this.reporteService.getReportes();
+    }
+
+
   }
 
   editarReporte(id: number) {

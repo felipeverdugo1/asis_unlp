@@ -17,7 +17,9 @@ public class DevolverDatosDTO {
     private Map<String, Integer> total_materiales;
     private Map<Integer, Integer> total_edades;
     private Integer total_personas;
+    private Integer total_casas;
     private Integer cantEncuestadas;
+    private Integer cantCasas;
 }
 
 
