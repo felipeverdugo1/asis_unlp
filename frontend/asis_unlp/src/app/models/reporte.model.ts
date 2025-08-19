@@ -3,7 +3,7 @@ export interface Reporte {
     fechaCreacion: string;
     nombreUnico: string;
     descripcion: string;
-    creadoPor_id: string;
+    creadoPor_id: number;
     campaña_id?: number;
-    compartido_con?: string[];
+    compartido_con?: number[];
 }

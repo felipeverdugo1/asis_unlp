@@ -53,7 +53,7 @@ public class PreguntaDAO extends GenericDAOImpl<Pregunta, Long> {
     }
 
     public long countPersonasDistintasPorEncuesta(Long encuestaId) {
-        return em.createQuery(
+        long cantidadPersonasEncuestadas = em.createQuery(
                         "SELECT COUNT(DISTINCT p.personaId) " +
                                 "FROM Pregunta p " +
                                 "WHERE p.personaId IS NOT NULL AND p.encuesta.id = :id",
@@ -61,6 +61,9 @@ public class PreguntaDAO extends GenericDAOImpl<Pregunta, Long> {
                 )
                 .setParameter("id", encuestaId)
                 .getSingleResult();
+        // si la encuesta no tiene preguntas personales no sabemos la cantidad
+        // de personas de la casa encuestada, dedjamos 1 por defecto como cantidad
+        return (cantidadPersonasEncuestadas == 0) ? 1 : cantidadPersonasEncuestadas;
     }
 
 
