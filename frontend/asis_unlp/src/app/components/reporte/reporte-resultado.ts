@@ -18,11 +18,12 @@ import { ChangeDetectionStrategy } from "@angular/core";
       <button (click)="volverAFiltro()">Ajustar Filtros</button>
     </div>
   `,
+  styleUrls: ['../../../styles.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ReporteResultadoComponent {
   @Input() data: any;
-  
+
   private router = inject(Router);
 
   volverAFiltro() {

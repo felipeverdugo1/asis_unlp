@@ -29,8 +29,10 @@ import { ListarReportes } from "../../components/reporte/listar-reporte";
     <div class="content-container">
     <listar-reportes 
       [reportes]="(reportes$ | async) ?? []"
+      [downloading]="downloading"
       (onEdit)="editarReporte($event)"
-      (onDelete)="borrarReporte($event)">
+      (onDelete)="borrarReporte($event)"
+      (onDownload)="descargarReporte($event)">
     </listar-reportes>
     </div>
   </div>
@@ -39,10 +41,12 @@ import { ListarReportes } from "../../components/reporte/listar-reporte";
 export class ListarReportePage implements OnInit {
  reportes$!: Observable<Reporte[]>;
   errorMensaje: string | null = null;
+  downloading = false;
 
   constructor(
     private reporteService: ReporteService,
-    private router: Router
+    private router: Router,
+    private cdRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -53,8 +57,6 @@ export class ListarReportePage implements OnInit {
   cargarReportes() {
     this.reportes$ = this.reporteService.getReportes();
   }
-
-
 
   editarReporte(id: number) {
   }
@@ -67,14 +69,36 @@ export class ListarReportePage implements OnInit {
       });
     }
   }
+
+  descargarReporte(reporteId: number) {
+    this.downloading = true;
+    this.cdRef.detectChanges(); 
+    this.reporteService.descargarPDF(reporteId).subscribe({
+      next: (blob: Blob) => {
+        // Crear nombre de archivo con la fecha actual
+        const fecha = new Date().toISOString().slice(0, 10);
+        const nombreArchivo = `reporte_${reporteId}_${fecha}.pdf`;
+
+        // Descargar el archivo
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = nombreArchivo;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        this.downloading = false;
+        this.cdRef.detectChanges(); 
+      },
+      error: (err: any) => {
+        console.error('Error descargando PDF:', err);
+        this.downloading = false;
+        this.cdRef.detectChanges(); 
+      }
+    });
+  }
 }
-
-
-
-
-
-
-
 
 
 

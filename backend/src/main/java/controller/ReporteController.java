@@ -20,7 +20,10 @@ import model.Reporte;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import service.ReporteService;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.Map;
 import java.util.Optional;
 
@@ -197,6 +200,27 @@ public class ReporteController {
     }
 
 
+    @GET
+    @Path("/descargarPDF/{id}")
+    @Produces("application/pdf")
+    @Operation(description = "Descarga un PDF guardado previamente en el servidor",
+            parameters = @Parameter(name = "reporte_id"))
+    public Response descargarPDF(@PathParam("id") Long reporte_id) {
+        File file = service.descargarPDF(reporte_id);
+        try {
+            String contentType = Files.probeContentType(file.toPath());
+            if (contentType == null) {
+                contentType = "application/pdf"; // Default si no se puede detectar
+            }
+            return Response.ok(file, contentType)
+                    .header("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"")
+                    .header("Content-Length", file.length())
+                    .build();
+        } catch (IOException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+
+    }
 }
 
 

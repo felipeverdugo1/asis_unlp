@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { ChangeDetectorRef, Component, inject } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { OnInit } from "@angular/core";
 import { Router, RouterModule } from "@angular/router";
@@ -40,6 +40,7 @@ import { PedidoReporte } from "../../models/pedido.model";
             [pedidos]="(pedidosTomados$ | async) || []"
             [showCompleteDialog]="showCompleteDialog"
             [reportes]="reportes"
+            [downloading]="downloading"
             (take)="onTakePedido($event)"
             (complete)="openCompleteDialog($event)"
             (download)="onDownloadReporte($event)"
@@ -60,6 +61,7 @@ import { PedidoReporte } from "../../models/pedido.model";
           [pedidos]="(pedidos$ | async) || []"
           [showCompleteDialog]="showCompleteDialog"
           [reportes]="reportes"
+          [downloading]="downloading"
           (take)="onTakePedido($event)"
           (complete)="openCompleteDialog($event)"
           (download)="onDownloadReporte($event)"
@@ -88,7 +90,8 @@ export class ListaPedidosPage implements OnInit {
   reportes: any[] = [];
   errorMensaje: string | null = null;
   id: number | null = null;
-  
+  downloading: boolean = false;
+
   // Estado para controlar el modal
   showCompleteDialog = false;
   selectedPedidoId: number | null = null;
@@ -97,7 +100,8 @@ export class ListaPedidosPage implements OnInit {
     private pedidoService: PedidoService,
     private reporteService: ReporteService,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private cdRef: ChangeDetectorRef
   ) {}
 
   auth = inject(AuthService);
@@ -160,7 +164,35 @@ export class ListaPedidosPage implements OnInit {
   }
 
   onDownloadReporte(pedidoId: number) {
-    this.pedidoService.descargarReporte(pedidoId);
+    this.cdRef.detectChanges(); 
+    this.downloading = true;
+    const pedido = this.pedidoService.getPedidoById(pedidoId).subscribe((pedido) => {
+      this.reporteService.descargarPDF(pedido.reporte_id).subscribe({
+        next: (blob: Blob) => {
+          // Crear nombre de archivo con la fecha actual
+          const fecha = new Date().toISOString().slice(0, 10);
+          const nombreArchivo = `reporte_${pedido.reporte_id}_${fecha}.pdf`;
+
+          // Descargar el archivo
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = nombreArchivo;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+          this.downloading = false;
+          this.cdRef.detectChanges(); 
+        },
+        error: (err: any) => {
+          console.error('Error descargando PDF:', err);
+          this.errorMensaje = 'Error descargando el PDF';
+          this.downloading = false;
+          this.cdRef.detectChanges(); 
+        }
+      });
+    });
   }
 
   nuevoPedido() {
