@@ -41,6 +41,17 @@ public class PreguntaDAO extends GenericDAOImpl<Pregunta, Long> {
                 .getResultList();
     }
 
+
+    public List<PreguntaDTO> findPreguntasViviendaByEncuestaId(Long encuestaId) {
+        return em.createQuery(
+                        "SELECT new controller.dto.PreguntaDTO(p.id, p.pregunta, p.respuesta, p.personaId, p.encuesta.id) " +
+                                "FROM Pregunta p WHERE p.personaId IS NULL AND p.encuesta.id = :id",
+                        PreguntaDTO.class
+                )
+                .setParameter("id", encuestaId)
+                .getResultList();
+    }
+
     public long countPersonasDistintasPorEncuesta(Long encuestaId) {
         return em.createQuery(
                         "SELECT COUNT(DISTINCT p.personaId) " +
