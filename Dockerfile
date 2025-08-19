@@ -4,7 +4,7 @@ WORKDIR /app
 COPY frontend/asis_unlp/package.json frontend/asis_unlp/package-lock.json ./frontend/
 WORKDIR /app/frontend
 RUN npm install
-COPY frontend/asis_unlp ./frontend/
+COPY frontend/asis_unlp ./
 RUN npx ng build --base-href /asis_unlp/
 
 FROM maven AS grupo5build
