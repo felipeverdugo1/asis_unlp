@@ -303,6 +303,27 @@ public class ReporteService extends GenericServiceImpl<Reporte, Long> {
 
         return safeName.isEmpty() ? "documento.pdf" : safeName;
     }
+
+    public File descargarPDF(Long reporte_id) {
+        Optional<Reporte> reporte = reporteDAO.buscarPorId(reporte_id);
+        if (reporte.isPresent()) {
+            Path filePath = Paths.get(reporte.get().getNombreUnico())
+                    .normalize()
+                    .toAbsolutePath();
+            // todo verificaciones de seguridad para acceso no permitido al disco
+
+            File file = filePath.toFile();
+            if (!file.exists()) {
+                throw new EntidadNoEncontradaException("El archivo PDF no se encuentra disponible");
+            }
+
+            return file;
+
+        } else {
+            throw new EntidadExistenteException("El reporte no existe");
+        }
+
+    }
 }
 
 

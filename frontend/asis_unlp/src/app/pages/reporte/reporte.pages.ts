@@ -10,6 +10,103 @@ import { AuthService } from "../../services/auth.service";
 import { FiltroCardComponent } from "../../components/filtro/filtro-card";
 import { Filtro } from '../../models/filtro.model';
 
+import { RouterModule } from "@angular/router";
+import { Reporte } from "../../models/reporte.model";
+import { Observable } from 'rxjs';
+import { ListarReportes } from "../../components/reporte/listar-reporte";
+/*Hay que aplicarle estilos a esto.*/
+
+
+@Component({
+  standalone: true,
+  imports: [CommonModule, RouterModule, ListarReportes],
+  template: `
+  <div class="page-container">
+    <div class="page-header">
+      <h1 class="page-title">Reportes</h1>
+    </div>
+
+    <div *ngIf="errorMensaje" class="error-box">
+      {{ errorMensaje }}
+    </div>
+    <div class="content-container">
+    <listar-reportes 
+      [reportes]="(reportes$ | async) ?? []"
+      [downloading]="downloading"
+      (onEdit)="editarReporte($event)"
+      (onDelete)="borrarReporte($event)"
+      (onDownload)="descargarReporte($event)">
+    </listar-reportes>
+    </div>
+  </div>
+  `
+})
+export class ListarReportePage implements OnInit {
+ reportes$!: Observable<Reporte[]>;
+  errorMensaje: string | null = null;
+  downloading = false;
+
+  constructor(
+    private reporteService: ReporteService,
+    private router: Router,
+    private cdRef: ChangeDetectorRef
+  ) {}
+
+  ngOnInit(): void {
+    this.cargarReportes();
+    this.errorMensaje = null;
+  }
+
+  cargarReportes() {
+    this.reportes$ = this.reporteService.getReportes();
+  }
+
+  editarReporte(id: number) {
+  }
+
+  borrarReporte(id: number) {
+    if (confirm('¿Borrar reporte?')) {
+      this.reporteService.deleteReporte(id).subscribe({
+        next: () => this.cargarReportes(),
+        error: (err) => this.errorMensaje = err.error?.error || 'Error inesperado al borrar el encuestador.'
+      });
+    }
+  }
+
+  descargarReporte(reporteId: number) {
+    this.downloading = true;
+    this.cdRef.detectChanges(); 
+    this.reporteService.descargarPDF(reporteId).subscribe({
+      next: (blob: Blob) => {
+        // Crear nombre de archivo con la fecha actual
+        const fecha = new Date().toISOString().slice(0, 10);
+        const nombreArchivo = `reporte_${reporteId}_${fecha}.pdf`;
+
+        // Descargar el archivo
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = nombreArchivo;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        this.downloading = false;
+        this.cdRef.detectChanges(); 
+      },
+      error: (err: any) => {
+        console.error('Error descargando PDF:', err);
+        this.downloading = false;
+        this.cdRef.detectChanges(); 
+      }
+    });
+  }
+}
+
+
+
+
+
 @Component({
   standalone: true,
   imports: [CommonModule, ReporteResultadoComponent, AsyncPipe, FiltroCardComponent],
