@@ -74,7 +74,7 @@ export class FiltroReporteComponent implements OnInit {
   }
 
 
-  generos: string[] = ['mujer cis', 'mujer trans-travesti', 'varón cis', 'varon trans-masculinidad trans', 'no binarie', 'otra identidad-ninguna de las anteriores'];
+  generos: string[] = ['mujer cis', 'mujer trans-travesti', 'varon cis', 'varon trans-masculinidad trans', 'no binarie', 'otra identidad-ninguna de las anteriores'];
   generoSeleccionado: string[] = [];
 
   materiales: string[] = ['ladrillo', 'madera', 'chapa', 'mixto', 'otros'];

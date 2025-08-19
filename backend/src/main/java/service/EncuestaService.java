@@ -341,7 +341,7 @@ public class EncuestaService extends GenericServiceImpl<Encuesta, Long> {
     }
 
 
-    public List<DatosRecolectadosDTO> obtenerDatos(ObtenerDatosDTO dto) {
+    public DevolverDatosDTO obtenerDatos(ObtenerDatosDTO dto) {
 
 
         boolean tieneFiltrosVivienda = dto.getMaterial_vivienda() != null ||
@@ -362,6 +362,9 @@ public class EncuestaService extends GenericServiceImpl<Encuesta, Long> {
         int cantEncuestadas=0;
         List<DatosRecolectadosDTO> datosRecolectados = new ArrayList<>();
         DatosRecolectadosDTO datosRecolectadosDTO;
+        Map<String, Integer> total_generos = new HashMap<>();
+        Map<String, Integer> total_materiales = new HashMap<>();
+        Map<Integer, Integer> total_edades = new HashMap<>();
 
         for (Encuesta encuesta : encuestas) {
             cant = 0;
@@ -388,9 +391,11 @@ public class EncuestaService extends GenericServiceImpl<Encuesta, Long> {
 
                     // Filtro por género
                     if (dto.getGeneros() != null && !dto.getGeneros().isEmpty()) {
-                        cumple &= preguntasPersona.stream()
-                                .anyMatch(p -> p.getPregunta().equalsIgnoreCase("genero") &&
-                                        dto.getGeneros().contains(p.getRespuesta().toLowerCase()));
+                        boolean cumpleLocal = preguntasPersona.stream()
+                                .filter(p -> p.getPregunta().equalsIgnoreCase("genero"))
+                                .anyMatch(p -> dto.getGeneros().contains(p.getRespuesta().toLowerCase()));
+
+                        cumple &= cumpleLocal;
                     }
 
                     // Filtro por acceso_salud
@@ -402,6 +407,24 @@ public class EncuestaService extends GenericServiceImpl<Encuesta, Long> {
 
                     if (cumple) {
                         cant++;
+                        preguntasPersona.stream()
+                                .filter(p -> p.getPregunta().equalsIgnoreCase("genero"))
+                                .findFirst()
+                                .ifPresent(p -> {
+                                    String respuesta = p.getRespuesta().toLowerCase();
+                                    total_generos.merge(respuesta, 1, Integer::sum);
+                                });
+                        // Contar edad
+                        preguntasPersona.stream()
+                                .filter(p -> p.getPregunta().equalsIgnoreCase("edad"))
+                                .findFirst()
+                                .ifPresent(p -> {
+                                    Integer edad = Integer.parseInt(p.getRespuesta());
+                                    total_edades.merge(edad, 1, Integer::sum);
+                                });
+
+
+
                     }
                 }
                  datosRecolectadosDTO = crearDTO(encuesta,cant);
@@ -409,21 +432,30 @@ public class EncuestaService extends GenericServiceImpl<Encuesta, Long> {
                     datosRecolectados.add(datosRecolectadosDTO);
                 }
             } else {
+
+
+
                 cant= (int) preguntaDAO.countPersonasDistintasPorEncuesta(encuesta.getId());
                 datosRecolectadosDTO = crearDTO(encuesta,cant);
                 if (datosRecolectadosDTO !=null) {
                     datosRecolectados.add(datosRecolectadosDTO);
                 }
-
             }
+
+            // contar materiales de esta encuesta
+            List<PreguntaDTO> preguntasVivienda = preguntaDAO.findPreguntasViviendaByEncuestaId(encuesta.getId());
+            preguntasVivienda.stream()
+                    .filter(p -> p.getPregunta().equalsIgnoreCase("material_vivienda"))
+                    .findFirst()
+                    .ifPresent(p -> {
+                        String material = p.getRespuesta().toLowerCase();
+                        total_materiales.merge(material, 1, Integer::sum);
+                    });
+
             cantEncuestadas +=cant;
         }
 
-        Integer totalPersonas = obtenerTotalPersonas();
-        System.out.println("Total personas: " + totalPersonas);
-        System.out.println("Total de encuestas: " + cantEncuestadas);
-
-        return datosRecolectados;
+        return new DevolverDatosDTO(datosRecolectados,total_generos,total_materiales,total_edades,obtenerTotalPersonas(),cantEncuestadas);
     }
 
     private int obtenerTotalPersonas(){

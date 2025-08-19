@@ -5,6 +5,7 @@ import { tap } from "rxjs/operators";
 import { Reporte } from "../models/reporte.model";
 import { environment } from "../../environments/environment";
 import { EncuestaService } from "./encuesta.service";
+import { log } from "console";
 
 @Injectable({ providedIn: 'root' })
 export class ReporteService {
@@ -14,6 +15,7 @@ export class ReporteService {
 
   private filtroActual = new BehaviorSubject<any>(null);
   private reporteData = new BehaviorSubject<any>(null);
+  private encuestasFiltradasData = new BehaviorSubject<any>(null);
 
   constructor(private http: HttpClient) {}
 
@@ -32,13 +34,18 @@ export class ReporteService {
     return this.encuestaService.obtenerDatos(filtro).pipe(
       tap((resp) => {
         console.log('Datos obtenidos para reporte:', resp);
-        this.reporteData.next(resp);
+        this.encuestasFiltradasData.next(resp.encuestasFiltradas)
+        this.reporteData.next(resp); 
       })
     );
   }
 
   getReporteData() {
     return this.reporteData.asObservable();
+  }
+
+  getEncuestasFiltradasData(){
+    return this.encuestasFiltradasData.asObservable();
   }
 
   getReportes(): Observable<Reporte[]> {

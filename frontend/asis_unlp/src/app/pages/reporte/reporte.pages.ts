@@ -142,7 +142,7 @@ export class ReportePage implements OnInit {
   private pdfService = inject(PdfService);
   private authService = inject(AuthService);
   generandoPDF: boolean = false;
-  reporteData$ = this.reporteService.getReporteData();
+  reporteData$ = this.reporteService.getEncuestasFiltradasData();
   filtroActual!: Filtro;
 
   constructor(private cdRef: ChangeDetectorRef) {}

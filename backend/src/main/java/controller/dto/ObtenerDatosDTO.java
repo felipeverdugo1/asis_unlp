@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -18,5 +19,7 @@ public class ObtenerDatosDTO {
     private String acceso_agua;
     private String acceso_salud;
     private List<String> material_vivienda;
+
+
 
 }
