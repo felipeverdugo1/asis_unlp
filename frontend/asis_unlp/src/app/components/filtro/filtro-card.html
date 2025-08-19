@@ -4,7 +4,7 @@
     <ul class="list-ul">
         <ng-container *ngIf="criterios.edad">
             <li class="list-item">
-              <strong>Edad:</strong> {{ criterios.edad[0] }} - {{ criterios.edad[1] }}
+              <strong>Edad:</strong> {{ criterios.edad[0] }} - {{ criterios.edad[criterios.edad.length - 1] }}
             </li>
         </ng-container>
         <ng-container *ngIf="criterios.genero?.length">
@@ -34,8 +34,10 @@
         </ng-container>
     </ul>
   </div>
-  <div class="filtro-actions">
-    <button (click)="aplicarFiltro()" class="btn btn-create">Aplicar</button>
-    <button (click)="eliminarFiltro()" class="btn btn-danger">Eliminar</button>
+  <ng-container *ngIf="mostrarBotones">
+    <div class="filtro-actions">
+      <button (click)="aplicarFiltro()" class="btn btn-create">Aplicar</button>
+      <button (click)="eliminarFiltro()" class="btn btn-delete">Eliminar</button>
   </div>
+  </ng-container>
 </div>

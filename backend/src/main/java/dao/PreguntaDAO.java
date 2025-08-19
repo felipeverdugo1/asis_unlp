@@ -41,6 +41,17 @@ public class PreguntaDAO extends GenericDAOImpl<Pregunta, Long> {
                 .getResultList();
     }
 
+    public long countPersonasDistintasPorEncuesta(Long encuestaId) {
+        return em.createQuery(
+                        "SELECT COUNT(DISTINCT p.personaId) " +
+                                "FROM Pregunta p " +
+                                "WHERE p.personaId IS NOT NULL AND p.encuesta.id = :id",
+                        Long.class
+                )
+                .setParameter("id", encuestaId)
+                .getSingleResult();
+    }
+
 
 
 }

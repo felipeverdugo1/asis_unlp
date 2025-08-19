@@ -14,6 +14,7 @@ import { CommonModule } from '@angular/common';
 })
 export class FiltroCardComponent {
   @Input() filtro!: Filtro;
+  @Input() mostrarBotones: boolean = true;
   @Output() eliminar = new EventEmitter<number>();
 
   constructor(
@@ -31,7 +32,7 @@ export class FiltroCardComponent {
 
   aplicarFiltro() {
     this.reporteService.setFiltroActual(this.criterios);
-    this.router.navigate(['/filtro']);
+    this.router.navigate(['/filtro/resultado']);
   }
 
   eliminarFiltro() {
