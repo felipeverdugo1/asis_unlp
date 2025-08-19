@@ -76,11 +76,19 @@
 
 
 
+
     <!-- Fin del if para rol de admin -->
     
     
     <!-- Seccion personal de Salud y Admin-->
     <ng-container *ngIf="auth.rolSalud() || auth.rolAdmin()">
+
+      <div class="menu-section hover-effect">
+        <h2> Reportes</h2>
+        <div class="menu-buttons">
+          <button class="btn btn-nav" routerLink="/reporte">Ver Reportes</button>
+        </div>
+      </div>
 
 
       <!-- Sección Generar Reporte -->
@@ -115,19 +123,12 @@
       <div class="menu-section hover-effect">
         <h2>Mis Reportes</h2>
         <div class="menu-buttons">
-          <button class="btn btn-nav" routerLink="/reportes">Ver Reportes</button>
+          <button class="btn btn-nav" routerLink="/reporte">Ver Reportes</button>
         </div>
       </div>
     </ng-container>
     <!-- Fin del if para rol de referente -->
      
-      <!-- Sección de Reportes -->
-      <div class="menu-section hover-effect">
-        <h2>Reportes</h2>
-        <div class="menu-buttons">
-          <button class="btn btn-nav" routerLink="/reporte">Ver Reportes</button>
-        </div>
-      </div>
 
 
 
