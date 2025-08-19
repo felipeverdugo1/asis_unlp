@@ -48,6 +48,7 @@ export class ReporteInputPedidoComponent {
   styleUrls: ['../../../styles.css']
 })
 export class ListarPedidosComponent {
+  @Input() downloading: boolean = false;
   @Input() pedidos: any[] = [];
   @Input() showCompleteDialog = false;
   @Input() reportes: any[] = [];

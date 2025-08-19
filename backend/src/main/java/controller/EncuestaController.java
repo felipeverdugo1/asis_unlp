@@ -77,21 +77,20 @@ public class EncuestaController {
                                     name = "ObtenerDatos",
                                     summary = "campos de prueba",
                                     value = """
-                                            {
-                                              "edad": [
-                                                "12",
-                                                "32"
-                                              ],
-                                              "genero": [
-                                                "varón cis"
-                                              ],
-                                              "barrio": "2",
-                                              "acceso_salud": "si",
-                                              "acceso_agua": "si",
-                                              "material_vivienda": [
-                                                "chapa"
-                                              ]
-                                            }
+                                                {
+                                                  "edad": [
+                                                    5
+                                                  ],
+                                                  "genero": [
+                                                    "varón cis"
+                                                  ],
+                                                  "barrio": "2",
+                                                  "acceso_salud": "no",
+                                                  "acceso_agua": "si",
+                                                  "material_vivienda": [
+                                                    "ladrillo"
+                                                  ]
+                                                }
                                             """
                             )}
                     )

@@ -51,7 +51,21 @@ public class PedidoReporteController {
     public Response get(@PathParam("id") Long id) {
         Optional<PedidoReporte> objeto = service.buscarPorId(id);
         if (objeto.isPresent()) {
-            return Response.ok(objeto.get()).build();
+            PedidoReporteDTO pedidoReporteDTO = new PedidoReporteDTO();
+            pedidoReporteDTO.setCamposPedidos(objeto.get().getCamposPedidos());
+            pedidoReporteDTO.setEstado(objeto.get().getEstado().name());
+            pedidoReporteDTO.setNombre(objeto.get().getNombre());
+            pedidoReporteDTO.setCreadoPor_id(objeto.get().getId());
+            if (objeto.get().getAsignado_a() != null) {
+                pedidoReporteDTO.setAsignado_a_id(objeto.get().getAsignado_a().getId());
+            }
+            if (objeto.get().getReporte() != null) {
+                pedidoReporteDTO.setReporte_id(objeto.get().getReporte().getId());
+            }
+            if (objeto.get().getComentario() != null) {
+                pedidoReporteDTO.setComentario(objeto.get().getComentario());
+            }
+            return Response.ok(pedidoReporteDTO).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
