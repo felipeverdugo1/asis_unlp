@@ -52,4 +52,8 @@ export class ReporteService {
       responseType: 'json'
     });
   }
+
+  deleteReporte(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 }

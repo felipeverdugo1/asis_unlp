@@ -7,8 +7,79 @@ import { ReporteService } from "../../services/reporte.service";
 import { ReporteResultadoComponent } from "../../components/reporte/reporte-resultado";
 import { PdfService } from "../../services/pdf.service";
 import { AuthService } from "../../services/auth.service";
-
+import { RouterModule } from "@angular/router";
+import { Reporte } from "../../models/reporte.model";
+import { Observable } from 'rxjs';
+import { ListarReportes } from "../../components/reporte/listar-reporte";
 /*Hay que aplicarle estilos a esto.*/
+
+
+@Component({
+  standalone: true,
+  imports: [CommonModule, RouterModule, ListarReportes],
+  template: `
+  <div class="page-container">
+    <div class="page-header">
+      <h1 class="page-title">Reportes</h1>
+    </div>
+
+    <div *ngIf="errorMensaje" class="error-box">
+      {{ errorMensaje }}
+    </div>
+    <div class="content-container">
+    <listar-reportes 
+      [reportes]="(reportes$ | async) ?? []"
+      (onEdit)="editarReporte($event)"
+      (onDelete)="borrarReporte($event)">
+    </listar-reportes>
+    </div>
+  </div>
+  `
+})
+export class ListarReportePage implements OnInit {
+ reportes$!: Observable<Reporte[]>;
+  errorMensaje: string | null = null;
+
+  constructor(
+    private reporteService: ReporteService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    this.cargarReportes();
+    this.errorMensaje = null;
+  }
+
+  cargarReportes() {
+    this.reportes$ = this.reporteService.getReportes();
+  }
+
+
+
+  editarReporte(id: number) {
+  }
+
+  borrarReporte(id: number) {
+    if (confirm('¿Borrar reporte?')) {
+      this.reporteService.deleteReporte(id).subscribe({
+        next: () => this.cargarReportes(),
+        error: (err) => this.errorMensaje = err.error?.error || 'Error inesperado al borrar el encuestador.'
+      });
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
 @Component({
   standalone: true,
   imports: [CommonModule, ReporteResultadoComponent, AsyncPipe],

@@ -79,7 +79,7 @@ public class EncuestaController {
                                     value = """
                                                 {
                                                   "edad": [
-                                                    "5"
+                                                    5
                                                   ],
                                                   "genero": [
                                                     "varón cis"
