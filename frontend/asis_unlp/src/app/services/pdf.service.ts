@@ -10,7 +10,23 @@ export class PdfService {
       contenido: HTMLElement, 
       nombreArchivo: string = 'reporte.pdf'
     ): Promise<{ pdfBlob: Blob, fileName: string }> {
-      const canvas = await html2canvas(contenido, { scale: 2 });
+        // Opciones específicas para capturar mapas Leaflet
+        const options = {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          logging: true,
+          onclone: (clonedDoc: Document) => {
+            // Forzar estilos para la captura
+            const mapContainer = clonedDoc.getElementById('map');
+            if (mapContainer) {
+              mapContainer.style.visibility = 'visible';
+              mapContainer.style.opacity = '1';
+            }
+          }
+        };
+
+      const canvas = await html2canvas(contenido, options);
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
     

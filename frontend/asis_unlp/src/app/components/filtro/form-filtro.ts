@@ -96,11 +96,27 @@ export class FiltroReporteComponent implements OnInit {
     const raw = this.form.value;
     const filtro: any = {};
 
-    if (raw.edadMin != null && raw.edadMax != null) filtro.edad = [raw.edadMin, raw.edadMax];
+    // Generar arreglo de edades dentro del rango
+    if (raw.edadMin != null && raw.edadMax != null) {
+      const edades: number[] = [];
+      for (let i = raw.edadMin; i <= raw.edadMax; i++) {
+        edades.push(i);
+      }
+      filtro.edad = edades;
+    }
+
     if (this.generoSeleccionado.length) filtro.genero = this.generoSeleccionado;
     if (raw.barrio != null) filtro.barrio = raw.barrio;
-    if (raw.acceso_salud != undefined && raw.acceso_salud != null) filtro.acceso_salud = raw.acceso_salud;
-    if (raw.acceso_agua != undefined && raw.acceso_agua != null) filtro.acceso_agua = raw.acceso_agua;
+
+    // Mapeo true -> "si", false -> "no"
+    if (raw.acceso_salud !== undefined && raw.acceso_salud !== null) {
+      filtro.acceso_salud = raw.acceso_salud ? "si" : "no";
+    }
+
+    if (raw.acceso_agua !== undefined && raw.acceso_agua !== null) {
+      filtro.acceso_agua = raw.acceso_agua ? "si" : "no";
+    }
+
     if (this.materialSeleccionado.length) filtro.material_vivienda = this.materialSeleccionado;
 
     this.generarReporte.emit(filtro);
@@ -135,21 +151,45 @@ export class FiltroReporteComponent implements OnInit {
 
   private buildFiltroData(customName: string): Filtro {
     const raw = this.form.value;
-    const criterios = {
-      edad: raw.edadMin && raw.edadMax ? [raw.edadMin, raw.edadMax] : null,
-      genero: this.generoSeleccionado,
-      barrio: raw.barrio,
-      acceso_salud: raw.acceso_salud,
-      acceso_agua: raw.acceso_agua,
-      material_vivienda: this.materialSeleccionado
-    };
+
+    const criterios: any = {};
+
+    // Edad: de min a max en array
+    if (raw.edadMin != null && raw.edadMax != null) {
+      const edades: number[] = [];
+      for (let i = raw.edadMin; i <= raw.edadMax; i++) {
+        edades.push(i);
+      }
+      criterios.edad = edades;
+    }
+
+    if (this.generoSeleccionado?.length) {
+      criterios.genero = this.generoSeleccionado;
+    }
+
+    if (raw.barrio) {
+      criterios.barrio = raw.barrio;
+    }
+
+    if (raw.acceso_salud === true || raw.acceso_salud === false) {
+      criterios.acceso_salud = raw.acceso_salud ? "si" : "no";
+    }
+
+    if (raw.acceso_agua === true || raw.acceso_agua === false) {
+      criterios.acceso_agua = raw.acceso_agua ? "si" : "no";
+    }
+
+    if (this.materialSeleccionado?.length) {
+      criterios.material_vivienda = this.materialSeleccionado;
+    }
+
     const now = new Date();
     const fechaHora = formatDate(now, 'yyyy-MM-dd_HH-mm-ss', 'en-US');
 
     return {
       nombre: `${customName}_${fechaHora}`,
       criterios: JSON.stringify(criterios),
-      propietario_id: this.auth.getUsuarioId() || 0 
+      propietario_id: this.auth.getUsuarioId() || 0
     };
   }
 }
