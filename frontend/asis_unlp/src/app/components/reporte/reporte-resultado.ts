@@ -92,7 +92,7 @@ export class ReporteResultadoComponent implements AfterViewInit, OnChanges {
     }
 
     // Crear el heatmap con parámetros ajustables
-    this.heatLayer = (L as any).heatLayer(points, {
+    this.heatLayer = (L as any).default.heatLayer(points, {
       radius: 25,
       blur: 15,
       maxZoom: 17,
