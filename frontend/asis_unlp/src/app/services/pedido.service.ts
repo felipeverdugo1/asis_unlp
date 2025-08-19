@@ -56,4 +56,8 @@ export class PedidoService {
   eliminarPedido(pedidoId: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${pedidoId}`);
   }
+
+  getPedidoById(pedidoId: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${pedidoId}`);
+  }
 }

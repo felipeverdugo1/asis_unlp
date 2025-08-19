@@ -55,4 +55,14 @@ export class ReporteService {
       responseType: 'json'
     });
   }
+
+  deleteReporte(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  descargarPDF(reporteId: number): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/descargarPDF/${reporteId}`, {
+      responseType: 'blob'
+    });
+  }
 }

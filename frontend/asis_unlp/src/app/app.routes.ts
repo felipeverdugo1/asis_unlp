@@ -7,7 +7,7 @@ import { ListarJornadaPage, FormJornadaPage, AdministrarZonasPage } from './page
 import { ListarOrgaSocialPage , FormOrgaSocialPage } from './pages/orgaSocial/orgaSocial.pages';
 import { ListarEncuestadorPage , FormEncuestadorPage } from './pages/encuestador/encuestador.pages';
 import { FiltroPage, FiltrosListPage } from './pages/filtro/filtro.pages';
-import { ReportePage } from './pages/reporte/reporte.pages';
+import { ListarReportePage,ReportePage } from './pages/reporte/reporte.pages';
 // import { ListaBarriosPage, FormZonaPage } from './pages/filtro/filtro.pages';
 import { FormZonaPage, ListarZonaPage } from './pages/zonas/zona.pages';
 import { Home } from './components/home/home';
@@ -113,10 +113,18 @@ export const routes: Routes = [
   },
   {
     path: 'encuestas',
-    data: { title: 'Encuestas' },
+    data: { title: 'Reportes' },
     children: [
       { path: '', component: ListarEncuestaPage, canActivate: [AuthGuard, AdminGuard] },
       { path: 'cargar-csv', component: CargaCsvPage, canActivate: [AuthGuard, AdminGuard] }
+    ]
+  }
+  ,
+  {
+    path: 'reporte',
+    data: { title: 'Reportes' },
+    children: [
+      { path: '', component: ListarReportePage, canActivate: [AuthGuard] },
     ]
   }
 ];
