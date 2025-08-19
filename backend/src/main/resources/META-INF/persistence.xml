@@ -26,7 +26,7 @@
             <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://mysql.java.linti.unlp.edu.ar:3306/jyaa2025_bd5?useSSL=false&amp;allowPublicKeyRetrieval=true"/>
             <property name="jakarta.persistence.jdbc.user" value="jyaa2025_usr5"/>
             <property name="jakarta.persistence.jdbc.password" value="jyaa2025_pwd5"/>
-            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
             <!-- Mostrar SQL -->
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
