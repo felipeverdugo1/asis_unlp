@@ -16,6 +16,8 @@
         <td class="table-td">{{ reporte.nombreUnico }}</td>
         <td class="table-td">{{ reporte.creadoPor_id }}</td>
         <td class="table-td">
+          <button class="btn btn-create" (click)="onDownload.emit(reporte.id)" [disabled]="downloading"> 
+          {{ downloading ? 'Descargando...' : 'Descargar' }}</button>
           <button class="btn btn-func" (click)="onEdit.emit(reporte.id)"> Editar</button>
           <button class="btn btn-delete" (click)="onDelete.emit(reporte.id)"> Borrar</button>
         </td>
