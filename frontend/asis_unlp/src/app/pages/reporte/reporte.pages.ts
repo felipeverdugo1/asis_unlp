@@ -5,6 +5,7 @@ import { OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { ReporteService } from "../../services/reporte.service";
 import { ReporteResultadoComponent } from "../../components/reporte/reporte-resultado";
+import { GraficoTortaComponent } from "../../components/reporte/grafico-torta";
 import { PdfService } from "../../services/pdf.service";
 import { AuthService } from "../../services/auth.service";
 import { FiltroCardComponent } from "../../components/filtro/filtro-card";
@@ -12,7 +13,7 @@ import { Filtro } from '../../models/filtro.model';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, ReporteResultadoComponent, AsyncPipe, FiltroCardComponent],
+  imports: [CommonModule, ReporteResultadoComponent, AsyncPipe, FiltroCardComponent, GraficoTortaComponent],
   template: `
     <div class="page-container">
       <div class="page-header">
@@ -32,8 +33,14 @@ import { Filtro } from '../../models/filtro.model';
         [mostrarBotones]="false">
       </app-filtro-card>
       <ng-container *ngIf="reporteData$ | async as data">
-        <reporte-resultado [data]="data"></reporte-resultado>
+        <reporte-resultado [data]="data"></reporte-resultado>       
       </ng-container>
+      <grafico-torta
+          [title]="'Ventas por categoría'"
+          [labels]="['Electrónica', 'Ropa', 'Hogar', 'Otros']"
+          [values]="[120, 90, 60, 30]"
+          [doughnut]="true">
+        </grafico-torta>
     </div>
   `
 })
