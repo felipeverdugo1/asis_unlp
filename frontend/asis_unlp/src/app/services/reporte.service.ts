@@ -16,6 +16,11 @@ export class ReporteService {
   private filtroActual = new BehaviorSubject<any>(null);
   private reporteData = new BehaviorSubject<any>(null);
   private encuestasFiltradasData = new BehaviorSubject<any>(null);
+  private cantidadEncuestadasData = new BehaviorSubject<any>(null);
+  private totalEdadesData = new BehaviorSubject<any>(null);
+  private totalPersonasData = new BehaviorSubject<any>(null);
+  private totalGenerosData = new BehaviorSubject<any>(null);
+  private totalMaterialesData = new BehaviorSubject<any>(null);
 
   constructor(private http: HttpClient) {}
 
@@ -35,6 +40,11 @@ export class ReporteService {
       tap((resp) => {
         console.log('Datos obtenidos para reporte:', resp);
         this.encuestasFiltradasData.next(resp.encuestasFiltradas)
+        this.cantidadEncuestadasData.next(resp.cantEncuestadas)
+        this.totalPersonasData.next(resp.total_personas)
+        this.totalEdadesData.next(resp.total_edades)
+        this.totalGenerosData.next(resp.total_generos)
+        this.totalMaterialesData.next(resp.total_materiales)
         this.reporteData.next(resp); 
       })
     );
@@ -46,6 +56,26 @@ export class ReporteService {
 
   getEncuestasFiltradasData(){
     return this.encuestasFiltradasData.asObservable();
+  }
+
+  getCantidadEncuestadasData(){
+    return this.cantidadEncuestadasData.asObservable();
+  }
+
+  getTotalEdadesData(){
+    return this.totalEdadesData.asObservable();
+  }
+
+  getTotalPersonasData(){
+    return this.totalPersonasData.asObservable();
+  }
+
+  getTotalGenerosData(){
+    return this.totalGenerosData.asObservable();
+  }
+
+  getTotalMaterialesData(){
+    return this.totalMaterialesData.asObservable();
   }
 
   getReportes(): Observable<Reporte[]> {

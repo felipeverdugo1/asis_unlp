@@ -129,15 +129,50 @@ export class ListarReportePage implements OnInit {
         [filtro]="filtroActual" 
         [mostrarBotones]="false">
       </app-filtro-card>
+      
+       <!-- Totales generales -->
+      <div class="totales-container">
+        <p><strong>Total personas:</strong> {{ totalPersonasData$ | async }}</p>
+        <p><strong>Total encuestados:</strong> {{ totalEncuestadosData$ | async }}</p>
+      </div>     
+
       <ng-container *ngIf="reporteData$ | async as data">
         <reporte-resultado [data]="data"></reporte-resultado>       
       </ng-container>
-      <grafico-torta
-          [title]="'Ventas por categoría'"
-          [labels]="['Electrónica', 'Ropa', 'Hogar', 'Otros']"
-          [values]="[120, 90, 60, 30]"
+
+      <!-- Gráfico Edades -->
+      <ng-container *ngIf="totalEdadesData$ | async as edades">
+        <grafico-torta
+          *ngIf="objectToChartData(edades).labels.length > 0"
+          [title]="'Distribución por edades'"
+          [labels]="objectToChartData(edades).labels"
+          [values]="objectToChartData(edades).values"
           [doughnut]="true">
         </grafico-torta>
+      </ng-container>
+
+      <!-- Gráfico Géneros -->
+      <ng-container *ngIf="totalGenerosData$ | async as generos">
+        <grafico-torta
+          *ngIf="objectToChartData(generos).labels.length > 0"
+          [title]="'Distribución por género'"
+          [labels]="objectToChartData(generos).labels"
+          [values]="objectToChartData(generos).values"
+          [doughnut]="true">
+        </grafico-torta>
+      </ng-container>
+
+      <!-- Gráfico Materiales -->
+      <ng-container *ngIf="totalMaterialesData$ | async as materiales">
+        <grafico-torta
+          *ngIf="objectToChartData(materiales).labels.length > 0"
+          [title]="'Distribución por materiales'"
+          [labels]="objectToChartData(materiales).labels"
+          [values]="objectToChartData(materiales).values"
+          [doughnut]="true">
+        </grafico-torta>
+      </ng-container>
+
     </div>
   `
 })
@@ -150,6 +185,11 @@ export class ReportePage implements OnInit {
   private authService = inject(AuthService);
   generandoPDF: boolean = false;
   reporteData$ = this.reporteService.getEncuestasFiltradasData();
+  totalPersonasData$ = this.reporteService.getTotalPersonasData();
+  totalEncuestadosData$ = this.reporteService.getCantidadEncuestadasData();
+  totalEdadesData$ = this.reporteService.getTotalEdadesData();
+  totalGenerosData$ = this.reporteService.getTotalGenerosData();
+  totalMaterialesData$ = this.reporteService.getTotalMaterialesData();
   filtroActual!: Filtro;
 
   constructor(private cdRef: ChangeDetectorRef) {}
@@ -171,6 +211,15 @@ export class ReportePage implements OnInit {
     };
 
     this.reporteService.generarReporte(filtro).subscribe();
+  }
+
+  objectToChartData(obj: Record<string, number>): { labels: string[], values: number[] } {
+    if (!obj || Object.keys(obj).length === 0) {
+      return { labels: [], values: [] };
+    }
+    const labels = Object.keys(obj);
+    const values = Object.values(obj);
+    return { labels, values };
   }
 
   async generarYGuardarPDF() {
