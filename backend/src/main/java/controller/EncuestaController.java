@@ -1,14 +1,10 @@
 package controller;
 
-import controller.dto.CargaEncuestasDTO;
-import controller.dto.DatosRecolectadosDTO;
-import controller.dto.EncuestaDTO;
-import controller.dto.ObtenerDatosDTO;
+import controller.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,7 +13,6 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import model.Encuesta;
-import model.Encuestador;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import service.EncuestaService;
 

@@ -2,16 +2,13 @@ package service;
 
 import controller.dto.*;
 import dao.*;
-import exceptions.EntidadExistenteException;
 import exceptions.EntidadNoEncontradaException;
 import exceptions.FaltanArgumentosException;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
-import jakarta.persistence.criteria.*;
 import model.*;
 
 import java.io.*;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.*;
@@ -21,7 +18,6 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
-import static java.lang.Long.parseLong;
 
 
 @RequestScoped
@@ -363,6 +359,7 @@ public class EncuestaService extends GenericServiceImpl<Encuesta, Long> {
 
 
         int cant;
+        int cantEncuestadas=0;
         List<DatosRecolectadosDTO> datosRecolectados = new ArrayList<>();
         DatosRecolectadosDTO datosRecolectadosDTO;
 
@@ -412,18 +409,32 @@ public class EncuestaService extends GenericServiceImpl<Encuesta, Long> {
                     datosRecolectados.add(datosRecolectadosDTO);
                 }
             } else {
-                datosRecolectadosDTO = crearDTO(encuesta,0);
+                cant= (int) preguntaDAO.countPersonasDistintasPorEncuesta(encuesta.getId());
+                datosRecolectadosDTO = crearDTO(encuesta,cant);
                 if (datosRecolectadosDTO !=null) {
                     datosRecolectados.add(datosRecolectadosDTO);
                 }
 
             }
-
+            cantEncuestadas +=cant;
         }
+
+        Integer totalPersonas = obtenerTotalPersonas();
+        System.out.println("Total personas: " + totalPersonas);
+        System.out.println("Total de encuestas: " + cantEncuestadas);
+
         return datosRecolectados;
     }
 
-
+    private int obtenerTotalPersonas(){
+        return encuestaDAO
+                .listarTodos()
+                .stream()
+                .mapToInt(encuesta ->
+                        (int) preguntaDAO.countPersonasDistintasPorEncuesta(encuesta.getId())
+                )
+                .sum();
+    }
 
 
     private DatosRecolectadosDTO crearDTO(Encuesta encuesta, int cantidad) {
