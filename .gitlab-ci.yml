@@ -6,7 +6,7 @@ buildDocker:
     - main
   script:
     - echo "Construimos la imagen de Docker"
-    - docker buildx build . -t grupo5-docker
+    - docker buildx build . -t grupo5-docker --no-cache
 
 detenemosContainer:
   stage: test
