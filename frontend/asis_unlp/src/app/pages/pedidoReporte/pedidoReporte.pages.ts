@@ -187,7 +187,8 @@ export class ListaPedidosPage implements OnInit {
         },
         error: (err: any) => {
           console.error('Error descargando PDF:', err);
-          this.errorMensaje = 'Error descargando el PDF';
+          this.errorMensaje = err.error?.error || 'Error inesperado al descargar PDF. El archivo podria no existir.';
+          alert(this.errorMensaje);
           this.downloading = false;
           this.cdRef.detectChanges(); 
         }
