@@ -220,6 +220,18 @@ public class ReporteService extends GenericServiceImpl<Reporte, Long> {
         return response;
     }
 
+    public List<Reporte> listarReportesByCompartidoCon(Long usuario_id){
+        Optional<Usuario> usuario_t = usuarioDAO.buscarPorId(usuario_id);
+        if (usuario_t.isEmpty()){
+            throw new EntidadNoEncontradaException("No existe un usuario con ese id");
+        }
+        List<Reporte> response = new ArrayList<>();
+        response = reporteDAO.listarReportesCompartidosConUsuario(usuario_id);
+        return response;
+    }
+
+
+
     public String getStoragePath() {
         // 1. Intentar leer de variable de entorno
         String envPath = System.getenv("PDF_STORAGE_DIR");

@@ -72,7 +72,26 @@
           </div>
         </div>
 
+
+      <div class="menu-section hover-effect">
+        <h2> Reportes </h2>
+        <div class="menu-buttons">
+          <button class="btn btn-nav" routerLink="/reporte">Ver Reportes</button>
+        </div>
+      </div>
     </ng-container>
+
+    <!-- Seccion personal de Salud o rolReferente-->
+    <ng-container *ngIf="auth.rolSalud() || auth.rolReferente()">
+      <div class="menu-section hover-effect">
+        <h2>Mis Reportes</h2>
+        <div class="menu-buttons">
+          <button class="btn btn-nav" routerLink="/reporte">Ver Reportes</button>
+        </div>
+      </div>
+    </ng-container>
+
+
 
 
 
@@ -82,13 +101,6 @@
     
     <!-- Seccion personal de Salud y Admin-->
     <ng-container *ngIf="auth.rolSalud() || auth.rolAdmin()">
-
-      <div class="menu-section hover-effect">
-        <h2> Reportes</h2>
-        <div class="menu-buttons">
-          <button class="btn btn-nav" routerLink="/reporte">Ver Reportes</button>
-        </div>
-      </div>
 
 
       <!-- Sección Generar Reporte -->
@@ -119,23 +131,9 @@
           <button class="btn btn-nav" routerLink="/pedidos">Ver Pedidos</button>
         </div>
       </div>
-      <!-- Sección Pedidos de Reportes para Referentes -->
-      <div class="menu-section hover-effect">
-        <h2>Mis Reportes</h2>
-        <div class="menu-buttons">
-          <button class="btn btn-nav" routerLink="/reporte">Ver Reportes</button>
-        </div>
-      </div>
     </ng-container>
+
     <!-- Fin del if para rol de referente -->
-     
-
-
-
-  </div>
-</div>
-
-</ng-container>
 
   <div class="home-container">
     <h1>Home Page</h1>

@@ -10,18 +10,16 @@ import { PdfService } from "../../services/pdf.service";
 import { AuthService } from "../../services/auth.service";
 import { FiltroCardComponent } from "../../components/filtro/filtro-card";
 import { Filtro } from '../../models/filtro.model';
-
 import { RouterModule } from "@angular/router";
-import { Reporte } from "../../models/reporte.model";
 import { Observable } from 'rxjs';
-import { ListarReportes } from "../../components/reporte/listar-reporte";
-import { log } from "console";
-/*Hay que aplicarle estilos a esto.*/
+import { CompartirConInputReporteComponent, ListarReportes } from "../../components/reporte/listar-reporte";
+import { UsuariosService } from "../../services/usuarios.service";
+
 
 
 @Component({
   standalone: true,
-  imports: [CommonModule, RouterModule, ListarReportes],
+  imports: [CommonModule, RouterModule, ListarReportes,CompartirConInputReporteComponent],
   template: `
   <div class="page-container">
     <div class="page-header">
@@ -42,20 +40,19 @@ import { log } from "console";
       {{ errorMensaje }}
     </div>
 
-   
 
   <ng-container *ngIf="auth.rolSalud()">
     <div class="content-container">
     <listar-reportes 
-      [reportes]="(reportesTomados$ | async) ?? []"
-      [downloading]="downloading"
-      (onEdit)="editarReporte($event)"
+      [reportes]="(reportes$ | async) ?? []"
+      [usuarios_compartidos]="usuarios_compartidos"
+      [showCompleteDialog]="showCompleteDialog"
       (onDelete)="borrarReporte($event)"
+      (share)="openCompleteDialog($event)" 
       (onDownload)="descargarReporte($event)">
     </listar-reportes>
     </div>
     </ng-container>
-
 
       <ng-container *ngIf="auth.rolReferente()">
     <div class="content-container">
@@ -70,38 +67,45 @@ import { log } from "console";
 
 
 
-
-
       <ng-container *ngIf="auth.rolAdmin()">
     <div class="content-container">
     <listar-reportes 
       [reportes]="(reportes$ | async) ?? []"
       [downloading]="downloading"
-      (onEdit)="editarReporte($event)"
       (onDelete)="borrarReporte($event)"
       (onDownload)="descargarReporte($event)">
-
     </listar-reportes>
     </div>
     </ng-container>
 
 
 
+    @if (showCompleteDialog) {
+      <compartir-input-dialog-reporte
+        [usuarios_compartidos]="usuarios_compartidos"
+        (saved)="onShare($event)" 
+        (closed)="closeDialog()">
+      </compartir-input-dialog-reporte>
+    }
 
   </div>
   `
 })
 export class ListarReportePage implements OnInit {
   reportes$: Observable<any[]> = new Observable();
-  reportesTomados$ : Observable<any[]> = new Observable();
   usuarios_compartidos : any [] = [];
   id: number | null = null;
 
   errorMensaje: string | null = null;
   downloading = false;
 
+  // Estado para controlar el modal
+  showCompleteDialog = false;
+  selectedReporteId: number | null = null;
+
   constructor(
     private reporteService: ReporteService,
+    private usuarioService : UsuariosService,
     private router: Router,
     private authService: AuthService,
     private cdRef: ChangeDetectorRef
@@ -116,9 +120,6 @@ export class ListarReportePage implements OnInit {
   }
 
   cargarReportes() {
-    console.log(this.authService.rolSalud());
-    console.log(this.authService.rolAdmin());
-    console.log(this.authService.rolReferente());
     
     if (!this.authService.loggedIn()) {
       this.router.navigate(['/login']);
@@ -131,8 +132,10 @@ export class ListarReportePage implements OnInit {
     }
 
     if (this.authService.rolSalud()) {
-      this.reportesTomados$ = this.reporteService.getReportesByUserId(this.id);
+      this.reportes$ = this.reporteService.getReportesByUserId(this.id);
       
+    }else if (this.auth.rolReferente()) {
+      this.reportes$ = this.reporteService.getReportesCompartidosById(this.id);
     }
     else if (this.authService.rolAdmin()) {
       this.reportes$ = this.reporteService.getReportes();
@@ -141,8 +144,50 @@ export class ListarReportePage implements OnInit {
 
   }
 
-  editarReporte(id: number) {
+
+  loadCompartidos() {
+    if (!this.id) {
+      this.router.navigate(['/login']);
+      return;
+    }
+    this.usuarioService.getUsuarios().subscribe({
+      next: (usuario) => this.usuarios_compartidos = usuario,
+      error: (err) => console.error('Error cargando usuarios compartidos', err)
+    });
   }
+
+
+  openCompleteDialog(reporteId: number) {
+    this.selectedReporteId = reporteId;
+  
+    this.usuarioService.getUsuarios().subscribe({
+      next: (usuarios) => {
+        this.usuarios_compartidos = usuarios;
+        this.showCompleteDialog = true; 
+      },
+      error: (err) => console.error('Error cargando usuarios', err)
+    });
+  }
+
+  onShare(data: { compartidoConId: number }) {
+    if (!this.selectedReporteId) return;
+  
+    this.reporteService.compartir(this.selectedReporteId, data.compartidoConId)
+      .subscribe({
+        next: () => {
+          this.closeDialog();
+          this.cargarReportes(); 
+        },
+        error: (err) => console.error('Error compartiendo reporte', err)
+      });
+  }
+
+
+  closeDialog() {
+    this.showCompleteDialog = false;
+    this.selectedReporteId = null;
+  }
+
 
   borrarReporte(id: number) {
     if (confirm('¿Borrar reporte?')) {

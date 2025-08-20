@@ -1,0 +1,27 @@
+<div class="dialog-overlay" (click)="close()">
+  <div class="dialog-content" (click)="$event.stopPropagation()">
+    <h3>Compartir reporte</h3>
+    <hr />
+
+    <div class="form-group">
+      <label class="form-label" for="compartidoConId">Seleccione un usuario:</label>
+      <select class="form-dropdown" [(ngModel)]="compartidoConId" name="compartidoConId" required>
+        <option [value]="null" disabled selected>-- Seleccione un usuario --</option>
+        <option *ngFor="let usuario of usuarios_compartidos" [value]="usuario.id">
+          {{ usuario.nombreUsuario }} ({{ usuario.email }})
+        </option>
+      </select>
+    </div>
+
+    
+    <div class="dialog-actions">
+      <button class="btn btn-cancel" (click)="close()">Cancelar</button>
+      <button 
+        class="btn btn-create" 
+        (click)="save()"
+        [disabled]="!isValid()">
+        Completar
+      </button>
+    </div>
+  </div>
+</div>

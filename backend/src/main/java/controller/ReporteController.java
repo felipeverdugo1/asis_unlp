@@ -181,6 +181,16 @@ public class ReporteController {
         return Response.ok(service.listarReportesByCreador(user_id)).build();
     }
 
+
+    @GET
+    @Path("/compartidoCon/{usuario_id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Este endpoint nos permite obtener todos los reportes compartidos para el referente social.",
+            parameters = @Parameter(name = "usuario id"))
+    public Response getByCompartidoCon(@PathParam("usuario_id") Long user_id) {
+        return Response.ok(service.listarReportesByCompartidoCon(user_id)).build();
+    }
+
     @POST
     @Path("/guardarPDFenDisco")
     @Produces(MediaType.APPLICATION_JSON)

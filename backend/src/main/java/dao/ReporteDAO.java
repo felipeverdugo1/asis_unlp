@@ -7,6 +7,7 @@ import jakarta.transaction.Transactional;
 import model.PedidoReporte;
 import model.Reporte;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -33,4 +34,18 @@ public class ReporteDAO extends GenericDAOImpl<Reporte, Long> {
         } finally {
         }
     }
+
+
+    public List<Reporte> listarReportesCompartidosConUsuario(Long usuarioId) {
+        try {
+            String jpql = "SELECT r FROM Reporte r JOIN r.compartidoCon u WHERE u.id = :usuarioId";
+            return em.createQuery(jpql, Reporte.class)
+                    .setParameter("usuarioId", usuarioId)
+                    .getResultList();
+        } catch (NoResultException e) {
+            return new ArrayList<>(); // o manejar como prefieras
+        }
+    }
+
+
 }

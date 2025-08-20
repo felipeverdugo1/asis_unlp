@@ -86,6 +86,14 @@ export class ReporteService {
     return this.http.get<Reporte[]>(`${this.apiUrl}/creadoPor/${userId}`);
   }
 
+  getReportesCompartidosById(userId: number): Observable<Reporte[]> {
+    return this.http.get<Reporte[]>(`${this.apiUrl}/compartidoCon/${userId}`);
+  }
+
+  compartir(id: number, usuarioId: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/agregarUsuarioCompartido/${id}/${usuarioId}`, {});
+  }
+
   persistirPDF(formData: FormData): Observable<any> {
     return this.http.post(`${this.apiUrl}/guardarPDFenDisco`, formData, {
       reportProgress: true,
