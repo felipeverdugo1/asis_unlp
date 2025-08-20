@@ -670,3 +670,85 @@ body {
 .badge-tomado {
   background-color: #2196F3; /* Azul */
 }
+
+/* Contenedor principal del PDF - tamaño A4 aproximado */
+.pdf-container {
+  width: 100%;
+  max-width: 210mm; /* Ancho aproximado de A4 */
+  margin: 0 auto;
+  padding: 5mm; /* Márgenes internos similares a un PDF */
+}
+
+/* Grid estricto de 2 columnas */
+.reporte-grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 columnas fijas */
+  gap: 12px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Items del grid */
+.reporte-grid-item {
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 12px;
+  page-break-inside: avoid; /* Importante para PDF */
+  break-inside: avoid; /* Alternativa moderna */
+}
+
+/* Para mantener consistencia en el PDF */
+@media screen {
+  .pdf-container {
+    background: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+  }
+}
+
+/* Estilos específicos para impresión/PDF */
+@media print {
+  .reporte-grid-container {
+    gap: 8px;
+  }
+  
+  .reporte-grid-item {
+    border: 0.5pt solid #ccc;
+    padding: 8px;
+  }
+}
+
+/* Contenedor del texto fuera del grid */
+.pdf-header-content {
+  width: 100%;
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+/* Para elementos que deben ocupar 2 columnas */
+.reporte-grid-item-full {
+  grid-column: 1 / -1;
+}
+
+/* Asegurar que no se creen más columnas */
+.reporte-grid-container {
+  grid-auto-flow: row;
+  grid-auto-columns: auto;
+}
+
+/* Para que los componentes internos se adapten */
+.reporte-grid-item > * {
+  width: 100%;
+  height: auto;
+}
+
+.reporte-grid-item div[style*="height: 500px"] {
+  height: 100% !important;
+  min-height: 250px !important;
+  max-height: 500px !important;
+}
+
+.reporte-grid-item .max-w-md {
+  max-width: 100% !important;
+}

@@ -10,6 +10,7 @@ export class PdfService {
       contenido: HTMLElement, 
       nombreArchivo: string = 'reporte.pdf'
     ): Promise<{ pdfBlob: Blob, fileName: string }> {
+        await this.esperarMapaEstable();
         // Opciones específicas para capturar mapas Leaflet
         const options = {
           scale: 2,
@@ -22,11 +23,32 @@ export class PdfService {
             if (mapContainer) {
               mapContainer.style.visibility = 'visible';
               mapContainer.style.opacity = '1';
+              mapContainer.style.height = mapContainer.offsetHeight + 'px'; // Fijar altura
+              mapContainer.style.width = mapContainer.offsetWidth + 'px'; // Fijar ancho
             }
+
+            // Congelar animaciones y transiciones
+            const allElements = clonedDoc.querySelectorAll('*');
+            allElements.forEach(el => {
+              (el as HTMLElement).style.transition = 'none';
+              (el as HTMLElement).style.animation = 'none';
+            });
+          },
+          async: true,
+          proxy: undefined,
+          ignoreElements: (element: Element) => {
+            // Ignorar elementos que puedan causar problemas
+            return element.tagName === 'SCRIPT' || element.tagName === 'LINK';
           }
+          
         };
 
-      const canvas = await html2canvas(contenido, options);
+      const canvas = await Promise.race([
+        html2canvas(contenido, options),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Timeout en captura HTML2Canvas')), 30000)
+        )
+      ]) as HTMLCanvasElement;
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
     
@@ -53,5 +75,12 @@ export class PdfService {
         pdfBlob, 
         fileName: nombreArchivo.endsWith('.pdf') ? nombreArchivo : `${nombreArchivo}.pdf`
       };
+    }
+
+    private async esperarMapaEstable(): Promise<void> {
+      return new Promise((resolve) => {
+        // Esperar a que se completen las operaciones del mapa
+        setTimeout(resolve, 1000); // 1 segundo de espera
+      });
     }
 }

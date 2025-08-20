@@ -41,7 +41,7 @@ export class FiltroReporteComponent implements OnInit {
     console.log("Tipo de filtro:", typeof filtro.acceso_salud, typeof filtro.acceso_agua);
     this.form.patchValue({
       edadMin: filtro.edad?.[0] || null,
-      edadMax: filtro.edad?.[1] || null,
+      edadMax: filtro.edad?.[filtro.edad?.length - 1] || null,
       barrio: filtro.barrio || null,
       acceso_salud: (typeof filtro.acceso_salud !== 'undefined') ? filtro.acceso_salud : null,
       acceso_agua: (typeof filtro.acceso_agua !== 'undefined') ? filtro.acceso_agua : null

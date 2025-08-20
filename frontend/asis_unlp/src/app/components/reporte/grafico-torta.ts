@@ -12,7 +12,7 @@ Chart.register(...registerables);
   standalone: true,
   imports: [CommonModule, BaseChartDirective],
   template: `
-    <div class="w-full max-w-md" style="height: 300px;">
+    <div class="w-full max-w-md" style="height: 500px;">
       <h3 style="margin:0 0 8px 0">{{ title }}</h3>
       <canvas
         baseChart
@@ -35,6 +35,9 @@ export class GraficoTortaComponent {
   pieChartOptions: ChartOptions<'pie' | 'doughnut'> = {
     responsive: true,
     maintainAspectRatio: false,
+    animation: {
+      duration: 0
+    },
     plugins: {
       legend: { position: 'top' },
       tooltip: { enabled: true },

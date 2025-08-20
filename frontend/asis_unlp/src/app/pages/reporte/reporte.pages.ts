@@ -200,60 +200,74 @@ export class ListarReportePage implements OnInit {
 
         <button class="btn btn-func" (click)="volverAFiltro()">Ajustar Filtros</button>
       </div>
+
+      <div class="pdf-container" #contenidoParaPDF>
+
+        <!-- Totales generales -->
+        <div class="pdf-header-content">
+          <h2>ASIS UNLP - {{ fechaHora }} </h2>
+          <p><strong>Total personas filtradas:</strong> {{ totalPersonasData$ | async }}</p>
+          <p><strong>Total personas encuestadas:</strong> {{ totalEncuestadosData$ | async }}</p>
+        </div>   
+
+        <div class="reporte-grid-container">
+
+          <div class="reporte-grid-item">
+            <app-filtro-card 
+              [filtro]="filtroActual" 
+              [mostrarBotones]="false">
+            </app-filtro-card>
+          </div>  
+
+          <ng-container *ngIf="reporteData$ | async as data">
+            <div class="reporte-grid-item">
+              <reporte-resultado [data]="data"></reporte-resultado>       
+            </div>
+          </ng-container>
+
+          <!-- Gráfico Edades -->
+          <ng-container *ngIf="totalEdadesData$ | async as edades">
+            <div class="reporte-grid-item">
+              <grafico-torta
+                *ngIf="objectToChartData(edades).labels.length > 0"
+                [title]="'Distribución por edades'"
+                [labels]="objectToChartData(edades).labels"
+                [values]="objectToChartData(edades).values"
+                [doughnut]="true">
+              </grafico-torta>
+            </div>
+          </ng-container>
+
+          <!-- Gráfico Géneros -->
+          <ng-container *ngIf="totalGenerosData$ | async as generos">
+            <div class="reporte-grid-item">
+              <grafico-torta
+                *ngIf="objectToChartData(generos).labels.length > 0"
+                [title]="'Distribución por género'"
+                [labels]="objectToChartData(generos).labels"
+                [values]="objectToChartData(generos).values"
+                [doughnut]="true">
+              </grafico-torta>
+            </div>
+          </ng-container>
+
+          <!-- Gráfico Materiales -->
+          <ng-container *ngIf="totalMaterialesData$ | async as materiales">
+            <div class="reporte-grid-item">
+              <grafico-torta
+                *ngIf="objectToChartData(materiales).labels.length > 0"
+                [title]="'Distribución por materiales'"
+                [labels]="objectToChartData(materiales).labels"
+                [values]="objectToChartData(materiales).values"
+                [doughnut]="true">
+              </grafico-torta>
+            </div>
+          </ng-container>
+        </div>
+      </div>
     </div>
-
-    <div class="content-container" #contenidoParaPDF>
-      <hr/>
-      <app-filtro-card 
-        [filtro]="filtroActual" 
-        [mostrarBotones]="false">
-      </app-filtro-card>
-      
-       <!-- Totales generales -->
-      <div class="totales-container">
-        <p><strong>Total personas:</strong> {{ totalPersonasData$ | async }}</p>
-        <p><strong>Total encuestados:</strong> {{ totalEncuestadosData$ | async }}</p>
-      </div>     
-
-      <ng-container *ngIf="reporteData$ | async as data">
-        <reporte-resultado [data]="data"></reporte-resultado>       
-      </ng-container>
-
-      <!-- Gráfico Edades -->
-      <ng-container *ngIf="totalEdadesData$ | async as edades">
-        <grafico-torta
-          *ngIf="objectToChartData(edades).labels.length > 0"
-          [title]="'Distribución por edades'"
-          [labels]="objectToChartData(edades).labels"
-          [values]="objectToChartData(edades).values"
-          [doughnut]="true">
-        </grafico-torta>
-      </ng-container>
-
-      <!-- Gráfico Géneros -->
-      <ng-container *ngIf="totalGenerosData$ | async as generos">
-        <grafico-torta
-          *ngIf="objectToChartData(generos).labels.length > 0"
-          [title]="'Distribución por género'"
-          [labels]="objectToChartData(generos).labels"
-          [values]="objectToChartData(generos).values"
-          [doughnut]="true">
-        </grafico-torta>
-      </ng-container>
-
-      <!-- Gráfico Materiales -->
-      <ng-container *ngIf="totalMaterialesData$ | async as materiales">
-        <grafico-torta
-          *ngIf="objectToChartData(materiales).labels.length > 0"
-          [title]="'Distribución por materiales'"
-          [labels]="objectToChartData(materiales).labels"
-          [values]="objectToChartData(materiales).values"
-          [doughnut]="true">
-        </grafico-torta>
-      </ng-container>
-
-    </div>
-  `
+  `,
+  styleUrls: ['../../../styles.css'],
 })
 export class ReportePage implements OnInit {
   @ViewChild('contenidoParaPDF', { static: false }) contenidoParaPDF!: ElementRef;
@@ -270,6 +284,7 @@ export class ReportePage implements OnInit {
   totalGenerosData$ = this.reporteService.getTotalGenerosData();
   totalMaterialesData$ = this.reporteService.getTotalMaterialesData();
   filtroActual!: Filtro;
+  fechaHora: string | undefined;
 
   constructor(private cdRef: ChangeDetectorRef) {}
 
@@ -288,6 +303,9 @@ export class ReportePage implements OnInit {
       criterios: JSON.stringify(filtro),
       propietario_id: this.authService.getUsuarioId() || 0
     };
+    
+    const now = new Date();
+    this.fechaHora = formatDate(now, 'yyyy-MM-dd_HH-mm-ss', 'en-US');
 
     this.reporteService.generarReporte(filtro).subscribe();
   }
@@ -310,9 +328,7 @@ export class ReportePage implements OnInit {
         throw new Error('Usuario no autenticado');
       }
 
-      const now = new Date();
-      const fechaHora = formatDate(now, 'yyyy-MM-dd_HH-mm-ss', 'en-US');
-      const fileName = `reporte_${user_id}_${fechaHora}.pdf`;
+      const fileName = `reporte_${user_id}_${this.fechaHora}.pdf`;
       
       // Generar el PDF (devuelve directamente el Blob)
       const { pdfBlob, fileName: safeFileName } = await this.pdfService.generarPDF(
