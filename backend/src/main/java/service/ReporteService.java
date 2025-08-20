@@ -326,7 +326,7 @@ public class ReporteService extends GenericServiceImpl<Reporte, Long> {
             return file;
 
         } else {
-            throw new EntidadExistenteException("El reporte no existe");
+            throw new EntidadNoEncontradaException("El reporte no existe");
         }
 
     }

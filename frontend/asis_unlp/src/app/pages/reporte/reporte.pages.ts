@@ -179,6 +179,8 @@ export class ListarReportePage implements OnInit {
       },
       error: (err: any) => {
         console.error('Error descargando PDF:', err);
+        this.errorMensaje = err.error?.error || 'Error inesperado al descargar el PDF. El archivo podria no existir.';
+        alert(this.errorMensaje);
         this.downloading = false;
         this.cdRef.detectChanges(); 
       }

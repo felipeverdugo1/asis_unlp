@@ -202,7 +202,7 @@ public class ReporteController {
 
     @GET
     @Path("/descargarPDF/{id}")
-    @Produces("application/pdf")
+    @Produces({"application/pdf", MediaType.APPLICATION_JSON})
     @Operation(description = "Descarga un PDF guardado previamente en el servidor",
             parameters = @Parameter(name = "reporte_id"))
     public Response descargarPDF(@PathParam("id") Long reporte_id) {
