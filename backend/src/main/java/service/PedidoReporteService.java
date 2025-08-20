@@ -189,7 +189,7 @@ public class PedidoReporteService extends GenericServiceImpl<PedidoReporte, Long
         if (pedidoReporte.isEmpty()){
             throw new EntidadNoEncontradaException("No existe el pedido");
         }
-            pedidoReporteDAO.eliminar(pedidoReporte.get());
+        pedidoReporteDAO.eliminar(pedidoReporte.get());
 
     }
 
@@ -238,7 +238,7 @@ public class PedidoReporteService extends GenericServiceImpl<PedidoReporte, Long
             throw new IllegalStateException("Solo se pueden completar pedidos en estado TOMADO.");
         }
 
-        if (dto.getReporte_id() == null || dto.getComentario() == null || dto.getComentario().trim().isEmpty()) {
+        if (dto.getReporte_id() == null) {
             throw new IllegalArgumentException("Debe enviar el ID del reporte y un comentario.");
         }
 
@@ -250,7 +250,9 @@ public class PedidoReporteService extends GenericServiceImpl<PedidoReporte, Long
                 .orElseThrow(() -> new EntidadNoEncontradaException("No existe el reporte con ID " + dto.getReporte_id()));
 
         pedido.setReporte(reporte);
-        pedido.setComentario(dto.getComentario());
+        if (dto.getComentario() != null &&  !(dto.getComentario().trim().isEmpty()) && !dto.getComentario().isBlank()) {
+            pedido.setComentario(dto.getComentario());
+        }
         pedido.setEstado(EstadoPedido.COMPLETADO);
 
 
@@ -305,6 +307,11 @@ public class PedidoReporteService extends GenericServiceImpl<PedidoReporte, Long
         response = pedidoReporteDAO.listarPedidosTomadosPor(usuario_id);
 
         return response;
+    }
+
+    public Boolean existePedidoReporte(Long reporte_id) {
+        Optional<PedidoReporte> pedido_T = pedidoReporteDAO.buscarPorReporte_Id(reporte_id);
+        return pedido_T.isPresent();
     }
 
 

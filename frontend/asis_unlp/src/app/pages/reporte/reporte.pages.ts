@@ -148,7 +148,10 @@ export class ListarReportePage implements OnInit {
     if (confirm('¿Borrar reporte?')) {
       this.reporteService.deleteReporte(id).subscribe({
         next: () => this.cargarReportes(),
-        error: (err) => this.errorMensaje = err.error?.error || 'Error inesperado al borrar el encuestador.'
+        error: (err) => {
+          this.errorMensaje = err.error?.error || 'Error inesperado al borrar el encuestador.';
+          alert(this.errorMensaje);
+        }
       });
     }
   }
