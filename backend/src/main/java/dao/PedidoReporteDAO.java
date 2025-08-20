@@ -7,6 +7,7 @@ import model.EstadoPedido;
 import model.Jornada;
 import model.PedidoReporte;
 import java.util.List;
+import java.util.Optional;
 
 
 @RequestScoped
@@ -52,6 +53,18 @@ public class PedidoReporteDAO extends GenericDAOImpl<PedidoReporte, Long> {
         } catch (Exception e) {
             throw e;
         } finally {
+        }
+    }
+
+    public Optional<PedidoReporte> buscarPorReporte_Id(Long reporte_id) {
+        try {
+            String jpql = "SELECT e FROM " + PedidoReporte.class.getSimpleName() + " e WHERE e.reporte.id" + " = :valor";
+            List<PedidoReporte> resultados = em.createQuery(jpql, PedidoReporte.class)
+                    .setParameter("valor", reporte_id)
+                    .getResultList();
+            return resultados.stream().findFirst();
+        } catch (Exception e) {
+            return Optional.empty();
         }
     }
 }

@@ -35,6 +35,9 @@ public class ReporteService extends GenericServiceImpl<Reporte, Long> {
     @Inject
     private UsuarioDAO usuarioDAO;
 
+    @Inject
+    private PedidoReporteService pedidoReporteService;
+
 
     @Inject
     public ReporteService(ReporteDAO reporteDAO) {
@@ -196,6 +199,9 @@ public class ReporteService extends GenericServiceImpl<Reporte, Long> {
     public void eliminar(Long id) {
         Optional<Reporte> reporte = reporteDAO.buscarPorId(id);
         if (reporte.isPresent()) {
+            if (pedidoReporteService.existePedidoReporte(reporte.get().getId())) {
+                throw new NoPuedesHacerEsoException("Existe un pedido para ese reporte. Si es necesario eliminarlo, presente una peticion con el administrador.");
+            }
             reporte.get().getCompartidoCon().clear();
             reporteDAO.actualizar(reporte.get());
             reporteDAO.eliminar(reporte.get());

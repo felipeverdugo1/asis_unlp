@@ -22,9 +22,9 @@
         <td class="table-td">
           <ng-container *ngIf="pedido.estado === 'COMPLETADO'">
             <button class="btn btn-create" (click)="download.emit(pedido.id)" [disabled]="downloading"> 
-          {{ downloading ? 'Descargando...' : 'Descargar' }}</button>
+          {{ downloading ? 'Descargando...' : 'Descargar' }}</button> 
           </ng-container>
-          <ng-container *ngIf="pedido.estado !== 'COMPLETADO' && auth.rolReferente()">
+          <ng-container *ngIf="auth.rolReferente() || auth.rolAdmin()">
             <button class="btn btn-delete" (click)="delete.emit(pedido.id)">Eliminar</button>
           </ng-container>
           
