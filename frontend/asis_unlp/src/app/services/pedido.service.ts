@@ -30,9 +30,9 @@ export class PedidoService {
     return this.http.post(`${this.apiUrl}`, pedido);
   }
 
-  completarPedido(pedidoId: number, reporteId: number, comentario?: string): Observable<any> {
+  completarPedido(pedidoId: number, reporteId: number, asignado_a_id: number, comentario?: string): Observable<any> {
     this.pedido.reporte_id = reporteId;
-    this.pedido.asignado_a_id = pedidoId;
+    this.pedido.asignado_a_id = asignado_a_id;
     this.pedido.comentario = comentario || '';
     return this.http.put(`${this.apiUrl}/${pedidoId}/completar`, { ...this.pedido });
   }

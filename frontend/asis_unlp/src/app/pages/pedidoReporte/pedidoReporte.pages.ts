@@ -232,10 +232,16 @@ export class ListaPedidosPage implements OnInit {
 
   onCompleteWithReporte(data: {reporteId: number, comentario?: string}) {
     if (!this.selectedPedidoId) return;
-
+    // solo lo completa el que tiene asignado
+    const user_id = this.auth.getUsuarioId();
+    if (user_id === null || user_id === undefined) {
+      this.router.navigate(['/login']);
+      return;
+    }
     this.pedidoService.completarPedido(
       this.selectedPedidoId, 
       data.reporteId,
+      user_id,
       data.comentario
     ).subscribe({
       next: () => {
