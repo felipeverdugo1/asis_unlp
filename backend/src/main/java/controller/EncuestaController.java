@@ -76,8 +76,8 @@ public class EncuestaController {
                                                   "edad": [
                                                     5
                                                   ],
-                                                  "genero": [
-                                                    "varón cis"
+                                                  "generos": [
+                                                    "varon cis"
                                                   ],
                                                   "barrio": "2",
                                                   "acceso_salud": "no",
@@ -97,7 +97,7 @@ public class EncuestaController {
     }
     )
     public Response obtenerDatos(ObtenerDatosDTO dto) {
-        List<DatosRecolectadosDTO> resultado = service.obtenerDatos(dto);
+        DevolverDatosDTO resultado = service.obtenerDatos(dto);
         return Response.ok(resultado).build();
 
 

@@ -5,6 +5,7 @@ import { OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { ReporteService } from "../../services/reporte.service";
 import { ReporteResultadoComponent } from "../../components/reporte/reporte-resultado";
+import { GraficoTortaComponent } from "../../components/reporte/grafico-torta";
 import { PdfService } from "../../services/pdf.service";
 import { AuthService } from "../../services/auth.service";
 import { FiltroCardComponent } from "../../components/filtro/filtro-card";
@@ -14,6 +15,7 @@ import { RouterModule } from "@angular/router";
 import { Reporte } from "../../models/reporte.model";
 import { Observable } from 'rxjs';
 import { ListarReportes } from "../../components/reporte/listar-reporte";
+import { log } from "console";
 /*Hay que aplicarle estilos a esto.*/
 
 
@@ -23,12 +25,54 @@ import { ListarReportes } from "../../components/reporte/listar-reporte";
   template: `
   <div class="page-container">
     <div class="page-header">
-      <h1 class="page-title">Reportes</h1>
-    </div>
+        <ng-container *ngIf="auth.rolReferente()">
+          <h1 class="page-title">Mis Reporte</h1>
+        </ng-container>
 
-    <div *ngIf="errorMensaje" class="error-box">
+        <ng-container *ngIf="auth.rolAdmin()">
+          <h1 class="page-title">Todos los Reportes</h1>
+        </ng-container>
+
+        <ng-container *ngIf="auth.rolSalud()">
+          <h1 class="page-title">Mis Reportes Generados</h1>
+        </ng-container>
+      </div>
+
+      <div *ngIf="errorMensaje" class="error-box">
       {{ errorMensaje }}
     </div>
+
+   
+
+  <ng-container *ngIf="auth.rolSalud()">
+    <div class="content-container">
+    <listar-reportes 
+      [reportes]="(reportesTomados$ | async) ?? []"
+      [downloading]="downloading"
+      (onEdit)="editarReporte($event)"
+      (onDelete)="borrarReporte($event)"
+      (onDownload)="descargarReporte($event)">
+    </listar-reportes>
+    </div>
+    </ng-container>
+
+
+      <ng-container *ngIf="auth.rolReferente()">
+    <div class="content-container">
+    <listar-reportes 
+      [reportes]="(reportes$ | async) ?? []"
+      [downloading]="downloading"
+      (onDelete)="borrarReporte($event)"
+      (onDownload)="descargarReporte($event)">
+    </listar-reportes>
+    </div>
+    </ng-container>
+
+
+
+
+
+      <ng-container *ngIf="auth.rolAdmin()">
     <div class="content-container">
     <listar-reportes 
       [reportes]="(reportes$ | async) ?? []"
@@ -36,21 +80,35 @@ import { ListarReportes } from "../../components/reporte/listar-reporte";
       (onEdit)="editarReporte($event)"
       (onDelete)="borrarReporte($event)"
       (onDownload)="descargarReporte($event)">
+
     </listar-reportes>
     </div>
+    </ng-container>
+
+
+
+
   </div>
   `
 })
 export class ListarReportePage implements OnInit {
- reportes$!: Observable<Reporte[]>;
+  reportes$: Observable<any[]> = new Observable();
+  reportesTomados$ : Observable<any[]> = new Observable();
+  usuarios_compartidos : any [] = [];
+  id: number | null = null;
+
   errorMensaje: string | null = null;
   downloading = false;
 
   constructor(
     private reporteService: ReporteService,
     private router: Router,
+    private authService: AuthService,
     private cdRef: ChangeDetectorRef
+
   ) {}
+
+  auth = inject(AuthService);
 
   ngOnInit(): void {
     this.cargarReportes();
@@ -58,7 +116,29 @@ export class ListarReportePage implements OnInit {
   }
 
   cargarReportes() {
-    this.reportes$ = this.reporteService.getReportes();
+    console.log(this.authService.rolSalud());
+    console.log(this.authService.rolAdmin());
+    console.log(this.authService.rolReferente());
+    
+    if (!this.authService.loggedIn()) {
+      this.router.navigate(['/login']);
+      return;
+    }
+    this.id = this.authService.getUsuarioId();
+    if (!this.id) {
+      this.errorMensaje = 'Usuario no encontrado';
+      return;
+    }
+
+    if (this.authService.rolSalud()) {
+      this.reportesTomados$ = this.reporteService.getReportesByUserId(this.id);
+      
+    }
+    else if (this.authService.rolAdmin()) {
+      this.reportes$ = this.reporteService.getReportes();
+    }
+
+
   }
 
   editarReporte(id: number) {
@@ -109,7 +189,7 @@ export class ListarReportePage implements OnInit {
 
 @Component({
   standalone: true,
-  imports: [CommonModule, ReporteResultadoComponent, AsyncPipe, FiltroCardComponent],
+  imports: [CommonModule, ReporteResultadoComponent, AsyncPipe, FiltroCardComponent, GraficoTortaComponent],
   template: `
     <div class="page-container">
       <div class="page-header">
@@ -120,19 +200,74 @@ export class ListarReportePage implements OnInit {
 
         <button class="btn btn-func" (click)="volverAFiltro()">Ajustar Filtros</button>
       </div>
-    </div>
 
-    <div class="content-container" #contenidoParaPDF>
-      <hr/>
-      <app-filtro-card 
-        [filtro]="filtroActual" 
-        [mostrarBotones]="false">
-      </app-filtro-card>
-      <ng-container *ngIf="reporteData$ | async as data">
-        <reporte-resultado [data]="data"></reporte-resultado>
-      </ng-container>
+      <div class="pdf-container" #contenidoParaPDF>
+
+        <!-- Totales generales -->
+        <div class="pdf-header-content">
+          <h2>ASIS UNLP - {{ fechaHora }} </h2>
+          <p><strong>Total personas filtradas:</strong> {{ totalPersonasData$ | async }}</p>
+          <p><strong>Total personas encuestadas:</strong> {{ totalEncuestadosData$ | async }}</p>
+        </div>   
+
+        <div class="reporte-grid-container">
+
+          <div class="reporte-grid-item">
+            <app-filtro-card 
+              [filtro]="filtroActual" 
+              [mostrarBotones]="false">
+            </app-filtro-card>
+          </div>  
+
+          <ng-container *ngIf="reporteData$ | async as data">
+            <div class="reporte-grid-item">
+              <reporte-resultado [data]="data"></reporte-resultado>       
+            </div>
+          </ng-container>
+
+          <!-- Gráfico Edades -->
+          <ng-container *ngIf="totalEdadesData$ | async as edades">
+            <div class="reporte-grid-item">
+              <grafico-torta
+                *ngIf="objectToChartData(edades).labels.length > 0"
+                [title]="'Distribución por edades'"
+                [labels]="objectToChartData(edades).labels"
+                [values]="objectToChartData(edades).values"
+                [doughnut]="true">
+              </grafico-torta>
+            </div>
+          </ng-container>
+
+          <!-- Gráfico Géneros -->
+          <ng-container *ngIf="totalGenerosData$ | async as generos">
+            <div class="reporte-grid-item">
+              <grafico-torta
+                *ngIf="objectToChartData(generos).labels.length > 0"
+                [title]="'Distribución por género'"
+                [labels]="objectToChartData(generos).labels"
+                [values]="objectToChartData(generos).values"
+                [doughnut]="true">
+              </grafico-torta>
+            </div>
+          </ng-container>
+
+          <!-- Gráfico Materiales -->
+          <ng-container *ngIf="totalMaterialesData$ | async as materiales">
+            <div class="reporte-grid-item">
+              <grafico-torta
+                *ngIf="objectToChartData(materiales).labels.length > 0"
+                [title]="'Distribución por materiales'"
+                [labels]="objectToChartData(materiales).labels"
+                [values]="objectToChartData(materiales).values"
+                [doughnut]="true">
+              </grafico-torta>
+            </div>
+          </ng-container>
+        </div>
+      </div>
     </div>
-  `
+  `,
+  styleUrls: ['../../../styles.css'],
 })
 export class ReportePage implements OnInit {
   @ViewChild('contenidoParaPDF', { static: false }) contenidoParaPDF!: ElementRef;
@@ -142,8 +277,14 @@ export class ReportePage implements OnInit {
   private pdfService = inject(PdfService);
   private authService = inject(AuthService);
   generandoPDF: boolean = false;
-  reporteData$ = this.reporteService.getReporteData();
+  reporteData$ = this.reporteService.getEncuestasFiltradasData();
+  totalPersonasData$ = this.reporteService.getTotalPersonasData();
+  totalEncuestadosData$ = this.reporteService.getCantidadEncuestadasData();
+  totalEdadesData$ = this.reporteService.getTotalEdadesData();
+  totalGenerosData$ = this.reporteService.getTotalGenerosData();
+  totalMaterialesData$ = this.reporteService.getTotalMaterialesData();
   filtroActual!: Filtro;
+  fechaHora: string | undefined;
 
   constructor(private cdRef: ChangeDetectorRef) {}
 
@@ -162,8 +303,20 @@ export class ReportePage implements OnInit {
       criterios: JSON.stringify(filtro),
       propietario_id: this.authService.getUsuarioId() || 0
     };
+    
+    const now = new Date();
+    this.fechaHora = formatDate(now, 'yyyy-MM-dd_HH-mm-ss', 'en-US');
 
     this.reporteService.generarReporte(filtro).subscribe();
+  }
+
+  objectToChartData(obj: Record<string, number>): { labels: string[], values: number[] } {
+    if (!obj || Object.keys(obj).length === 0) {
+      return { labels: [], values: [] };
+    }
+    const labels = Object.keys(obj);
+    const values = Object.values(obj);
+    return { labels, values };
   }
 
   async generarYGuardarPDF() {
@@ -175,9 +328,7 @@ export class ReportePage implements OnInit {
         throw new Error('Usuario no autenticado');
       }
 
-      const now = new Date();
-      const fechaHora = formatDate(now, 'yyyy-MM-dd_HH-mm-ss', 'en-US');
-      const fileName = `reporte_${user_id}_${fechaHora}.pdf`;
+      const fileName = `reporte_${user_id}_${this.fechaHora}.pdf`;
       
       // Generar el PDF (devuelve directamente el Blob)
       const { pdfBlob, fileName: safeFileName } = await this.pdfService.generarPDF(

@@ -41,8 +41,19 @@ public class PreguntaDAO extends GenericDAOImpl<Pregunta, Long> {
                 .getResultList();
     }
 
-    public long countPersonasDistintasPorEncuesta(Long encuestaId) {
+
+    public List<PreguntaDTO> findPreguntasViviendaByEncuestaId(Long encuestaId) {
         return em.createQuery(
+                        "SELECT new controller.dto.PreguntaDTO(p.id, p.pregunta, p.respuesta, p.personaId, p.encuesta.id) " +
+                                "FROM Pregunta p WHERE p.personaId IS NULL AND p.encuesta.id = :id",
+                        PreguntaDTO.class
+                )
+                .setParameter("id", encuestaId)
+                .getResultList();
+    }
+
+    public long countPersonasDistintasPorEncuesta(Long encuestaId) {
+        long cantidadPersonasEncuestadas = em.createQuery(
                         "SELECT COUNT(DISTINCT p.personaId) " +
                                 "FROM Pregunta p " +
                                 "WHERE p.personaId IS NOT NULL AND p.encuesta.id = :id",
@@ -50,6 +61,9 @@ public class PreguntaDAO extends GenericDAOImpl<Pregunta, Long> {
                 )
                 .setParameter("id", encuestaId)
                 .getSingleResult();
+        // si la encuesta no tiene preguntas personales no sabemos la cantidad
+        // de personas de la casa encuestada, dedjamos 1 por defecto como cantidad
+        return (cantidadPersonasEncuestadas == 0) ? 1 : cantidadPersonasEncuestadas;
     }
 
 
