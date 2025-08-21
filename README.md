@@ -16,3 +16,4 @@ Para la definicion de los filtros posibles a aplicar para la generacion de repor
 - acceso_salud: si o no
 - acceso_agua: si o no
 - material_vivienda: lista (ladrillo, madera, chapa, mixto, otros)# asis_unlp
+# asis_unlp
